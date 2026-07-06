@@ -100,11 +100,13 @@ export class ArdiumMultipageDateRangeInputComponent extends _AbstractDateInput<D
       }
       return {
         location:
-          i === 0
-            ? ArdMultiCalendarLocation.Left
-            : i === arr.length - 1
-              ? ArdMultiCalendarLocation.Right
-              : ArdMultiCalendarLocation.Inner,
+          arr.length === 1
+            ? ArdMultiCalendarLocation.Only
+            : i === 0
+              ? ArdMultiCalendarLocation.Left
+              : i === arr.length - 1
+                ? ArdMultiCalendarLocation.Right
+                : ArdMultiCalendarLocation.Inner,
         activeDate,
         highlightedDay,
       };
