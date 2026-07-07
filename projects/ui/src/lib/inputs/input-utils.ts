@@ -160,7 +160,7 @@ export class NumberInputModel {
       v = v.replace(/^0+/, '');
     }
     // apply fixed decimal places if configured
-    if (this._ardHostCmp.fixedDecimalPlaces()) {
+    if (this._ardHostCmp.allowFloat() && this._ardHostCmp.fixedDecimalPlaces()) {
       v = this._fixDecimalPlaces(v);
     }
 
