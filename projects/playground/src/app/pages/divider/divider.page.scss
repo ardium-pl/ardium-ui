@@ -22,3 +22,16 @@
 .dashed {
   --ard-divider-style: dashed;
 }
+
+.cover-image {
+  background-color: #fefbed;
+  padding: 10rem;
+  display: flex;
+
+  .container {
+    border: none;
+    width: 10rem;
+
+    --ard-divider-color: #ada67f;
+  }
+}

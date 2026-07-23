@@ -10,7 +10,9 @@
   $hover-opacity,
   $focus-opacity,
   $active-opacity,
-  $focus-visible-opacity
+  $focus-visible-opacity,
+  $border-style,
+  $border-width,
 ) {
   @include coloringMixins.typeColors();
   font-family: var(--ard-font-family);
@@ -81,7 +83,7 @@
   &.ard-appearance-outlined {
     background: ARD.$bg;
     color: var(--ard-cmpcl--content);
-    border: 1px solid ARD.$border-light;
+    border: $border-width $border-style ARD.$border-light;
 
     &::before {
       background: var(--ard-cmpcl--overlay-colored);
@@ -90,7 +92,7 @@
   &.ard-appearance-outlined-strong {
     background: ARD.$bg;
     color: var(--ard-cmpcl--content);
-    border: 1px solid ARD.$border-light;
+    border: $border-width $border-style ARD.$border-light;
 
     &::before {
       display: none;

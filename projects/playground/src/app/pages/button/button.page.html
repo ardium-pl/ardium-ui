@@ -108,6 +108,23 @@
     <ard-icon>home</ard-icon>
   </ard-button>
 </div>
+<div class="master">
+  <div class="title">Styled button</div>
+  <div class="flex horiz">
+    <ard-button
+      appearance="outlined"
+      style="--ard-button-border-style: dashed; --ard-button-border-width: 2px"
+    >
+      Dashed
+    </ard-button>
+    <ard-button
+      appearance="outlined-strong"
+      style="--ard-button-border-style: dashed; --ard-button-border-width: 2px"
+    >
+      Dashed
+    </ard-button>
+  </div>
+</div>
 <div
   class="master flex"
   (click)="log('click div', $event)"

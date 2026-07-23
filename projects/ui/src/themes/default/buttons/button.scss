@@ -16,6 +16,8 @@
     --ard-button-font-size-compact: 0.75rem;
     --ard-button-font-weight: 500;
     --ard-button-aspect-ratio: auto;
+    --ard-button-border-style: solid;
+    --ard-button-border-width: 1px;
     --ard-button-overlay-hover-opacity: 0.04;
     --ard-button-overlay-focus-opacity: 0;
     --ard-button-overlay-active-opacity: 0.18;
@@ -42,7 +44,9 @@
       var(--ard-button-overlay-hover-opacity, 0.04),
       var(--ard-button-overlay-focus-opacity, 0.12),
       var(--ard-button-overlay-active-opacity, 0.18),
-      var(--ard-button-overlay-focus-visible-opacity, 0.24)
+      var(--ard-button-overlay-focus-visible-opacity, 0.24),
+      var(--ard-button-border-style, solid),
+      var(--ard-button-border-width, 1px)
     );
     background: transparent;
     gap: var(--ard-button-gap, 0.375rem);

@@ -39,7 +39,9 @@
       var(--ard-icon-button-overlay-hover-opacity, var(--ard-button-overlay-hover-opacity, 0.04)),
       var(--ard-icon-button-overlay-focus-opacity, var(--ard-button-overlay-focus-opacity, 0.12)),
       var(--ard-icon-button-overlay-active-opacity, var(--ard-button-overlay-active-opacity, 0.18)),
-      var(--ard-icon-button-overlay-focus-visible-opacity, var(--ard-button-overlay-focus-visible-opacity, 0.24))
+      var(--ard-icon-button-overlay-focus-visible-opacity, var(--ard-button-overlay-focus-visible-opacity, 0.24)),
+      solid,
+      0,
     );
     background: transparent;
     height: var(--ard-icon-button-size, 2.1875em);
