@@ -105,6 +105,7 @@
 - Snackbar
   - Added `onAction` observable to the `ArdSnackbarRef`. It emits if the action button is pressed and immediately completes. If the snackbar is closed in any other way, the observable completes without emitting any value.
   - Added JSDoc comments
+- All prefix/suffix templates in inputs now support additional input-related context
 
 ### Default Template Components
 
