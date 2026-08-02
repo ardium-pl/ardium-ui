@@ -37,7 +37,7 @@
           [disabled]="allActionsDisabled()"
           (click)="onCloseButtonClick()"
         >
-          @if (closeIconComponent) {
+          @if (closeIconComponent && !closeIconTemplate()) {
             <!-- render the component -->
             <ng-template [ngComponentOutlet]="closeIconComponent" />
           } @else {

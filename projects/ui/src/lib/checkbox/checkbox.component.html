@@ -15,7 +15,7 @@
   <div class="ard-hitbox"></div>
   <div class="ard-focus-overlay"></div>
 
-  @if (checkboxIconComponent) {
+  @if (checkboxIconComponent && !checkboxTemplate()) {
     <!-- render the component -->
     <ng-template
       [ngComponentOutlet]="checkboxIconComponent"
