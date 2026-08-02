@@ -1,10 +1,10 @@
-<!-- <div class="master flex">
+<div class="master flex">
   <span class="title">Simplest number input</span>
-  <ard-number-input></ard-number-input>
+  <ard-number-input/>
 </div>
 <div class="master flex">
   <span class="title">Simplest number input compact</span>
-  <ard-number-input compact></ard-number-input>
+  <ard-number-input compact/>
 </div>
 <div class="master flex">
   <span class="title">Number input with min, max, value, placeholder</span>
@@ -14,7 +14,7 @@
     max="10"
     value="5"
     placeholder="Foo"
-  ></ard-number-input>
+  />
 </div>
 <div class="master flex">
   <span class="title">Number input with custom step size</span>
@@ -23,18 +23,18 @@
     max="100"
     value="40"
     stepSize="5"
-  ></ard-number-input>
+  />
 </div>
 <div class="master flex">
   <span class="title">Readonly number input</span>
-  <ard-number-input readonly value="5"></ard-number-input>
+  <ard-number-input readonly value="5"/>
 </div>
 <div class="master flex">
   <span class="title">Compact & with error number input</span>
   <ard-number-input
     compact
     hasError
-  ></ard-number-input>
+  />
 </div>
 <div class="master flex">
   <span class="title">Number input events</span>
@@ -48,7 +48,7 @@
     (focus)="log('focus', $event)"
     (blur)="log('blur', $event)"
     (quickChange)="log('quickChange', $event)"
-  ></ard-number-input>
+  />
 </div>
 <div class="master flex">
   <span class="title">Number input that allows floats</span>
@@ -56,11 +56,11 @@
     max="5"
     stepSize="0.25"
     allowFloat
-  ></ard-number-input>
+  />
 </div>
 <div class="master flex">
   <span class="title">Number input with no buttons</span>
-  <ard-number-input noButtons></ard-number-input>
+  <ard-number-input noButtons/>
 </div>
 <div class="master flex">
   <span class="title">Number input with no buttons and placeholder (left)</span>
@@ -68,7 +68,7 @@
     noButtons
     placeholder="Enter a number"
     alignText="left"
-  ></ard-number-input>
+  />
 </div>
 <div class="master flex">
   <span class="title">Number input with no buttons and placeholder (left) compact</span>
@@ -77,21 +77,21 @@
     placeholder="Enter a number"
     alignText="left"
     compact
-  ></ard-number-input>
+  />
 </div>
 <div class="master flex">
   <span class="title">Number input with [keepFocusOnQuickChange]</span>
   <ard-number-input
     keepFocusOnQuickChangeButton
     max="10"
-  ></ard-number-input>
+  />
 </div>
 <div class="master flex">
   <span class="title">Number input with [keepFocusOnQuickChange]="false"</span>
   <ard-number-input
     keepFocusOnQuickChangeButton="false"
     max="10"
-  ></ard-number-input>
+  />
 </div>
 <div class="master flex">
   <span class="title">Number input with max 2 decimal places</span>
@@ -102,7 +102,7 @@
     allowFloat
     maxDecimalPlaces="2"
     [(value)]="valueDecPl"
-  ></ard-number-input>
+  />
   <p>Value: {{ valueDecPl() }}</p>
 </div>
 <div class="master flex">
@@ -115,9 +115,9 @@
     maxDecimalPlaces="2"
     fixedDecimalPlaces
     [(value)]="valueFixedDecPl"
-  ></ard-number-input>
+  />
   <p>Value: {{ valueFixedDecPl() }}</p>
-</div> -->
+</div>
 <div class="master flex">
   <span class="title">Number input with max 2 decimal places (fixed amount, custom decimal separator)</span>
   <ard-number-input
@@ -129,10 +129,14 @@
     fixedDecimalPlaces
     decimalSeparator=","
     [(value)]="valueFixedDecPl"
-  ></ard-number-input>
+  />
   <p>Value: {{ valueFixedDecPl() }}</p>
 </div>
-<!-- <div class="master flex">
+<div class="master">
+  <span class="title">Default prefix component</span>
+  <app-number-input-default-prefix-component />
+</div>
+<div class="master flex">
   <span class="title">Number input with prefix and suffix</span>
   <ard-number-input
     min="0"
@@ -163,7 +167,7 @@
     value="0"
     (valueChange)="increaseMax()"
     [max]="maxSignal()"
-  ></ard-number-input>
+  />
 </div>
 <div class="master flex">
   <span class="title">Number input within a form field</span>
@@ -184,7 +188,7 @@
         [disabled]="disabled"
         [appearance]="appearance"
         [variant]="variant"
-      ></ard-number-input>
+      />
       }
       <span class="monospace">{{ appearance }}</span>
       }
@@ -201,4 +205,4 @@
     maxDecimalPlaces="2"
     fixedDecimalPlaces
   />
-</div> -->
+</div>

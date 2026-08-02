@@ -32,6 +32,13 @@
           [ngTemplateOutletContext]="prefixSuffixTemplateContext()"
         />
       </div>
+    } @else if (prefixComponent) {
+      <div class="ard-number-input-prefix-container">
+        <ng-template
+          [ngComponentOutlet]="prefixComponent"
+          [ngComponentOutletInputs]="prefixComponentInputs()"
+        />
+      </div>
     }
     <div class="ard-input-container">
       @if (shouldDisplayPlaceholder()) {
@@ -42,7 +49,7 @@
           <div class="ard-placeholder">{{ placeholder() }}</div>
         </ng-template>
 
-        <ng-template [ngTemplateOutlet]="placeholderTemplate()?.template || defaultPlaceholderTemplate"/>
+        <ng-template [ngTemplateOutlet]="placeholderTemplate()?.template || defaultPlaceholderTemplate" />
       }
 
       <input
@@ -69,6 +76,13 @@
         <ng-template
           [ngTemplateOutlet]="suffixTemplate()?.template ?? null"
           [ngTemplateOutletContext]="prefixSuffixTemplateContext()"
+        />
+      </div>
+    } @else if (suffixComponent) {
+      <div class="ard-number-input-suffix-container">
+        <ng-template
+          [ngComponentOutlet]="suffixComponent"
+          [ngComponentOutletInputs]="suffixComponentInputs()"
         />
       </div>
     }

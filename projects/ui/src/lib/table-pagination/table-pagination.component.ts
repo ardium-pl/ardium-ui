@@ -6,8 +6,7 @@ import {
   ViewEncapsulation,
   computed,
   input,
-  model,
-  output,
+  model
 } from '@angular/core';
 import { BooleanLike, coerceBooleanProperty } from '@ardium-ui/devkit';
 import { _FocusableComponentBase } from '../_internal/focusable-component';
@@ -39,9 +38,6 @@ export class ArdiumTablePaginationComponent extends _FocusableComponentBase impl
   readonly options = input<number[] | { value: number; label: string }[]>([10, 25, 50]);
   readonly itemsPerPage = model<number>(50);
   readonly page = model<number>(1);
-
-  readonly itemsPerPageChangeEvent = output<number>({ alias: 'itemsPerPageChange' });
-  readonly pageChangeEvent = output<number>({ alias: 'pageChange' });
 
   ngOnInit(): void {
     if (this._pagination.isTotalItemsDefined()) return;
@@ -81,41 +77,26 @@ export class ArdiumTablePaginationComponent extends _FocusableComponentBase impl
     if (this.isLoading()) return;
     if (newValue === this.itemsPerPage()) return;
     this.itemsPerPage.set(newValue);
-    this.itemsPerPageChangeEvent.emit(this.itemsPerPage());
-    this._emitPageEvent();
-  }
-
-  private _emitPageEvent(): void {
-    this.pageChangeEvent.emit(this.page());
   }
   onPageChange(newPage: number): void {
     if (this.isLoading()) return;
     if (newPage === this.page()) return;
     this._pagination.setPage(newPage);
-    this._emitPageEvent();
   }
   onFirstPage(): void {
     if (this.isLoading()) return;
-    const newPage = this._pagination.goToFirstPage();
-    if (!newPage) return;
-    this._emitPageEvent();
+    this._pagination.goToFirstPage();
   }
   onPrevPage(): void {
     if (this.isLoading()) return;
-    const newPage = this._pagination.goToPrevPage();
-    if (!newPage) return;
-    this._emitPageEvent();
+    this._pagination.goToPrevPage();
   }
   onNextPage(): void {
     if (this.isLoading()) return;
-    const newPage = this._pagination.goToNextPage();
-    if (!newPage) return;
-    this._emitPageEvent();
+    this._pagination.goToNextPage();
   }
   onLastPage(): void {
     if (this.isLoading()) return;
-    const newPage = this._pagination.goToLastPage();
-    if (!newPage) return;
-    this._emitPageEvent();
+    this._pagination.goToLastPage();
   }
 }

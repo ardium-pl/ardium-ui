@@ -20,6 +20,7 @@ import { BooleanLike, coerceBooleanProperty, coerceNumberProperty, NumberLike } 
 import { roundToPrecision } from 'more-rounding';
 import { isDefined } from 'simple-bool';
 import { _FormFieldComponentBase } from '../../_internal/form-field-component';
+import { contextToInputs } from '../../_internal/utils/context-to-inputs';
 import { ButtonAppearance, ButtonVariant } from '../../buttons/general-button.types';
 import { FormFieldFrameTemplateContext } from '../../form-field-frame';
 import { ARD_FORM_FIELD_CONTROL } from '../../form-field/form-field-child.token';
@@ -113,6 +114,12 @@ export class ArdiumNumberInputComponent
     isSuccess: this.isSuccess(),
     isFocused: this.isFocused(),
   }));
+
+  readonly prefixComponent = this._DEFAULTS.PrefixComponent;
+  readonly suffixComponent = this._DEFAULTS.SuffixComponent;
+
+  readonly prefixComponentInputs = contextToInputs(this.prefixSuffixTemplateContext, this.prefixComponent);
+  readonly suffixComponentInputs = contextToInputs(this.prefixSuffixTemplateContext, this.suffixComponent);
 
   //! appearance
   readonly appearance = input<FormElementAppearance>(this._DEFAULTS.appearance);
