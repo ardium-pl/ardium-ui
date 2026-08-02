@@ -1,9 +1,9 @@
-import { InjectionToken, Provider } from '@angular/core';
+import { InjectionToken, Provider, Type } from '@angular/core';
 import { _ngModelComponentDefaults, _NgModelComponentDefaults } from '../_internal/ngmodel-component';
 import { CompareWithFn } from '../types/item-storage.types';
 import { Nullable } from '../types/utility.types';
 import { ComponentColor } from './../types/colors.types';
-import { CheckboxListAlignType } from './checkbox-list.types';
+import { ArdCheckboxListLabelComponent, CheckboxListAlignType } from './checkbox-list.types';
 
 export interface ArdCheckboxListDefaults extends _NgModelComponentDefaults {
   valueFrom: string;
@@ -15,6 +15,7 @@ export interface ArdCheckboxListDefaults extends _NgModelComponentDefaults {
   color: ComponentColor;
   align: CheckboxListAlignType;
   compact: boolean;
+  LabelComponent?: Type<ArdCheckboxListLabelComponent>;
 }
 
 const _checkboxListDefaults: ArdCheckboxListDefaults = {
@@ -28,6 +29,7 @@ const _checkboxListDefaults: ArdCheckboxListDefaults = {
   color: ComponentColor.Primary,
   align: CheckboxListAlignType.LeftClumped,
   compact: false,
+  LabelComponent: undefined,
 };
 
 export const ARD_CHECKBOX_LIST_DEFAULTS = new InjectionToken<ArdCheckboxListDefaults>('ard-checkbox-list-defaults', {

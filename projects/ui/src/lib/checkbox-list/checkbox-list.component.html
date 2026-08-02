@@ -34,17 +34,24 @@
       />
     </ard-checkbox>
     <label [for]="htmlId() + item.index">
-      <ng-template
-        #defaultLabelTemplate
-        let-label="label"
-      >
-        {{ label }}
-      </ng-template>
+      @if (labelComponent && !labelTemplate()) {
+        <ng-template
+          [ngComponentOutlet]="labelComponent"
+          [ngComponentOutletInputs]="labelComponentInputsGenerator()(item)"
+        />
+      } @else {
+        <ng-template
+          #defaultLabelTemplate
+          let-label="label"
+        >
+          {{ label }}
+        </ng-template>
 
-      <ng-template
-        [ngTemplateOutlet]="labelTemplate()?.template || defaultLabelTemplate"
-        [ngTemplateOutletContext]="labelContextGenerator()(item)"
-      />
+        <ng-template
+          [ngTemplateOutlet]="labelTemplate()?.template || defaultLabelTemplate"
+          [ngTemplateOutletContext]="labelContextGenerator()(item)"
+        />
+      }
     </label>
   </div>
   }

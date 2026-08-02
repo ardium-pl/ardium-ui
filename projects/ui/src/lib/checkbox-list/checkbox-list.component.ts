@@ -154,6 +154,8 @@ export class ArdiumCheckboxListComponent extends _NgModelComponentBase implement
 
   readonly labelTemplate = contentChild(ArdCheckboxListLabelTemplateDirective);
 
+  readonly labelComponent = this._DEFAULTS.LabelComponent;
+
   readonly labelContextGenerator = computed<(item: ArdOptionSimple) => OptionContext<ArdOptionSimple>>(() => item => ({
     $implicit: item,
     item,
@@ -164,5 +166,9 @@ export class ArdiumCheckboxListComponent extends _NgModelComponentBase implement
     highlighted: item.highlighted,
     itemData: item.itemData,
     disabled: item.disabled,
+  }));
+
+  readonly labelComponentInputsGenerator = computed<(item: ArdOptionSimple) => Record<string, unknown>>(() => item => ({
+    ...this.labelContextGenerator()(item),
   }));
 }
