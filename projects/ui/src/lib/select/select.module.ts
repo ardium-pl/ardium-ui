@@ -18,7 +18,6 @@ import {
   ArdSelectPlaceholderTemplateDirective,
   ArdSelectPrefixTemplateDirective,
   ArdSelectSuffixTemplateDirective,
-  ArdValueChipTemplateDirective,
   ArdValueTemplateDirective,
 } from './select.directive';
 
@@ -39,7 +38,6 @@ import { _ClearButtonModule } from './../_internal/clear-button/clear-button.mod
     ArdDropdownHeaderTemplateDirective,
     ArdDropdownFooterTemplateDirective,
     ArdNoItemsFoundTemplateDirective,
-    ArdValueChipTemplateDirective,
     ArdItemLimitReachedTemplateDirective,
     ArdItemDisplayLimitTemplateDirective,
     ArdAddCustomTemplateDirective,
@@ -68,7 +66,6 @@ import { _ClearButtonModule } from './../_internal/clear-button/clear-button.mod
     ArdDropdownHeaderTemplateDirective,
     ArdDropdownFooterTemplateDirective,
     ArdNoItemsFoundTemplateDirective,
-    ArdValueChipTemplateDirective,
     ArdItemLimitReachedTemplateDirective,
     ArdItemDisplayLimitTemplateDirective,
     ArdAddCustomTemplateDirective,

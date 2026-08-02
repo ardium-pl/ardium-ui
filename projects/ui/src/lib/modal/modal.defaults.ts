@@ -1,5 +1,6 @@
-import { InjectionToken, Provider } from '@angular/core';
+import { InjectionToken, Provider, Type } from '@angular/core';
 import { PanelAppearance, PanelVariant } from './../types/theming.types';
+import { ArdModalCloseIcon } from './modal.types';
 
 export interface ArdModalDefaults {
   appearance: PanelAppearance;
@@ -11,6 +12,7 @@ export interface ArdModalDefaults {
   disableBackdropClose: boolean;
   panelClass: string;
   backdropClass: string;
+  CloseIconComponent?: Type<ArdModalCloseIcon>;
 }
 
 export const _modalDefaults: ArdModalDefaults = {
@@ -23,6 +25,7 @@ export const _modalDefaults: ArdModalDefaults = {
   disableBackdropClose: false,
   panelClass: '',
   backdropClass: '',
+  CloseIconComponent: undefined,
 };
 
 export const ARD_MODAL_DEFAULTS = new InjectionToken<ArdModalDefaults>('ard-modal-defaults', {

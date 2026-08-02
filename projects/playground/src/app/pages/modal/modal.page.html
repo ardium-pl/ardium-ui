@@ -114,3 +114,10 @@
     Modal content
   </ard-modal>
 </div>
+<div class="master">
+  <div class="title">Modal with default close icon component</div>
+  <button (click)="isOpen5.set(true)">Open</button>
+
+  <app-modal-close-icon-default-component
+    [(open)]="isOpen5" />
+</div>

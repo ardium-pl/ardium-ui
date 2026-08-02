@@ -124,30 +124,23 @@
     [(value)]="selectedPeople"
   />
 </div>
-<span class="title">City selector example</span>
+<span class="title">City selector example with only up to one option visible when selected</span>
 <div class="grid master">
   <ard-select
     [items]="cities"
     multiselectable
-    clearable
-    clearButtonTitle="Wyczyść"
-    placeholder="Wybierz osoby"
     keepOpen
     [(value)]="selectedCities"
+    itemDisplayLimit="1"
   >
     <ng-template
-      ard-value-chip-tmp
+      ard-value-tmp
       let-item
-      let-unselect="unselect"
+      let-itemsSelectedCount="itemsSelectedCount"
     >
-      <ard-deletable-chip
-        (delete)="unselect(item)"
-        compact
-        appearance="outlined"
-      >
-        <div [innerHTML]="item.label"></div>
-      </ard-deletable-chip>
+      {{ itemsSelectedCount > 1 ? itemsSelectedCount + ' cities selected' : item.label }}
     </ng-template>
+    <ng-template ard-item-display-limit-tmp></ng-template>
   </ard-select>
 </div>
 <div class="master flex align-right">

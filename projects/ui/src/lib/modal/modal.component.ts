@@ -122,4 +122,5 @@ export class ArdiumModalComponent {
   readonly closeIconTemplate = contentChild(ArdModalCloseIconTemplateDirective);
 
   readonly _closeIconTemplate = input<ArdModalCloseIconTemplateDirective | undefined>(undefined);
+  readonly closeIconComponent = this._DEFAULTS.CloseIconComponent;
 }

@@ -27,11 +27,6 @@ export class ArdValueTemplateDirective {
   constructor(public template: TemplateRef<ValueContext>) {}
 }
 
-@Directive({ standalone: false, selector: 'ard-select > ng-template[ard-value-chip-tmp]' })
-export class ArdValueChipTemplateDirective {
-  constructor(public template: TemplateRef<ValueContext>) {}
-}
-
 @Directive({ standalone: false, selector: 'ard-select > ng-template[ard-option-tmp]' })
 export class ArdOptionTemplateDirective {
   constructor(public template: TemplateRef<OptionContext<ArdOption>>) {}

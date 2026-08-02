@@ -37,13 +37,18 @@
           [disabled]="allActionsDisabled()"
           (click)="onCloseButtonClick()"
         >
-          <ng-template #defaultCloseIconTemplate>
-            <ard-icon>close</ard-icon>
-          </ng-template>
+          @if (closeIconComponent) {
+            <!-- render the component -->
+            <ng-template [ngComponentOutlet]="closeIconComponent" />
+          } @else {
+            <ng-template #defaultCloseIconTemplate>
+              <ard-icon>close</ard-icon>
+            </ng-template>
 
-          <ng-template
-            [ngTemplateOutlet]="closeIconTemplate()?.template ?? _closeIconTemplate()?.template ?? defaultCloseIconTemplate"
-          />
+            <ng-template
+              [ngTemplateOutlet]="closeIconTemplate()?.template ?? _closeIconTemplate()?.template ?? defaultCloseIconTemplate"
+            />
+          }
         </ard-icon-button>
       }
     </div>
