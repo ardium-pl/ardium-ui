@@ -1,4 +1,5 @@
 import { Directive, TemplateRef } from '@angular/core';
+import { FormFieldFrameTemplateContext } from '../../form-field-frame';
 import { ArdSimplestStorageItem, OptionContext } from '../../types/item-storage.types';
 
 @Directive({ standalone: false, selector: 'ard-autocomplete-input > ng-template[ard-suggestion-tmp]' })
@@ -18,10 +19,10 @@ export class ArdAutocompleteInputLoadingTemplateDirective {
 
 @Directive({ standalone: false, selector: 'ard-autocomplete-input > ng-template[ard-prefix-tmp]' })
 export class ArdAutocompleteInputPrefixTemplateDirective {
-  constructor(public template: TemplateRef<undefined>) {}
+  constructor(public template: TemplateRef<FormFieldFrameTemplateContext>) {}
 }
 
 @Directive({ standalone: false, selector: 'ard-autocomplete-input > ng-template[ard-suffix-tmp]' })
 export class ArdAutocompleteInputSuffixTemplateDirective {
-  constructor(public template: TemplateRef<undefined>) {}
+  constructor(public template: TemplateRef<FormFieldFrameTemplateContext>) {}
 }

@@ -21,6 +21,7 @@ import { roundToPrecision } from 'more-rounding';
 import { isDefined } from 'simple-bool';
 import { _FormFieldComponentBase } from '../../_internal/form-field-component';
 import { ButtonAppearance, ButtonVariant } from '../../buttons/general-button.types';
+import { FormFieldFrameTemplateContext } from '../../form-field-frame';
 import { ARD_FORM_FIELD_CONTROL } from '../../form-field/form-field-child.token';
 import { OneAxisAlignment } from '../../types/alignment.types';
 import { FormElementAppearance, FormElementVariant } from '../../types/theming.types';
@@ -75,7 +76,7 @@ export class ArdiumNumberInputComponent
     effect(() => {
       this.decimalSeparator();
       // calling rewrite ensures element value includes new separator
-      untracked(() =>this.inputModel.rewriteValueAfterHostUpdate());
+      untracked(() => this.inputModel.rewriteValueAfterHostUpdate());
     });
   }
 
@@ -104,6 +105,14 @@ export class ArdiumNumberInputComponent
   //! prefix and suffix templates
   readonly prefixTemplate = contentChild(ArdNumberInputPrefixTemplateDirective);
   readonly suffixTemplate = contentChild(ArdNumberInputSuffixTemplateDirective);
+
+  readonly prefixSuffixTemplateContext = computed<FormFieldFrameTemplateContext>(() => ({
+    hasError: this.hasError(),
+    disabled: this.disabled(),
+    readonly: this.readonly(),
+    isSuccess: this.isSuccess(),
+    isFocused: this.isFocused(),
+  }));
 
   //! appearance
   readonly appearance = input<FormElementAppearance>(this._DEFAULTS.appearance);
@@ -197,9 +206,7 @@ export class ArdiumNumberInputComponent
   readonly decimalSeparator = input<string, string>(this._DEFAULTS.decimalSeparator, {
     transform: (v: any) => {
       if (typeof v !== 'string' || v.length !== 1) {
-        throw new Error(
-          `ARD-FT0073: <ard-number-input>'s [decimalSeparator] must be a single character, got "${v}".`
-        );
+        throw new Error(`ARD-FT0073: <ard-number-input>'s [decimalSeparator] must be a single character, got "${v}".`);
       }
       return v;
     },
@@ -281,7 +288,7 @@ export class ArdiumNumberInputComponent
   //! event handlers
   onInput(newVal: string): void {
     if (this.disabled() || this.readonly()) return;
-    
+
     const valueHasChanged = this.inputModel.writeValue(newVal, true);
     if (!valueHasChanged) return;
     this._emitInput();

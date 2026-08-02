@@ -1,17 +1,18 @@
 import { Directive, TemplateRef } from '@angular/core';
 import { CalendarDayContext, CalendarDaysViewHeaderContext, CalendarFloatingMonthContext, CalendarMonthContext, CalendarMonthsViewHeaderContext, CalendarWeekdayContext, CalendarYearContext, CalendarYearsViewHeaderContext } from '../../calendar';
+import { FormFieldFrameTemplateContext } from '../../form-field-frame';
 import { ArdDateInputAcceptButtonsContext, ArdDateInputValueContext } from './date-input.types';
 
 //public (exported)
 
 @Directive({ standalone: false, selector: 'ard-date-input > ng-template[ard-prefix-tmp]' })
 export class ArdDateInputPrefixTemplateDirective {
-  constructor(public template: TemplateRef<undefined>) {}
+  constructor(public template: TemplateRef<FormFieldFrameTemplateContext>) {}
 }
 
 @Directive({ standalone: false, selector: 'ard-date-input > ng-template[ard-suffix-tmp]' })
 export class ArdDateInputSuffixTemplateDirective {
-  constructor(public template: TemplateRef<undefined>) {}
+  constructor(public template: TemplateRef<FormFieldFrameTemplateContext>) {}
 }
 
 @Directive({ standalone: false, selector: 'ard-date-input > ng-template[ard-value-tmp]' })

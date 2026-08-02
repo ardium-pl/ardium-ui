@@ -1,4 +1,5 @@
 import { Directive, TemplateRef } from '@angular/core';
+import { FormFieldFrameTemplateContext } from '../form-field-frame';
 import { ArdOption, OptionContext } from '../types/item-storage.types';
 import {
   CustomOptionContext,
@@ -14,12 +15,12 @@ import {
 
 @Directive({ standalone: false, selector: 'ard-select > ng-template[ard-prefix-tmp]' })
 export class ArdSelectPrefixTemplateDirective {
-  constructor(public template: TemplateRef<undefined>) {}
+  constructor(public template: TemplateRef<FormFieldFrameTemplateContext>) {}
 }
 
 @Directive({ standalone: false, selector: 'ard-select > ng-template[ard-suffix-tmp]' })
 export class ArdSelectSuffixTemplateDirective {
-  constructor(public template: TemplateRef<undefined>) {}
+  constructor(public template: TemplateRef<FormFieldFrameTemplateContext>) {}
 }
 
 @Directive({ standalone: false, selector: 'ard-select > ng-template[ard-value-tmp]' })

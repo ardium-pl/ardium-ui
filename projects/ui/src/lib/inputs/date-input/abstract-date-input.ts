@@ -42,9 +42,7 @@ import { ArdDateInputDefaults } from './date-input.defaults';
 import {
   ArdDateInputAcceptButtonsTemplateDirective,
   ArdDateInputCalendarIconTemplateDirective,
-  ArdDateInputPrefixTemplateDirective,
-  ArdDateInputSuffixTemplateDirective,
-  ArdDateInputValueTemplateDirective,
+  ArdDateInputValueTemplateDirective
 } from './date-input.directives';
 import { ArdDateInputAcceptButtonsContext, ArdDateInputSerializeFn, ArdDateInputValueContext } from './date-input.types';
 
@@ -361,9 +359,6 @@ export abstract class _AbstractDateInput<T, PT = T> extends _FormFieldComponentB
   readonly valueTemplate = contentChild(ArdDateInputValueTemplateDirective);
   readonly calendarIconTemplate = contentChild(ArdDateInputCalendarIconTemplateDirective);
   readonly acceptButtonsTemplate = contentChild(ArdDateInputAcceptButtonsTemplateDirective);
-
-  readonly prefixTemplate = contentChild(ArdDateInputPrefixTemplateDirective);
-  readonly suffixTemplate = contentChild(ArdDateInputSuffixTemplateDirective);
 
   abstract readonly calendarYearsViewHeaderTemplate: Signal<ArdCalendarYearsViewHeaderTemplateDirective | undefined>;
   abstract readonly calendarMonthsViewHeaderTemplate: Signal<ArdCalendarMonthsViewHeaderTemplateDirective | undefined>;

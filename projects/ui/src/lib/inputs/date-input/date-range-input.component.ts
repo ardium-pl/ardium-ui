@@ -22,6 +22,8 @@ import {
   ArdDateRangeInputFloatingMonthTemplateDirective,
   ArdDateRangeInputMonthsViewHeaderTemplateDirective,
   ArdDateRangeInputMonthTemplateDirective,
+  ArdDateRangeInputPrefixTemplateDirective,
+  ArdDateRangeInputSuffixTemplateDirective,
   ArdDateRangeInputWeekdayTemplateDirective,
   ArdDateRangeInputYearsViewHeaderTemplateDirective,
   ArdDateRangeInputYearTemplateDirective,
@@ -96,6 +98,9 @@ export class ArdiumDateRangeInputComponent extends _AbstractDateInput<DateRange,
     return isDateRange(this.value());
   });
   readonly shouldDisplayDateInput = computed(() => false);
+
+  readonly prefixTemplate = contentChild(ArdDateRangeInputPrefixTemplateDirective);
+  readonly suffixTemplate = contentChild(ArdDateRangeInputSuffixTemplateDirective);
 
   readonly calendarDaysViewHeaderTemplate = contentChild(ArdDateRangeInputDaysViewHeaderTemplateDirective);
   readonly calendarYearsViewHeaderTemplate = contentChild(ArdDateRangeInputYearsViewHeaderTemplateDirective);

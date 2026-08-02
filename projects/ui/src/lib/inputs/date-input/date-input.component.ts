@@ -27,6 +27,8 @@ import {
   ArdDateInputFloatingMonthTemplateDirective,
   ArdDateInputMonthsViewHeaderTemplateDirective,
   ArdDateInputMonthTemplateDirective,
+  ArdDateInputPrefixTemplateDirective,
+  ArdDateInputSuffixTemplateDirective,
   ArdDateInputWeekdayTemplateDirective,
   ArdDateInputYearsViewHeaderTemplateDirective,
   ArdDateInputYearTemplateDirective,
@@ -215,6 +217,9 @@ export class ArdiumDateInputComponent extends _AbstractDateInput<Date> implement
       this.close();
     }
   }
+
+  readonly prefixTemplate = contentChild(ArdDateInputPrefixTemplateDirective);
+  readonly suffixTemplate = contentChild(ArdDateInputSuffixTemplateDirective);
 
   readonly calendarDaysViewHeaderTemplate = contentChild(ArdDateInputDaysViewHeaderTemplateDirective);
   readonly calendarYearsViewHeaderTemplate = contentChild(ArdDateInputYearsViewHeaderTemplateDirective);

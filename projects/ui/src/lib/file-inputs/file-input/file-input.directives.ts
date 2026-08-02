@@ -1,4 +1,5 @@
 import { Directive, TemplateRef } from '@angular/core';
+import { FormFieldFrameTemplateContext } from '../../form-field-frame';
 import { FileInputBrowseContext, FileInputFilesContext } from '../file-input-types';
 
 @Directive({ standalone: false, selector: 'ard-file-input > ng-template[ard-placeholder-tmp]' })
@@ -8,12 +9,12 @@ export class ArdFileInputPlaceholderTemplateDirective {
 
 @Directive({ standalone: false, selector: 'ard-file-input > ng-template[ard-prefix-tmp]' })
 export class ArdFileInputPrefixTemplateDirective {
-  constructor(public template: TemplateRef<undefined>) {}
+  constructor(public template: TemplateRef<FormFieldFrameTemplateContext>) {}
 }
 
 @Directive({ standalone: false, selector: 'ard-file-input > ng-template[ard-suffix-tmp]' })
 export class ArdFileInputSuffixTemplateDirective {
-  constructor(public template: TemplateRef<undefined>) {}
+  constructor(public template: TemplateRef<FormFieldFrameTemplateContext>) {}
 }
 
 @Directive({ standalone: false, selector: 'ard-file-input > ng-template[ard-idle-content-tmp]' })

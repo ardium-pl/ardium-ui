@@ -17,6 +17,7 @@ import { FormElementAppearance, FormElementVariant } from '../types/theming.type
 import { Nullable } from '../types/utility.types';
 import { ARD_FORM_FIELD_FRAME_DEFAULTS, ArdFormFieldFrameDefaults } from './form-field-frame.defaults';
 import { ArdFormFieldPrefixTemplateDirective, ArdFormFieldSuffixTemplateDirective } from './form-field-frame.directives';
+import { FormFieldFrameTemplateContext } from './form-field-frame.types';
 
 @Component({
   standalone: false,
@@ -71,8 +72,20 @@ export class ArdiumFormFieldFrameComponent extends _FocusableComponentBase {
   );
 
   //! prefix & suffix
-  readonly prefixTemplateInput = input<Nullable<TemplateRef<any>>>(undefined, { alias: 'prefixTemplate' });
-  readonly suffixTemplateInput = input<Nullable<TemplateRef<any>>>(undefined, { alias: 'suffixTemplate' });
+  readonly prefixTemplateInput = input<Nullable<TemplateRef<FormFieldFrameTemplateContext>>>(undefined, {
+    alias: 'prefixTemplate',
+  });
+  readonly suffixTemplateInput = input<Nullable<TemplateRef<FormFieldFrameTemplateContext>>>(undefined, {
+    alias: 'suffixTemplate',
+  });
   readonly prefixTemplate = contentChild(ArdFormFieldPrefixTemplateDirective);
   readonly suffixTemplate = contentChild(ArdFormFieldSuffixTemplateDirective);
+
+  readonly prefixSuffixTemplateContext = computed<FormFieldFrameTemplateContext>(() => ({
+    hasError: this.hasError(),
+    disabled: this.disabled(),
+    readonly: this.readonly(),
+    isSuccess: this.isSuccess(),
+    isFocused: this.isFocused(),
+  }));
 }
