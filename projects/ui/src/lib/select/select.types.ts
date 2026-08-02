@@ -1,4 +1,5 @@
 import { ArdOption, ArdOptionGroup, OptionContext } from '../types/item-storage.types';
+import { TemplateComponent } from '../types/utility.types';
 
 export type AddCustomFn<T> = (value: string) => T;
 
@@ -46,3 +47,14 @@ export interface ItemLimitContext {
 export interface ItemDisplayLimitContext extends ItemLimitContext {
   overflowCount: number;
 }
+
+export interface ArdSelectOptionComponent extends TemplateComponent<OptionContext<ArdOption>> {}
+export interface ArdSelectOptgroupComponent extends TemplateComponent<GroupContext> {}
+export interface ArdSelectValueComponent extends TemplateComponent<ValueContext> {}
+export interface ArdSelectPlaceholderComponent extends TemplateComponent<PlaceholderContext> {}
+export interface ArdSelectDropdownArrowComponent extends TemplateComponent<{}> {}
+export interface ArdSelectLoadingSpinnerComponent extends TemplateComponent<{}> {}
+export interface ArdSelectLoadingPlaceholderComponent extends TemplateComponent<SearchContext> {}
+export interface ArdSelectNoItemsFoundComponent extends TemplateComponent<SearchContext> {}
+export interface ArdSelectAddCustomComponent extends TemplateComponent<CustomOptionContext> {}
+export interface ArdSelectItemDisplayLimitComponent extends TemplateComponent<ItemDisplayLimitContext> {}

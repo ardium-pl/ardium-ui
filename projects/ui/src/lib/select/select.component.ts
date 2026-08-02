@@ -29,7 +29,7 @@ import {
   model,
   output,
   signal,
-  viewChild,
+  viewChild
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { BooleanLike, NumberLike, coerceArrayProperty, coerceBooleanProperty, coerceNumberProperty } from '@ardium-ui/devkit';
@@ -37,6 +37,7 @@ import { Observable, Subject, merge, startWith, takeUntil } from 'rxjs';
 import { isAnyString, isArray, isFunction } from 'simple-bool';
 import { _FormFieldComponentBase } from '../_internal/form-field-component';
 import { ItemStorage, ItemStorageHost } from '../_internal/item-storages/dropdown-item-storage';
+import { contextToInputs, contextToInputsMultiple } from '../_internal/utils/context-to-inputs';
 import { ArdiumDropdownPanelComponent } from '../dropdown-panel/dropdown-panel.component';
 import { DropdownPanelAppearance, DropdownPanelVariant } from '../dropdown-panel/dropdown-panel.types';
 import { ARD_FORM_FIELD_CONTROL } from '../form-field/form-field-child.token';
@@ -413,6 +414,17 @@ export class ArdiumSelectComponent
   readonly prefixComponent = this._DEFAULTS.PrefixComponent;
   readonly suffixComponent = this._DEFAULTS.SuffixComponent;
 
+  readonly optionComponent = this._DEFAULTS.OptionComponent;
+  readonly optgroupComponent = this._DEFAULTS.OptgroupComponent;
+  readonly valueComponent = this._DEFAULTS.ValueComponent;
+  readonly placeholderComponent = this._DEFAULTS.PlaceholderComponent;
+  readonly dropdownArrowComponent = this._DEFAULTS.DropdownArrowComponent;
+  readonly loadingSpinnerComponent = this._DEFAULTS.LoadingSpinnerComponent;
+  readonly loadingPlaceholderComponent = this._DEFAULTS.LoadingPlaceholderComponent;
+  readonly noItemsFoundComponent = this._DEFAULTS.NoItemsFoundComponent;
+  readonly addCustomComponent = this._DEFAULTS.AddCustomComponent;
+  readonly itemDisplayLimitComponent = this._DEFAULTS.ItemDisplayLimitComponent;
+
   //! context providers
   readonly optionContextGenerator = computed<(item: ArdOption) => OptionContext<ArdOption>>(() => item => ({
     $implicit: item,
@@ -487,6 +499,17 @@ export class ArdiumSelectComponent
       overflowCount: selectedItems - (this.itemDisplayLimit() ?? 0),
     };
   });
+
+  //! default component input generators
+  readonly optionComponentInputsGenerator = contextToInputsMultiple(this.optionContextGenerator, this.optionComponent);
+  readonly optgroupComponentInputsGenerator = contextToInputsMultiple(this.groupContextGenerator, this.optgroupComponent);
+  readonly valueComponentInputsGenerator = contextToInputsMultiple(this.valueContextGenerator, this.valueComponent);
+
+  readonly placeholderComponentInputs = contextToInputs(this.getPlaceholderContext, this.placeholderComponent);
+  readonly loadingPlaceholderComponentInputs = contextToInputs(this.getSearchContext, this.loadingPlaceholderComponent);
+  readonly noItemsFoundComponentInputs = contextToInputs(this.getSearchContext, this.noItemsFoundComponent);
+  readonly addCustomComponentInputs = contextToInputs(this.getCustomOptionContext, this.addCustomComponent);
+  readonly itemDisplayLimitComponentInputs = contextToInputs(this.getItemDisplayLimitContext, this.itemDisplayLimitComponent);
 
   private readonly elementRef = inject(ElementRef<HTMLElement>);
   private readonly _cd = inject(ChangeDetectorRef);

@@ -6,7 +6,19 @@ import { searchFunctions } from '../search-functions';
 import { ArdPanelPosition, CompareWithFn, GroupByFn, SearchFn } from '../types/item-storage.types';
 import { Nullable } from '../types/utility.types';
 import { FormElementAppearance, FormElementVariant } from './../types/theming.types';
-import { AddCustomFn } from './select.types';
+import {
+  AddCustomFn,
+  ArdSelectAddCustomComponent,
+  ArdSelectDropdownArrowComponent,
+  ArdSelectItemDisplayLimitComponent,
+  ArdSelectLoadingPlaceholderComponent,
+  ArdSelectLoadingSpinnerComponent,
+  ArdSelectNoItemsFoundComponent,
+  ArdSelectOptgroupComponent,
+  ArdSelectOptionComponent,
+  ArdSelectPlaceholderComponent,
+  ArdSelectValueComponent,
+} from './select.types';
 
 export interface ArdSelectDefaults extends _FormFieldComponentDefaults {
   valueFrom: string;
@@ -57,6 +69,16 @@ export interface ArdSelectDefaults extends _FormFieldComponentDefaults {
   addCustom: boolean | AddCustomFn<any> | AddCustomFn<Promise<any>>;
     PrefixComponent?: Type<ArdFormFieldFramePrefixSuffix>;
     SuffixComponent?: Type<ArdFormFieldFramePrefixSuffix>;
+  OptionComponent?: Type<ArdSelectOptionComponent>;
+  OptgroupComponent?: Type<ArdSelectOptgroupComponent>;
+  ValueComponent?: Type<ArdSelectValueComponent>;
+  PlaceholderComponent?: Type<ArdSelectPlaceholderComponent>;
+  DropdownArrowComponent?: Type<ArdSelectDropdownArrowComponent>;
+  LoadingSpinnerComponent?: Type<ArdSelectLoadingSpinnerComponent>;
+  LoadingPlaceholderComponent?: Type<ArdSelectLoadingPlaceholderComponent>;
+  NoItemsFoundComponent?: Type<ArdSelectNoItemsFoundComponent>;
+  AddCustomComponent?: Type<ArdSelectAddCustomComponent>;
+  ItemDisplayLimitComponent?: Type<ArdSelectItemDisplayLimitComponent>;
 }
 
 const _selectDefaults: ArdSelectDefaults = {
@@ -109,6 +131,16 @@ const _selectDefaults: ArdSelectDefaults = {
   addCustom: false,
   PrefixComponent: undefined,
   SuffixComponent: undefined,
+  OptionComponent: undefined,
+  OptgroupComponent: undefined,
+  ValueComponent: undefined,
+  PlaceholderComponent: undefined,
+  DropdownArrowComponent: undefined,
+  LoadingSpinnerComponent: undefined,
+  LoadingPlaceholderComponent: undefined,
+  NoItemsFoundComponent: undefined,
+  AddCustomComponent: undefined,
+  ItemDisplayLimitComponent: undefined,
 };
 
 export const ARD_SELECT_DEFAULTS = new InjectionToken<ArdSelectDefaults>('ard-select-defaults', {

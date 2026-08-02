@@ -21,11 +21,18 @@
   >
     <div class="ard-select-value-container">
       @if (shouldDisplayPlaceholder()) {
-        <ng-template #defaultPlaceholderTemplate>
-          <div class="ard-placeholder">{{ placeholder() }}</div>
-        </ng-template>
+        @if (placeholderComponent && !placeholderTemplate()) {
+          <ng-template
+            [ngComponentOutlet]="placeholderComponent"
+            [ngComponentOutletInputs]="placeholderComponentInputs()"
+          />
+        } @else {
+          <ng-template #defaultPlaceholderTemplate>
+            <div class="ard-placeholder">{{ placeholder() }}</div>
+          </ng-template>
 
-        <ng-template [ngTemplateOutlet]="placeholderTemplate()?.template || defaultPlaceholderTemplate" />
+          <ng-template [ngTemplateOutlet]="placeholderTemplate()?.template || defaultPlaceholderTemplate" />
+        }
       }
       @if (shouldDisplayValue()) {
         @for (item of itemStorage.selectedItems(); track item.index) {
@@ -35,12 +42,19 @@
             [attr.hidden]="!isValueWithinDisplayLimit($index)"
           >
             @if (isValueWithinDisplayLimit($index)) {
-              <ng-template
-                [ngTemplateOutlet]="
-                  valueTemplate()?.template || (multiselectable() ? defaultMultiValueTemplate : defaultValueTemplate)
-                "
-                [ngTemplateOutletContext]="valueContextGenerator()(item)"
-              />
+              @if (valueComponent && !valueTemplate()) {
+                <ng-template
+                  [ngComponentOutlet]="valueComponent"
+                  [ngComponentOutletInputs]="valueComponentInputsGenerator()(item)"
+                />
+              } @else {
+                <ng-template
+                  [ngTemplateOutlet]="
+                    valueTemplate()?.template || (multiselectable() ? defaultMultiValueTemplate : defaultValueTemplate)
+                  "
+                  [ngTemplateOutletContext]="valueContextGenerator()(item)"
+                />
+              }
             }
           </div>
         }
@@ -72,17 +86,24 @@
       }
       @if (itemStorage.isAnyItemSelected() && shouldShowItemDisplayLimit()) {
         <div class="ard-overflow-indicator">
-          <ng-template
-            [ngTemplateOutlet]="itemDisplayLimitTemplate()?.template || defaultItemDisplayLimitTemplate"
-            [ngTemplateOutletContext]="getItemDisplayLimitContext()"
-          />
+          @if (itemDisplayLimitComponent && !itemDisplayLimitTemplate()) {
+            <ng-template
+              [ngComponentOutlet]="itemDisplayLimitComponent"
+              [ngComponentOutletInputs]="itemDisplayLimitComponentInputs()"
+            />
+          } @else {
+            <ng-template
+              [ngTemplateOutlet]="itemDisplayLimitTemplate()?.template || defaultItemDisplayLimitTemplate"
+              [ngTemplateOutletContext]="getItemDisplayLimitContext()"
+            />
 
-          <ng-template
-            #defaultItemDisplayLimitTemplate
-            let-count="overflowCount"
-          >
-            <div>{{ count }} more...</div>
-          </ng-template>
+            <ng-template
+              #defaultItemDisplayLimitTemplate
+              let-count="overflowCount"
+            >
+              <div>{{ count }} more...</div>
+            </ng-template>
+          }
         </div>
       }
 
@@ -117,11 +138,15 @@
 
     <div class="ard-select-controls">
       @if (isLoading()) {
-        <ng-template #defaultLoadingSpinnerTemplate>
-          <div class="ard-spinner"></div>
-        </ng-template>
+        @if (loadingSpinnerComponent && !loadingSpinnerTemplate()) {
+          <ng-template [ngComponentOutlet]="loadingSpinnerComponent" />
+        } @else {
+          <ng-template #defaultLoadingSpinnerTemplate>
+            <div class="ard-spinner"></div>
+          </ng-template>
 
-        <ng-template [ngTemplateOutlet]="loadingSpinnerTemplate()?.template || defaultLoadingSpinnerTemplate" />
+          <ng-template [ngTemplateOutlet]="loadingSpinnerTemplate()?.template || defaultLoadingSpinnerTemplate" />
+        }
       }
       @if (shouldShowClearButton()) {
         <ard-clear-button
@@ -136,11 +161,15 @@
           (click)="handleDropdownArrowClick($event)"
           [attr.tabindex]="tabIndex()"
         >
-          <ng-template #defaultDropdownArrowTemplate>
-            <span class="ard-dropdown-arrow"></span>
-          </ng-template>
+          @if (dropdownArrowComponent && !dropdownArrowTemplate()) {
+            <ng-template [ngComponentOutlet]="dropdownArrowComponent" />
+          } @else {
+            <ng-template #defaultDropdownArrowTemplate>
+              <span class="ard-dropdown-arrow"></span>
+            </ng-template>
 
-          <ng-template [ngTemplateOutlet]="dropdownArrowTemplate()?.template || defaultDropdownArrowTemplate" />
+            <ng-template [ngTemplateOutlet]="dropdownArrowTemplate()?.template || defaultDropdownArrowTemplate" />
+          }
           <div class="ard-hitbox"></div>
         </button>
       }
@@ -176,20 +205,27 @@
           (click)="onGroupClick(group)"
         >
           @if (!!group.label) {
-            <ng-template
-              #defaultOptgroupTemplate
-              let-label="label"
-            >
-              <span
-                class="ard-optgroup-label"
-                [innerHTML]="isItemsInputUsed ? (label | escapeHTML) : label"
-              ></span>
-            </ng-template>
+            @if (optgroupComponent && !optgroupTemplate()) {
+              <ng-template
+                [ngComponentOutlet]="optgroupComponent"
+                [ngComponentOutletInputs]="optgroupComponentInputsGenerator()(group)"
+              />
+            } @else {
+              <ng-template
+                #defaultOptgroupTemplate
+                let-label="label"
+              >
+                <span
+                  class="ard-optgroup-label"
+                  [innerHTML]="isItemsInputUsed ? (label | escapeHTML) : label"
+                ></span>
+              </ng-template>
 
-            <ng-template
-              [ngTemplateOutlet]="optgroupTemplate()?.template || defaultOptgroupTemplate"
-              [ngTemplateOutletContext]="groupContextGenerator()(group)"
-            />
+              <ng-template
+                [ngTemplateOutlet]="optgroupTemplate()?.template || defaultOptgroupTemplate"
+                [ngTemplateOutletContext]="groupContextGenerator()(group)"
+              />
+            }
           }
 
           <div class="ard-optgroup-children">
@@ -209,17 +245,24 @@
                 (mouseleave)="onItemMouseLeave(option, $event)"
               >
                 <div class="ard-option-label">
-                  <ng-template
-                    #defaultOptionTemplate
-                    let-label="label"
-                  >
-                    <span [innerHTML]="isItemsInputUsed ? (label | escapeHTML) : label"></span>
-                  </ng-template>
+                  @if (optionComponent && !optionTemplate()) {
+                    <ng-template
+                      [ngComponentOutlet]="optionComponent"
+                      [ngComponentOutletInputs]="optionComponentInputsGenerator()(option)"
+                    />
+                  } @else {
+                    <ng-template
+                      #defaultOptionTemplate
+                      let-label="label"
+                    >
+                      <span [innerHTML]="isItemsInputUsed ? (label | escapeHTML) : label"></span>
+                    </ng-template>
 
-                  <ng-template
-                    [ngTemplateOutlet]="optionTemplate()?.template || defaultOptionTemplate"
-                    [ngTemplateOutletContext]="optionContextGenerator()(option)"
-                  />
+                    <ng-template
+                      [ngTemplateOutlet]="optionTemplate()?.template || defaultOptionTemplate"
+                      [ngTemplateOutletContext]="optionContextGenerator()(option)"
+                    />
+                  }
                 </div>
               </div>
             }
@@ -228,43 +271,64 @@
       }
     }
     @if (shouldShowNoItemsFound()) {
-      <ng-template #defaultNoItemsFoundTemplate>
-        <div class="ard-option ard-option-disabled">{{ noItemsFoundText() }}</div>
-      </ng-template>
+      @if (noItemsFoundComponent && !noItemsFoundTemplate()) {
+        <ng-template
+          [ngComponentOutlet]="noItemsFoundComponent"
+          [ngComponentOutletInputs]="noItemsFoundComponentInputs()"
+        />
+      } @else {
+        <ng-template #defaultNoItemsFoundTemplate>
+          <div class="ard-option ard-option-disabled">{{ noItemsFoundText() }}</div>
+        </ng-template>
 
-      <ng-template
-        [ngTemplateOutlet]="noItemsFoundTemplate()?.template || defaultNoItemsFoundTemplate"
-        [ngTemplateOutletContext]="getSearchContext()"
-      />
+        <ng-template
+          [ngTemplateOutlet]="noItemsFoundTemplate()?.template || defaultNoItemsFoundTemplate"
+          [ngTemplateOutletContext]="getSearchContext()"
+        />
+      }
     }
     @if (shouldShowAddCustom()) {
       <div
         class="ard-option ard-option-highlighted ard-add-custom"
         (click)="addCustomOption(searchTerm())"
       >
-        <ng-template
-          #defaultAddCustomTemplate
-          let-searchTerm
-        >
-          <span class="ard-add-custom-label">{{ addCustomOptionText() }}</span>
-          <span class="ard-add-custom-value">"{{ searchTerm }}"</span>
-        </ng-template>
+        @if (addCustomComponent && !addCustomTemplate()) {
+          <ng-template
+            [ngComponentOutlet]="addCustomComponent"
+            [ngComponentOutletInputs]="addCustomComponentInputs()"
+          />
+        } @else {
+          <ng-template
+            #defaultAddCustomTemplate
+            let-searchTerm
+          >
+            <span class="ard-add-custom-label">{{ addCustomOptionText() }}</span>
+            <span class="ard-add-custom-value">"{{ searchTerm }}"</span>
+          </ng-template>
 
-        <ng-template
-          [ngTemplateOutlet]="addCustomTemplate()?.template || defaultAddCustomTemplate"
-          [ngTemplateOutletContext]="getCustomOptionContext()"
-        />
+          <ng-template
+            [ngTemplateOutlet]="addCustomTemplate()?.template || defaultAddCustomTemplate"
+            [ngTemplateOutletContext]="getCustomOptionContext()"
+          />
+        }
       </div>
     }
     @if (isLoading()) {
-      <ng-template #defaultLoadingPlaceholderTemplate>
-        <div class="ard-option ard-option-disabled">{{ loadingPlaceholderText() }}</div>
-      </ng-template>
+      @if (loadingPlaceholderComponent && !loadingPlaceholderTemplate()) {
+        <ng-template
+          [ngComponentOutlet]="loadingPlaceholderComponent"
+          [ngComponentOutletInputs]="loadingPlaceholderComponentInputs()"
+        />
+      } @else {
+        <ng-template #defaultLoadingPlaceholderTemplate>
+          <div class="ard-option ard-option-disabled">{{ loadingPlaceholderText() }}</div>
+        </ng-template>
 
-      <ng-template
-        [ngTemplateOutlet]="loadingPlaceholderTemplate()?.template || defaultLoadingPlaceholderTemplate"
-        [ngTemplateOutletContext]="getSearchContext()"
-      />
+        <ng-template
+          [ngTemplateOutlet]="loadingPlaceholderTemplate()?.template || defaultLoadingPlaceholderTemplate"
+          [ngTemplateOutletContext]="getSearchContext()"
+        />
+      }
     }
   </ard-dropdown-panel>
 </ng-template>
