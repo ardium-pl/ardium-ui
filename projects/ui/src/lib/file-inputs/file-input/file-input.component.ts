@@ -19,7 +19,6 @@ import { _FileInputComponentBase } from '../file-input-base';
 import { FileInputBrowseContext, FileInputFileAmountContext, FileInputFilesContext } from '../file-input-types';
 import { ARD_FILE_INPUT_DEFAULTS, ArdFileInputDefaults } from './file-input.defaults';
 import {
-  ArdFileInputPlaceholderTemplateDirective,
   ArdFileInputPrefixTemplateDirective,
   ArdFileInputSuffixTemplateDirective,
   ArdiumFileInputDragoverContentTemplateDirective,
@@ -64,19 +63,10 @@ export class ArdiumFileInputComponent extends _FileInputComponentBase {
   //! other inputs
   readonly inputAttrs = input<Record<string, any>>(this._DEFAULTS.inputAttrs);
 
-  //! placeholder
-  readonly placeholder = input<string>(this._DEFAULTS.placeholder);
-
   //! root element classes
   readonly ngClasses = computed<string>(() =>
     [`ard-color-${this.color()}`, `ard-state-${this.currentViewState()}`, this.value ? 'ard-has-value' : ''].join(' ')
   );
-
-  readonly placeholderTemplate = contentChild(ArdFileInputPlaceholderTemplateDirective);
-
-  get shouldDisplayPlaceholder(): boolean {
-    return !!this.placeholder() && !this.value;
-  }
 
   //! clear button
   readonly clearable = input<boolean, BooleanLike>(this._DEFAULTS.clearable, { transform: v => coerceBooleanProperty(v) });
@@ -112,6 +102,10 @@ export class ArdiumFileInputComponent extends _FileInputComponentBase {
   //! prefix & suffix
   readonly prefixTemplate = contentChild(ArdFileInputPrefixTemplateDirective);
   readonly suffixTemplate = contentChild(ArdFileInputSuffixTemplateDirective);
+
+  readonly prefixComponent = this._DEFAULTS.PrefixComponent;
+  readonly suffixComponent = this._DEFAULTS.SuffixComponent;
+
   //! templates
   readonly idleTemplate = contentChild(ArdiumFileInputIdleContentTemplateDirective);
   readonly dragoverTemplate = contentChild(ArdiumFileInputDragoverContentTemplateDirective);

@@ -74,6 +74,9 @@ export class ArdiumHexInputComponent
   readonly prefixTemplate = contentChild(ArdHexInputPrefixTemplateDirective);
   readonly suffixTemplate = contentChild(ArdHexInputSuffixTemplateDirective);
 
+  readonly prefixComponent = this._DEFAULTS.PrefixComponent;
+  readonly suffixComponent = this._DEFAULTS.SuffixComponent;
+
   //! placeholder
   readonly placeholder = input<Nullable<string>>(this._DEFAULTS.placeholder);
 

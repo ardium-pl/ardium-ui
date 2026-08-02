@@ -120,6 +120,9 @@ export class ArdiumAutocompleteInputComponent
   override readonly prefixTemplate = contentChild(ArdAutocompleteInputPrefixTemplateDirective);
   override readonly suffixTemplate = contentChild(ArdAutocompleteInputSuffixTemplateDirective);
 
+  readonly prefixComponent = this._DEFAULTS.PrefixComponent;
+  readonly suffixComponent = this._DEFAULTS.SuffixComponent;
+
   //! placeholder
   override readonly placeholderTemplate = contentChild(ArdAutocompleteInputPlaceholderTemplateDirective);
 

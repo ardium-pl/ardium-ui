@@ -7,17 +7,19 @@ import {
   Input,
   input,
   TemplateRef,
-  ViewEncapsulation,
+  Type,
+  ViewEncapsulation
 } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { BooleanLike, coerceBooleanProperty } from '@ardium-ui/devkit';
 import { delay, startWith, Subject } from 'rxjs';
 import { _FocusableComponentBase } from '../_internal/focusable-component';
+import { contextToInputs } from '../_internal/utils/context-to-inputs';
 import { FormElementAppearance, FormElementVariant } from '../types/theming.types';
 import { Nullable } from '../types/utility.types';
 import { ARD_FORM_FIELD_FRAME_DEFAULTS, ArdFormFieldFrameDefaults } from './form-field-frame.defaults';
 import { ArdFormFieldPrefixTemplateDirective, ArdFormFieldSuffixTemplateDirective } from './form-field-frame.directives';
-import { FormFieldFrameTemplateContext } from './form-field-frame.types';
+import { ArdFormFieldFramePrefixSuffix, FormFieldFrameTemplateContext } from './form-field-frame.types';
 
 @Component({
   standalone: false,
@@ -88,4 +90,16 @@ export class ArdiumFormFieldFrameComponent extends _FocusableComponentBase {
     isSuccess: this.isSuccess(),
     isFocused: this.isFocused(),
   }));
+
+  readonly prefixComponentInput = input<Nullable<Type<ArdFormFieldFramePrefixSuffix>>>(undefined, {
+    alias: 'prefixComponent',
+  });
+  readonly suffixComponentInput = input<Nullable<Type<ArdFormFieldFramePrefixSuffix>>>(undefined, {
+    alias: 'suffixComponent',
+  });
+  readonly prefixComponent = this._DEFAULTS.PrefixComponent;
+  readonly suffixComponent = this._DEFAULTS.SuffixComponent;
+
+  readonly prefixComponentInputs = contextToInputs(this.prefixSuffixTemplateContext, this.prefixComponent);
+  readonly suffixComponentInputs = contextToInputs(this.prefixSuffixTemplateContext, this.suffixComponent);
 }

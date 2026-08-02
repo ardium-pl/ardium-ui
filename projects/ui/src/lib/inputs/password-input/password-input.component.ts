@@ -69,6 +69,9 @@ export class ArdiumPasswordInputComponent extends _FormFieldComponentBase implem
   readonly prefixTemplate = contentChild(ArdPasswordInputPrefixTemplateDirective);
   readonly suffixTemplate = contentChild(ArdPasswordInputSuffixTemplateDirective);
 
+  readonly prefixComponent = this._DEFAULTS.PrefixComponent;
+  readonly suffixComponent = this._DEFAULTS.SuffixComponent;
+
   //! placeholder
   readonly placeholderTemplate = contentChild(ArdPasswordInputPlaceholderTemplateDirective);
 

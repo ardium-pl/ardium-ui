@@ -22,28 +22,42 @@
 <div class="flex horiz main-container">
   <div class="master">
     <span class="title">Date input min max</span>
-    <ard-date-input [min]="MIN" [max]="MAX" />
+    <ard-date-input
+      [min]="MIN"
+      [max]="MAX"
+    />
     <code>{{ MIN.toISOString() }} - {{ MAX.toISOString() }}</code>
   </div>
 </div>
 <div class="flex horiz main-container">
   <div class="master">
     <span class="title">Date input min max</span>
-    <ard-date-input [min]="MIN2" [max]="MAX2" />
+    <ard-date-input
+      [min]="MIN2"
+      [max]="MAX2"
+    />
     <code>{{ MIN2.toISOString() }} - {{ MAX2.toISOString() }}</code>
   </div>
 </div>
 <div class="flex horiz main-container">
   <div class="master">
     <span class="title">Date input min max UTC</span>
-    <ard-date-input [min]="MIN" [max]="MAX" UTC />
+    <ard-date-input
+      [min]="MIN"
+      [max]="MAX"
+      UTC
+    />
     <code>{{ MIN.toISOString() }} - {{ MAX.toISOString() }}</code>
   </div>
 </div>
 <div class="flex horiz main-container">
   <div class="master">
     <span class="title">Date input min max UTC</span>
-    <ard-date-input [min]="MIN2" [max]="MAX2" UTC />
+    <ard-date-input
+      [min]="MIN2"
+      [max]="MAX2"
+      UTC
+    />
     <code>{{ MIN2.toISOString() }} - {{ MAX2.toISOString() }}</code>
   </div>
 </div>
@@ -60,13 +74,20 @@
 <div class="flex horiz main-container">
   <div class="master">
     <span class="title">Date input with reactive forms and placeholder</span>
-    <ard-date-input [formControl]="formControl" placeholder="Select a date" />
+    <ard-date-input
+      [formControl]="formControl"
+      placeholder="Select a date"
+    />
   </div>
 </div>
 <div class="flex horiz main-container">
   <div class="master">
     <span class="title">Readonly date input with reactive forms and placeholder</span>
-    <ard-date-input [formControl]="formControl" placeholder="Select a date" readonly />
+    <ard-date-input
+      [formControl]="formControl"
+      placeholder="Select a date"
+      readonly
+    />
   </div>
 </div>
 <div class="flex horiz main-container">
@@ -99,6 +120,15 @@
 <div class="flex horiz main-container">
   <div class="master">
     <span class="title">Date input without floating month</span>
-    <ard-date-input (valueChange)="log('valueChange', $event)" hideFloatingMonth />
+    <ard-date-input
+      (valueChange)="log('valueChange', $event)"
+      hideFloatingMonth
+    />
+  </div>
+</div>
+<div class="flex horiz main-container">
+  <div class="master">
+    <span class="title">Default prefix component</span>
+    <app-date-input-default-prefix-component />
   </div>
 </div>

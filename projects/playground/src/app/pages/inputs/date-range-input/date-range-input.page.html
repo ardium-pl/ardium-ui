@@ -1,4 +1,4 @@
-<!-- <div class="flex horiz main-container">
+<div class="flex horiz main-container">
   <div class="master">
     <span class="title">Most basic date range input</span>
     <ard-date-range-input (valueChange)="log('valueChange', $event)" />
@@ -13,16 +13,23 @@
 <div class="flex horiz main-container">
   <div class="master">
     <span class="title">Readonly date range input with reactive forms</span>
-    <ard-date-range-input [formControl]="formControl" readonly />
+    <ard-date-range-input
+      [formControl]="formControl"
+      readonly
+    />
   </div>
-</div> -->
+</div>
 <div class="flex horiz main-container">
   <div class="master">
     <span class="title">Date range input min max</span>
-    <ard-date-range-input [min]="MIN" [max]="MAX" UTC />
+    <ard-date-range-input
+      [min]="MIN"
+      [max]="MAX"
+      UTC
+    />
   </div>
 </div>
-<!-- <div class="flex horiz main-container">
+<div class="flex horiz main-container">
   <div class="master">
     <span class="title">Disabled date range input with reactive forms</span>
     <ard-date-range-input [formControl]="formControlDisabled" />
@@ -37,6 +44,15 @@
 <div class="flex horiz main-container">
   <div class="master">
     <span class="title">Date range input with reactive forms and placeholder</span>
-    <ard-date-range-input [formControl]="formControl" placeholder="Select a date range" />
+    <ard-date-range-input
+      [formControl]="formControl"
+      placeholder="Select a date range"
+    />
   </div>
-</div> -->
+</div>
+<div class="flex horiz main-container">
+  <div class="master">
+    <span class="title">Default prefix component</span>
+    <app-date-range-input-default-prefix-component />
+  </div>
+</div>

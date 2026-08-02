@@ -38,6 +38,9 @@ export class ArdiumInputComponent extends _SimpleInputComponentBase {
   readonly prefixTemplate = contentChild(ArdInputPrefixTemplateDirective);
   readonly suffixTemplate = contentChild(ArdInputSuffixTemplateDirective);
 
+  readonly prefixComponent = this._DEFAULTS.PrefixComponent;
+  readonly suffixComponent = this._DEFAULTS.SuffixComponent;
+
   //! placeholder
   readonly placeholderTemplate = contentChild(ArdInputPlaceholderTemplateDirective);
 }

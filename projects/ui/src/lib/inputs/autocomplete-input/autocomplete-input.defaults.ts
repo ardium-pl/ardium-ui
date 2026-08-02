@@ -1,5 +1,6 @@
-import { InjectionToken, Provider } from '@angular/core';
+import { InjectionToken, Provider, Type } from '@angular/core';
 import { DropdownPanelAppearance, DropdownPanelVariant } from '../../dropdown-panel/dropdown-panel.types';
+import { ArdFormFieldFramePrefixSuffix } from '../../form-field-frame';
 import { Nullable } from '../../types/utility.types';
 import { _SimpleInputComponentDefaults, _simpleInputComponentDefaults } from '../_simple-input-base';
 
@@ -11,6 +12,8 @@ export interface ArdAutocompleteInputDefaults extends _SimpleInputComponentDefau
   charlistCaseInsensitive: boolean;
   dropdownAppearance: Nullable<DropdownPanelAppearance>;
   dropdownVariant: Nullable<DropdownPanelVariant>;
+  PrefixComponent?: Type<ArdFormFieldFramePrefixSuffix>;
+  SuffixComponent?: Type<ArdFormFieldFramePrefixSuffix>;
 }
 
 const _inputDefaults: ArdAutocompleteInputDefaults = {
@@ -22,6 +25,8 @@ const _inputDefaults: ArdAutocompleteInputDefaults = {
   charlistCaseInsensitive: false,
   dropdownAppearance: undefined,
   dropdownVariant: undefined,
+  PrefixComponent: undefined,
+  SuffixComponent: undefined,
 };
 
 export const ARD_AUTOCOMPLETE_INPUT_DEFAULTS = new InjectionToken<ArdAutocompleteInputDefaults>('ard-autocomplete-input-defaults', {

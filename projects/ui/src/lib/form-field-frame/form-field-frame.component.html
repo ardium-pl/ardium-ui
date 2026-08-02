@@ -10,6 +10,13 @@
         [ngTemplateOutletContext]="prefixSuffixTemplateContext()"
       />
     </div>
+  } @else if (prefixComponentInput() || prefixComponent) {
+    <div class="ard-form-field-prefix-container">
+      <ng-template
+        [ngComponentOutlet]="prefixComponentInput() ?? prefixComponent ?? null"
+        [ngComponentOutletInputs]="prefixComponentInputs()"
+      />
+    </div>
   }
   <div class="ard-form-field-content-container">
     <ng-content></ng-content>
@@ -19,6 +26,13 @@
       <ng-template
         [ngTemplateOutlet]="suffixTemplateInput() ?? suffixTemplate()?.template ?? null"
         [ngTemplateOutletContext]="prefixSuffixTemplateContext()"
+      />
+    </div>
+  } @else if (suffixComponentInput() || suffixComponent) {
+    <div class="ard-form-field-suffix-container">
+      <ng-template
+        [ngComponentOutlet]="suffixComponentInput() ?? suffixComponent ?? null"
+        [ngComponentOutletInputs]="suffixComponentInputs()"
       />
     </div>
   }

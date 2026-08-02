@@ -102,6 +102,9 @@ export class ArdiumDateRangeInputComponent extends _AbstractDateInput<DateRange,
   readonly prefixTemplate = contentChild(ArdDateRangeInputPrefixTemplateDirective);
   readonly suffixTemplate = contentChild(ArdDateRangeInputSuffixTemplateDirective);
 
+  readonly prefixComponent = this._DEFAULTS.PrefixComponent;
+  readonly suffixComponent = this._DEFAULTS.SuffixComponent;
+
   readonly calendarDaysViewHeaderTemplate = contentChild(ArdDateRangeInputDaysViewHeaderTemplateDirective);
   readonly calendarYearsViewHeaderTemplate = contentChild(ArdDateRangeInputYearsViewHeaderTemplateDirective);
   readonly calendarMonthsViewHeaderTemplate = contentChild(ArdDateRangeInputMonthsViewHeaderTemplateDirective);

@@ -168,6 +168,9 @@ export class ArdiumMultipageDateRangeInputComponent extends _AbstractDateInput<D
   readonly prefixTemplate = contentChild(ArdMultipageDateRangeInputPrefixTemplateDirective);
   readonly suffixTemplate = contentChild(ArdMultipageDateRangeInputSuffixTemplateDirective);
 
+  readonly prefixComponent = this._DEFAULTS.PrefixComponent;
+  readonly suffixComponent = this._DEFAULTS.SuffixComponent;
+
   readonly calendarDaysViewHeaderTemplate = contentChild(ArdMultipageDateRangeInputDaysViewHeaderTemplateDirective);
   readonly calendarYearsViewHeaderTemplate = contentChild(ArdMultipageDateRangeInputYearsViewHeaderTemplateDirective);
   readonly calendarMonthsViewHeaderTemplate = contentChild(ArdMultipageDateRangeInputMonthsViewHeaderTemplateDirective);

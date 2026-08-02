@@ -9,6 +9,8 @@
   [isSuccess]="isSuccess()"
   [prefixTemplate]="prefixTemplate()?.template"
   [suffixTemplate]="suffixTemplate()?.template"
+  [prefixComponent]="prefixComponent"
+  [suffixComponent]="suffixComponent"
   (dragover)="onDragover($event)"
   (dragleave)="onDragleave()"
   (drop)="onDrop($event)"
@@ -19,14 +21,6 @@
     [ngClass]="ngClasses()"
   >
     <div class="ard-input-container">
-      @if (shouldDisplayPlaceholder) {
-        <ng-template #defaultPlaceholderTemplate>
-          <div class="ard-placeholder">{{ placeholder() }}</div>
-        </ng-template>
-
-        <ng-template [ngTemplateOutlet]="placeholderTemplate()?.template || defaultPlaceholderTemplate" />
-      }
-
       <div class="ard-file-input__value">
         @if (currentViewState() === 'idle') {
           <ng-template

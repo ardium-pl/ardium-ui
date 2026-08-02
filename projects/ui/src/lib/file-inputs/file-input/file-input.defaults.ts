@@ -1,4 +1,5 @@
-import { InjectionToken, Provider } from '@angular/core';
+import { InjectionToken, Provider, Type } from '@angular/core';
+import { ArdFormFieldFramePrefixSuffix } from '../../form-field-frame';
 import { _fileInputBaseDefaults, _FileInputBaseDefaults } from '../file-input-base.defaults';
 import { ComponentColor } from './../../types/colors.types';
 import { FormElementAppearance, FormElementVariant } from './../../types/theming.types';
@@ -8,9 +9,10 @@ export interface ArdFileInputDefaults extends _FileInputBaseDefaults {
   variant: FormElementVariant;
   color: ComponentColor;
   inputAttrs: Record<string, any>;
-  placeholder: string;
   clearable: boolean;
   clearButtonTitle: string;
+  PrefixComponent?: Type<ArdFormFieldFramePrefixSuffix>;
+  SuffixComponent?: Type<ArdFormFieldFramePrefixSuffix>;
 }
 
 const _fileInputDefaults: ArdFileInputDefaults = {
@@ -19,9 +21,10 @@ const _fileInputDefaults: ArdFileInputDefaults = {
   variant: FormElementVariant.Rounded,
   color: ComponentColor.Primary,
   inputAttrs: {},
-  placeholder: '',
   clearable: false,
   clearButtonTitle: 'Clear',
+  PrefixComponent: undefined,
+  SuffixComponent: undefined,
 };
 
 export const ARD_FILE_INPUT_DEFAULTS = new InjectionToken<ArdFileInputDefaults>('ard-file-input-defaults', {

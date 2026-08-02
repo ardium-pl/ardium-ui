@@ -1,14 +1,15 @@
-import { InjectionToken, Provider } from '@angular/core';
+import { InjectionToken, Provider, Type } from '@angular/core';
 import { _FormFieldComponentDefaults, _formFieldComponentDefaults } from '../../_internal/form-field-component';
 import { ArdCalendarFilterFn, ArdCalendarView, PartialDateRange } from '../../calendar/calendar.types';
 import { DropdownPanelAppearance, DropdownPanelVariant } from '../../dropdown-panel';
+import { ArdFormFieldFramePrefixSuffix } from '../../form-field-frame';
 import { ComponentColor } from '../../types/colors.types';
 import { FormElementAppearance, FormElementVariant } from '../../types/theming.types';
 import { Nullable } from '../../types/utility.types';
 import {
-  DEFAULT_DATE_INPUT_DESERIALIZE_FN,
-  DEFAULT_DATE_INPUT_SERIALIZE_FN,
-  DEFAULT_DATE_RANGE_INPUT_SERIALIZE_FN,
+    DEFAULT_DATE_INPUT_DESERIALIZE_FN,
+    DEFAULT_DATE_INPUT_SERIALIZE_FN,
+    DEFAULT_DATE_RANGE_INPUT_SERIALIZE_FN,
 } from './date-input.serializers';
 import { ArdDateInputDeserializeFn, ArdDateInputMinMaxStrategy, ArdDateInputSerializeFn } from './date-input.types';
 
@@ -54,6 +55,8 @@ export interface ArdDateInputDefaults extends _FormFieldComponentDefaults {
   calendarDayDateFormat: string;
   acceptButtonText: string;
   cancelButtonText: string;
+  PrefixComponent?: Type<ArdFormFieldFramePrefixSuffix>;
+  SuffixComponent?: Type<ArdFormFieldFramePrefixSuffix>;
 }
 
 const _dateInputDefaults: ArdDateInputDefaults = {
@@ -99,6 +102,8 @@ const _dateInputDefaults: ArdDateInputDefaults = {
   calendarDayDateFormat: 'd',
   acceptButtonText: 'Accept',
   cancelButtonText: 'Cancel',
+  PrefixComponent: undefined,
+  SuffixComponent: undefined,
 };
 
 export const ARD_DATE_INPUT_DEFAULTS = new InjectionToken<ArdDateInputDefaults>('ard-date-input-defaults', {

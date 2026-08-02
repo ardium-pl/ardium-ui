@@ -1,4 +1,4 @@
-
+import { TemplateComponent } from '../types/utility.types';
 
 export interface FormFieldFrameTemplateContext {
   hasError: boolean;
@@ -7,3 +7,5 @@ export interface FormFieldFrameTemplateContext {
   isSuccess: boolean;
   isFocused: boolean;
 }
+
+export interface ArdFormFieldFramePrefixSuffix extends TemplateComponent<FormFieldFrameTemplateContext> {}

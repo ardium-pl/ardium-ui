@@ -410,6 +410,9 @@ export class ArdiumSelectComponent
   readonly prefixTemplate = contentChild(ArdSelectPrefixTemplateDirective);
   readonly suffixTemplate = contentChild(ArdSelectSuffixTemplateDirective);
 
+  readonly prefixComponent = this._DEFAULTS.PrefixComponent;
+  readonly suffixComponent = this._DEFAULTS.SuffixComponent;
+
   //! context providers
   readonly optionContextGenerator = computed<(item: ArdOption) => OptionContext<ArdOption>>(() => item => ({
     $implicit: item,

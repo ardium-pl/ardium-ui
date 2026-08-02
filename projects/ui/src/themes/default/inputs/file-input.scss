@@ -25,8 +25,6 @@
     // --ard-file-input-padding-bottom-compact: ;
     // --ard-file-input-padding-left-compact: ;
     // --ard-file-input-color: ;
-    // --ard-file-input-placeholder-color: ;
-    --ard-file-input-placeholder-opacity: 60%;
     // --ard-file-input-readonly-cursor: ;
 
     --ard-file-input-min-width: 10rem;
@@ -78,8 +76,8 @@
       var(--ard-file-input-padding-bottom-compact, var(--ard-form-field-padding-bottom-compact, 0)),
       var(--ard-file-input-padding-left-compact, var(--ard-form-field-padding-left-compact, 0.375rem)),
       var(--ard-file-input-color, #{ARD.$text}),
-      var(--ard-file-input-placeholder-color, #{ARD.$text}),
-      var(--ard-file-input-placeholder-opacity, 60%),
+      unset,
+      unset,
       var(--ard-file-input-readonly-cursor, var(--ard-readonly-cursor, default))
     );
     @include CM.typeColors();

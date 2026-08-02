@@ -1,6 +1,7 @@
-import { InjectionToken, Provider } from '@angular/core';
+import { InjectionToken, Provider, Type } from '@angular/core';
 import { _FormFieldComponentDefaults, _formFieldComponentDefaults } from '../_internal/form-field-component';
 import { DropdownPanelAppearance, DropdownPanelVariant } from '../dropdown-panel';
+import { ArdFormFieldFramePrefixSuffix } from '../form-field-frame';
 import { searchFunctions } from '../search-functions';
 import { ArdPanelPosition, CompareWithFn, GroupByFn, SearchFn } from '../types/item-storage.types';
 import { Nullable } from '../types/utility.types';
@@ -54,6 +55,8 @@ export interface ArdSelectDefaults extends _FormFieldComponentDefaults {
   clearable: boolean;
   searchable: boolean;
   addCustom: boolean | AddCustomFn<any> | AddCustomFn<Promise<any>>;
+    PrefixComponent?: Type<ArdFormFieldFramePrefixSuffix>;
+    SuffixComponent?: Type<ArdFormFieldFramePrefixSuffix>;
 }
 
 const _selectDefaults: ArdSelectDefaults = {
@@ -104,6 +107,8 @@ const _selectDefaults: ArdSelectDefaults = {
   clearable: false,
   searchable: false,
   addCustom: false,
+  PrefixComponent: undefined,
+  SuffixComponent: undefined,
 };
 
 export const ARD_SELECT_DEFAULTS = new InjectionToken<ArdSelectDefaults>('ard-select-defaults', {
