@@ -28,6 +28,9 @@
 ### Additions & Changes
 
 - **New Components**
+  - Button Group
+    - For grouping multiple buttons into a single group
+    - Also can be used for spacing multiple button groups
   - Date Range Input & Range Calendar
     - For selecting ranges of two dates, with all features of normal calendar
   - Multipage Date Range Input
@@ -38,6 +41,9 @@
 - Button
   - Added button directive that can be used on a `<button>` or an `<a>` element to add all button functionality
   - Button component now uses the directive internally
+  - Buttons can now be made square using the `[square]` input
+  - Now supports defining aspect ratio via a CSS variable
+  - Now supports defining border style via a CSS variable
 - Checkbox List
   - Allow to customize the checkboxes and labels using respective template directives
 - Checkbox, Selectable Chip, Slide Toggle, Star Button
@@ -98,6 +104,11 @@
   - Added `[(selectedTabId)]` two-way binding
 - Snackbar
   - Added `onAction` observable to the `ArdSnackbarRef`. It emits if the action button is pressed and immediately completes. If the snackbar is closed in any other way, the observable completes without emitting any value.
+  - Added JSDoc comments
+
+### Default Template Components
+
+**All components now support providing a default component for every template in the component.** The default component will override the library default. Custom templates can still be specified for individual use cases.
 
 ### Styling Changes
 
@@ -117,7 +128,11 @@ Other notable changes include:
 - Added `display: block` to almost all components (some use `inline-block` or similar). Only a few components now remain as `inline` because they are usually used within text.
 - Calendar year template context variable shows the previous year due to timezone issues
 - Calendar heading buttons change when the button defaults are provided
-- Some Calendar did not support providing default values
+- Calendar days view was not using UTC in the template
+- Calendar was not applying min/max properly in UTC mode
+- Some Calendar features did not support providing default values
+- Date Input was emitting value changes too early
+- Date Input text-based input was creating local-timezone dates in UTC mode
 - Input, Autocomplete Input, and Hex Input didn't use the native HTML `maxlength` attribute
 - Form Field hints & errors don't to the next line when too long
 - Select dropdown panel goes off the screen when select is positioned very close to the right side of the screen
@@ -139,6 +154,7 @@ Other notable changes include:
 - Number Input doesn't emit its value for Reactive Forms
 - Number Input has zero as its default value, while it should be null
 - Number Input removes leading zeros and trailing decimal separators on every keystroke (should remove only on blur)
+- Number Input was not applying the separator propely, leading to weird behavior when inputing numbers by text
 - Checkbox List items do not have the `ard-item-selected` class when selected
 - Checkbox, Checkbox List, Radio, Selectable Chip, and Slide Toggle components don't emit touched event when changing values - they should emit touched events on every value change for a more intuitive
 - Tabber doesn't set the intial tab correctly
@@ -153,3 +169,4 @@ Other notable changes include:
 - Tabber's tabs accept the disabled attribute, but do not disable the actual tab buttons
 - Some input components use `[inputId]` instead of `[htmlId]` to set the input's id attribute
 - Snackbar's `onClose` and `onCloseStart` always emit `false` and `true` respectively, regardless if the action button was pressed
+- Fixed `readonly` not actually working in most components
