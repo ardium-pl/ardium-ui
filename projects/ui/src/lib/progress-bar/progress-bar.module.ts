@@ -1,11 +1,10 @@
-import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { NgModule } from '@angular/core';
 import { ArdiumProgressBarComponent } from './progress-bar.component';
-import { ArdProgressBarValueTemplateDirective } from './progress-bar.directive';
 
 @NgModule({
-  declarations: [ArdiumProgressBarComponent, ArdProgressBarValueTemplateDirective],
+  declarations: [ArdiumProgressBarComponent],
   imports: [CommonModule],
-  exports: [ArdiumProgressBarComponent, ArdProgressBarValueTemplateDirective],
+  exports: [ArdiumProgressBarComponent],
 })
 export class ArdiumProgressBarModule {}

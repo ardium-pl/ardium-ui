@@ -127,15 +127,6 @@
       }
     }
 
-    //! hiding the value
-    &.ard-progress-bar__size-default,
-    &.ard-progress-bar__hide-value,
-    &.ard-progress-bar__mode-buffer {
-      > .ard-progress-bar__value {
-        display: none;
-      }
-    }
-
     //! currentColor special case
     &.ard-color-currentColor {
       .ard-progress-bar__background {

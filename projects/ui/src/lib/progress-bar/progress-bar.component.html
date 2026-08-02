@@ -7,17 +7,4 @@
   <div class="ard-progress-bar__background"></div>
   <div class="ard-progress-bar__overlay-buffer"></div>
   <div class="ard-progress-bar__overlay"></div>
-  <div class="ard-progress-bar__value">
-    <ng-template
-      #defaultValueTemplate
-      let-value
-    >
-      {{ value * 100 | number: '1.0-0' }}%
-    </ng-template>
-
-    <ng-template
-      [ngTemplateOutlet]="valueTemplate() || defaultValueTemplate"
-      [ngTemplateOutletContext]="getValueContext()"
-    ></ng-template>
-  </div>
 </div>

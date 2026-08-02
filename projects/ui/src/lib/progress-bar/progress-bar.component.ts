@@ -2,18 +2,15 @@ import {
   ChangeDetectionStrategy,
   Component,
   computed,
-  contentChild,
   effect,
   inject,
   input,
-  TemplateRef,
-  ViewEncapsulation,
+  ViewEncapsulation
 } from '@angular/core';
-import { BooleanLike, coerceBooleanProperty, coerceNumberProperty, NumberLike } from '@ardium-ui/devkit';
+import { coerceNumberProperty, NumberLike } from '@ardium-ui/devkit';
 import { SimpleComponentColor } from '../types/colors.types';
 import { ARD_PROGRESS_BAR_DEFAULTS } from './progress-bar.defaults';
-import { ArdProgressBarValueTemplateDirective } from './progress-bar.directive';
-import { ProgressBarMode, ProgressBarSize, ProgressBarValueContext, ProgressBarVariant } from './progress-bar.types';
+import { ProgressBarMode, ProgressBarSize, ProgressBarVariant } from './progress-bar.types';
 
 @Component({
   standalone: false,
@@ -37,15 +34,12 @@ export class ArdiumProgressBarComponent {
   readonly size = input<ProgressBarSize>(this._DEFAULTS.size);
   readonly mode = input<ProgressBarMode>(this._DEFAULTS.mode);
 
-  readonly hideValue = input<boolean, BooleanLike>(this._DEFAULTS.hideValue, { transform: v => coerceBooleanProperty(v) });
-
   readonly ngClasses = computed<string>(() =>
     [
       `ard-variant-${this.variant()}`,
       `ard-color-${this.color()}`,
       `ard-progress-bar__size-${this.size()}`,
       `ard-progress-bar__mode-${this.mode()}`,
-      this.hideValue() ? 'ard-progress-bar__hide-value' : '',
     ].join(' ')
   );
 
@@ -73,12 +67,4 @@ export class ArdiumProgressBarComponent {
     }
     return mainVariable;
   });
-
-  //! templates
-  readonly valueTemplate = contentChild<TemplateRef<ArdProgressBarValueTemplateDirective>>(TemplateRef);
-
-  readonly getValueContext = computed<ProgressBarValueContext>(() => ({
-    value: this.value(),
-    $implicit: this.value(),
-  }));
 }

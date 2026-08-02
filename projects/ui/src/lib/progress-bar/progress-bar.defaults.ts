@@ -9,7 +9,6 @@ export interface ArdProgressBarDefaults {
   variant: ProgressBarVariant;
   size: ProgressBarSize;
   mode: ProgressBarMode;
-  hideValue: boolean;
 }
 
 const _progressBarDefaults: ArdProgressBarDefaults = {
@@ -19,7 +18,6 @@ const _progressBarDefaults: ArdProgressBarDefaults = {
   variant: ProgressBarVariant.Pill,
   size: ProgressBarSize.Default,
   mode: ProgressBarMode.Determinate,
-  hideValue: false,
 };
 
 export const ARD_PROGRESS_BAR_DEFAULTS = new InjectionToken<ArdProgressBarDefaults>('ard-progress-bar-defaults', {

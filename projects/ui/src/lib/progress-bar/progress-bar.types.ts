@@ -1,7 +1,3 @@
-export interface ProgressBarValueContext {
-  value: number;
-  $implicit: number;
-}
 
 export const ProgressBarSize = {
   Default: 'default',
