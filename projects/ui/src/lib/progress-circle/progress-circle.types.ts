@@ -1,3 +1,7 @@
+import { TemplateComponent } from '../types/utility.types';
+
+export interface ArdProgressCircleValueComponent extends TemplateComponent<ProgressCircleValueContext> {}
+
 export interface ProgressCircleValueContext {
   value: number;
   percentValue: number;

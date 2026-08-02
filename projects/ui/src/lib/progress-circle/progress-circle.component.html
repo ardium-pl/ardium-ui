@@ -8,16 +8,23 @@
     [style]="fillPercentVariable()"
   ></div>
   <div class="ard-progress-circle-value">
-    <ng-template
-      #defaultValueTemplate
-      let-percents
-    >
-      {{ percents | number: '1.0-0' }}%
-    </ng-template>
+    @if (valueComponent && !valueTemplate()) {
+      <ng-template
+        [ngComponentOutlet]="valueComponent"
+        [ngComponentOutletInputs]="valueComponentInputs()"
+      />
+    } @else {
+      <ng-template
+        #defaultValueTemplate
+        let-percents
+      >
+        {{ percents | number: '1.0-0' }}%
+      </ng-template>
 
-    <ng-template
-      [ngTemplateOutlet]="valueTemplate() || defaultValueTemplate"
-      [ngTemplateOutletContext]="getValueContext()"
-    ></ng-template>
+      <ng-template
+        [ngTemplateOutlet]="valueTemplate() || defaultValueTemplate"
+        [ngTemplateOutletContext]="getValueContext()"
+      ></ng-template>
+    }
   </div>
 </div>

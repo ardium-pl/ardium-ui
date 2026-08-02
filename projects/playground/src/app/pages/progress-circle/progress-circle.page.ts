@@ -1,5 +1,9 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { ProgressCircleAppearance, ProgressCircleVariant, SimpleComponentColor } from 'projects/ui/src/public-api';
+import {
+  ProgressCircleAppearance,
+  ProgressCircleVariant,
+  SimpleComponentColor
+} from 'projects/ui/src/public-api';
 
 @Component({
   standalone: false,

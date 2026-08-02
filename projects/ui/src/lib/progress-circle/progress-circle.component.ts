@@ -9,6 +9,7 @@ import {
   ViewEncapsulation,
 } from '@angular/core';
 import { BooleanLike, coerceBooleanProperty, coerceNumberProperty, NumberLike } from '@ardium-ui/devkit';
+import { contextToInputs } from '../_internal/utils/context-to-inputs';
 import { SimpleComponentColor } from '../types/colors.types';
 import { ARD_PROGRESS_CIRCLE_DEFAULTS } from './progress-circle.defaults';
 import { ArdProgressCircleValueTemplateDirective } from './progress-circle.directive';
@@ -62,4 +63,7 @@ export class ArdiumProgressCircleComponent {
     max: this.max(),
     $implicit: this.percentValue(),
   }));
+
+  readonly valueComponent = this._DEFAULTS.ValueComponent;
+  readonly valueComponentInputs = contextToInputs(this.getValueContext, this.valueComponent);
 }

@@ -1,6 +1,6 @@
-import { InjectionToken, Provider } from '@angular/core';
+import { InjectionToken, Provider, Type } from '@angular/core';
 import { SimpleComponentColor } from '../types/colors.types';
-import { ProgressCircleAppearance, ProgressCircleVariant } from './progress-circle.types';
+import { ArdProgressCircleValueComponent, ProgressCircleAppearance, ProgressCircleVariant } from './progress-circle.types';
 
 export interface ArdProgressCircleDefaults {
   value: number;
@@ -10,6 +10,7 @@ export interface ArdProgressCircleDefaults {
   variant: ProgressCircleVariant;
   hideValue: boolean;
   reverse: boolean;
+  ValueComponent?: Type<ArdProgressCircleValueComponent>;
 }
 
 const _progressCircleDefaults: ArdProgressCircleDefaults = {
@@ -20,6 +21,7 @@ const _progressCircleDefaults: ArdProgressCircleDefaults = {
   variant: ProgressCircleVariant.Full,
   hideValue: false,
   reverse: false,
+  ValueComponent: undefined,
 };
 
 export const ARD_PROGRESS_CIRCLE_DEFAULTS = new InjectionToken<ArdProgressCircleDefaults>('ard-progress-circle-defaults', {
