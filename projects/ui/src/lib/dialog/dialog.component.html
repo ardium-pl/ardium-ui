@@ -18,48 +18,55 @@
       <ng-content></ng-content>
     </div>
     <div class="ard-dialog-buttons">
-      <ng-template
-        #defaultButtonsTemplate
-        let-confirmButton="confirmButton"
-        let-rejectButton="rejectButton"
-        let-canConfirm="canConfirm"
-        let-allActionsDisabled="allActionsDisabled"
-        let-onConfirm="onConfirm"
-        let-onReject="onReject"
-        let-dialogVariant="dialogVariant"
-        let-dialogCompact="dialogCompact"
-      >
-        <div class="ard-dialog-buttons-container">
-          @if (rejectButton.enabled) {
+      @if (buttonsComponent && !buttonsTemplate()) {
+        <ng-template
+          [ngComponentOutlet]="buttonsComponent"
+          [ngComponentOutletInputs]="buttonsComponentInputs()"
+        />
+      } @else {
+        <ng-template
+          #defaultButtonsTemplate
+          let-confirmButton="confirmButton"
+          let-rejectButton="rejectButton"
+          let-canConfirm="canConfirm"
+          let-allActionsDisabled="allActionsDisabled"
+          let-onConfirm="onConfirm"
+          let-onReject="onReject"
+          let-dialogVariant="dialogVariant"
+          let-dialogCompact="dialogCompact"
+        >
+          <div class="ard-dialog-buttons-container">
+            @if (rejectButton.enabled) {
+              <ard-button
+                [color]="rejectButton.color"
+                [appearance]="rejectButton.appearance"
+                [variant]="dialogVariant"
+                [compact]="dialogCompact"
+                [disabled]="allActionsDisabled"
+                (click)="onReject()"
+              >
+                {{ rejectButton.text }}
+              </ard-button>
+            }
             <ard-button
-              [color]="rejectButton.color"
-              [appearance]="rejectButton.appearance"
+              [color]="confirmButton.color"
+              [appearance]="confirmButton.appearance"
               [variant]="dialogVariant"
               [compact]="dialogCompact"
-              [disabled]="allActionsDisabled"
-              (click)="onReject()"
+              (click)="onConfirm()"
+              [disabled]="!canConfirm || allActionsDisabled"
+              [pointerEventsWhenDisabled]="confirmButton.pointerEventsWhenDisabled"
             >
-              {{ rejectButton.text }}
+              {{ confirmButton.text }}
             </ard-button>
-          }
-          <ard-button
-            [color]="confirmButton.color"
-            [appearance]="confirmButton.appearance"
-            [variant]="dialogVariant"
-            [compact]="dialogCompact"
-            (click)="onConfirm()"
-            [disabled]="!canConfirm || allActionsDisabled"
-            [pointerEventsWhenDisabled]="confirmButton.pointerEventsWhenDisabled"
-          >
-            {{ confirmButton.text }}
-          </ard-button>
-        </div>
-      </ng-template>
+          </div>
+        </ng-template>
 
-      <ng-template
-        [ngTemplateOutlet]="buttonsTemplate()?.template ?? defaultButtonsTemplate"
-        [ngTemplateOutletContext]="getButtonsContext()"
-      />
+        <ng-template
+          [ngTemplateOutlet]="buttonsTemplate()?.template ?? defaultButtonsTemplate"
+          [ngTemplateOutletContext]="getButtonsContext()"
+        />
+      }
     </div>
   </div>
 </ard-modal>

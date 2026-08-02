@@ -1,8 +1,8 @@
-import { InjectionToken, Provider } from '@angular/core';
+import { InjectionToken, Provider, Type } from '@angular/core';
 import { _modalDefaults, ArdModalDefaults } from '../modal/modal.defaults';
 import { ButtonAppearance } from './../buttons/general-button.types';
 import { ComponentColor } from './../types/colors.types';
-import { ArdDialogActionType } from './dialog.types';
+import { ArdDialogActionType, ArdDialogButtonsComponent } from './dialog.types';
 
 export interface ArdDialogDefaults extends ArdModalDefaults {
   confirmButtonText: string;
@@ -14,6 +14,7 @@ export interface ArdDialogDefaults extends ArdModalDefaults {
   noRejectButton: boolean;
   canConfirm: boolean;
   buttonActionType: ArdDialogActionType;
+  ButtonsComponent?: Type<ArdDialogButtonsComponent>;
 }
 
 const _dialogDefaults: ArdDialogDefaults = {
@@ -27,6 +28,7 @@ const _dialogDefaults: ArdDialogDefaults = {
   noRejectButton: false,
   canConfirm: true,
   buttonActionType: ArdDialogActionType.AutoClose,
+  ButtonsComponent: undefined,
 };
 
 export const ARD_DIALOG_DEFAULTS = new InjectionToken<ArdDialogDefaults>('ard-dialog-defaults', {

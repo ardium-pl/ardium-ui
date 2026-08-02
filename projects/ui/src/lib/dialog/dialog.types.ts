@@ -1,6 +1,7 @@
 import { ButtonAppearance } from '../buttons/general-button.types';
 import { ComponentColor } from '../types/colors.types';
 import { PanelAppearance, PanelVariant } from '../types/theming.types';
+import { TemplateComponent } from '../types/utility.types';
 
 export const ArdDialogResult = {
   Confirm: 'confirm',
@@ -36,3 +37,5 @@ export interface DialogButtonsContext {
   dialogVariant: PanelVariant;
   dialogCompact: boolean;
 }
+
+export interface ArdDialogButtonsComponent extends TemplateComponent<DialogButtonsContext> {}

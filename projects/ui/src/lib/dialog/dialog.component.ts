@@ -10,6 +10,7 @@ import {
   output,
 } from '@angular/core';
 import { BooleanLike, coerceBooleanProperty } from '@ardium-ui/devkit';
+import { contextToInputs } from '../_internal/utils/context-to-inputs';
 import { ButtonAppearance } from '../buttons/general-button.types';
 import { ComponentColor } from '../types/colors.types';
 import { PanelAppearance, PanelVariant } from '../types/theming.types';
@@ -150,4 +151,7 @@ export class ArdiumDialogComponent {
       dialogCompact: this.compact(),
     };
   });
+
+  readonly buttonsComponent = this._DEFAULTS.ButtonsComponent;
+  readonly buttonsComponentInputs = contextToInputs(this.getButtonsContext, this.buttonsComponent);
 }
