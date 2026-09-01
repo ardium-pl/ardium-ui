@@ -7,17 +7,29 @@
   // read more in docs/dev/css-variables.md
   :root {
     --ard-checkbox-size: 1.25em;
-    --ard-checkbox-icon-size: 1em;
     --ard-checkbox-icon-size: 1.8em;
     --ard-checkbox-hitbox-offset: -4px;
     --ard-checkbox-overlay-offset: 0.4em;
     --ard-checkbox-unselected-disabled-opacity: 40%;
     --ard-checkbox-indeterminate-disabled-opacity: 50%;
     --ard-checkbox-selected-disabled-opacity: 50%;
+    --ard-checkbox-alignment: center;
+    --ard-checkbox-spacing: 0.375em;
     // --ard-checkbox-base-color: ;
     // --ard-checkbox-readonly-cursor: ;
+    --ard-checkbox-label-font-size: 0.875em;
+    --ard-checkbox-label-font-weight: 400;
+    // --ard-checkbox-label-color: ;
+    --ard-checkbox-label-cursor: pointer;
+    --ard-checkbox-label-disabled-opacity: 50%;
+    --ard-checkbox-label-max-width: 100%;
   }
 
+  ard-checkbox {
+    display: flex;
+    align-items: var(--ard-checkbox-alignment, center);
+    gap: var(--ard-checkbox-spacing, 0.375em);
+  }
   .ard-checkbox {
     @include coloringMixins.typeColors();
     @include coloringMixins.typeColors('unsel-cmpcl');
@@ -68,24 +80,44 @@
       }
     }
   }
-  //! disabled state
-  .ard-disabled > .ard-checkbox {
-    pointer-events: none;
-    opacity: var(--ard-checkbox-unselected-disabled-opacity, 40%);
+  //! label
+  .ard-checkbox__label {
+    min-height: var(--ard-checkbox-size, 1.25em);
+    max-width: var(--ard-checkbox-label-max-width, 100%);
 
-    &.ard-checkbox-selected {
-      opacity: var(--ard-checkbox-selected-disabled-opacity, 50%);
+    .ard-checkbox__label-inner {
+      display: inline-block;
+      font-size: var(--ard-checkbox-label-font-size, 0.875em);
+      font-weight: var(--ard-checkbox-label-font-weight, 400);
+      color: var(--ard-checkbox-label-color, #{ARD.$text2});
+      cursor: var(--ard-checkbox-label-cursor, pointer);
     }
-    &.ard-checkbox-indeterminate {
-      opacity: var(--ard-checkbox-indeterminate-disabled-opacity, 50%);
+  }
+  //! disabled state
+  ard-checkbox.ard-disabled {
+    > .ard-checkbox {
+      pointer-events: none;
+      opacity: var(--ard-checkbox-unselected-disabled-opacity, 40%);
+
+      &.ard-checkbox-selected {
+        opacity: var(--ard-checkbox-selected-disabled-opacity, 50%);
+      }
+      &.ard-checkbox-indeterminate {
+        opacity: var(--ard-checkbox-indeterminate-disabled-opacity, 50%);
+      }
+    }
+    .ard-checkbox__label {
+      opacity: var(--ard-checkbox-label-disabled-opacity, 50%);
     }
   }
   //! readonly state
-  .ard-readonly > .ard-checkbox {
-    cursor: var(--ard-checkbox-readonly-cursor, var(--ard-readonly-cursor, default));
+  ard-checkbox.ard-readonly {
+    > .ard-checkbox {
+      cursor: var(--ard-checkbox-readonly-cursor, var(--ard-readonly-cursor, default));
 
-    .ard-focus-overlay {
-      display: none;
+      .ard-focus-overlay {
+        display: none;
+      }
     }
   }
 }

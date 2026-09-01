@@ -14,5 +14,10 @@ export interface CheckboxTemplateContext {
   state: CheckboxState;
   internalState: CheckboxState;
 }
+export interface CheckboxLabelTemplateContext {
+  $implicit: string;
+  label: string;
+}
 
 export interface ArdCheckboxIcon extends TemplateComponent<CheckboxTemplateContext> {}
+export interface ArdCheckboxLabel extends TemplateComponent<CheckboxLabelTemplateContext> {}

@@ -15,9 +15,9 @@ import { contextToInputs } from '../_internal/utils/context-to-inputs';
 import { SimpleComponentColor } from '../types/colors.types';
 import { _BooleanComponentBase } from './../_internal/boolean-component';
 import { ARD_CHECKBOX_DEFAULTS, ArdCheckboxDefaults } from './checkbox.defaults';
-import { ArdCheckboxTemplateDirective } from './checkbox.directives';
+import { ArdCheckboxLabelTemplateDirective, ArdCheckboxTemplateDirective } from './checkbox.directives';
 import { _CheckboxTemplateRepositoryDirective } from './checkbox.internal-directives';
-import { CheckboxState, CheckboxTemplateContext } from './checkbox.types';
+import { CheckboxLabelTemplateContext, CheckboxState, CheckboxTemplateContext } from './checkbox.types';
 
 @Component({
   standalone: false,
@@ -42,6 +42,12 @@ export class ArdiumCheckboxComponent extends _BooleanComponentBase implements Co
 
   protected readonly _componentId = '100';
   protected readonly _componentName = 'checkbox';
+
+  //! label
+  // string for defining label text, boolean for showing/hiding label, null for no label
+  readonly label = input<string | boolean | null, string | undefined | boolean | null>(null, {
+    transform: v => (v === undefined || v === '' ? true : v),
+  });
 
   //! appearance
   readonly color = input<SimpleComponentColor>(this._DEFAULTS.color);
@@ -87,10 +93,12 @@ export class ArdiumCheckboxComponent extends _BooleanComponentBase implements Co
 
   //! templates
   readonly checkboxIconComponent = this._DEFAULTS.CheckboxIconComponent;
+  readonly labelComponent = this._DEFAULTS.LabelComponent;
 
   readonly templateRepository = contentChild(_CheckboxTemplateRepositoryDirective);
 
   readonly checkboxTemplate = contentChild(ArdCheckboxTemplateDirective);
+  readonly labelTemplate = contentChild(ArdCheckboxLabelTemplateDirective);
 
   readonly checkboxTemplateContext = computed<CheckboxTemplateContext>(() => ({
     $implicit: this.selectedAccountingForReverse(),
@@ -100,4 +108,13 @@ export class ArdiumCheckboxComponent extends _BooleanComponentBase implements Co
     internalState: this.internalState(),
   }));
   readonly checkboxIconInputs = contextToInputs(this.checkboxTemplateContext, this.checkboxIconComponent);
+
+  readonly labelTemplateContext = computed<CheckboxLabelTemplateContext>(() => {
+    const label = this.label();
+    return {
+      $implicit: typeof label === 'string' ? label : '',
+      label: typeof label === 'string' ? label : '',
+    };
+  });
+  readonly labelComponentInputs = contextToInputs(this.labelTemplateContext, this.labelComponent);
 }

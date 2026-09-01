@@ -3,6 +3,10 @@
   <ard-checkbox></ard-checkbox>
 </div>
 <div class="master">
+  <span class="title">Checkbox with label</span>
+  <ard-checkbox label="Checkbox label"></ard-checkbox>
+</div>
+<div class="master">
   <span class="title">Checkbox events</span>
   <ard-checkbox
     (select)="log('select', $event)"
@@ -40,7 +44,7 @@
     />
   </div>
   <div [style]="'font-size: ' + fontsize + 'px'">
-    <ard-checkbox></ard-checkbox>
+    <ard-checkbox label="Checkbox label"></ard-checkbox>
   </div>
 </div>
 <div class="master">

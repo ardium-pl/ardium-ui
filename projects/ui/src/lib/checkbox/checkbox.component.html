@@ -6,6 +6,7 @@
   [attr.name]="htmlName()"
   [attr.aria-checked]="selectedAccountingForReverse()"
   [attr.aria-disabled]="disabled()"
+  [attr.aria-labelledby]="label() ? htmlId() + '-label' : null"
   [tabindex]="tabIndex()"
   [ngClass]="ngClasses()"
   (click)="toggleState()"
@@ -47,3 +48,32 @@
     />
   }
 </button>
+@if (label()) {
+  <div
+    class="ard-checkbox__label"
+    (click)="toggleState()"
+    [attr.id]="htmlId() + '-label'"
+  >
+    <div class="ard-checkbox__label-inner">
+      @if (labelComponent && !labelTemplate()) {
+        <!-- render the component -->
+        <ng-template
+          [ngComponentOutlet]="labelComponent"
+          [ngComponentOutletInputs]="labelComponentInputs()"
+        />
+      } @else {
+        <ng-template
+          #defaultLabelTemplate
+          let-label
+        >
+          {{ label }}
+        </ng-template>
+
+        <ng-template
+          [ngTemplateOutlet]="labelTemplate()?.template ?? defaultLabelTemplate"
+          [ngTemplateOutletContext]="labelTemplateContext()"
+        />
+      }
+    </div>
+  </div>
+}
