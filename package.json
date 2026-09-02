@@ -1,6 +1,5 @@
 {
   "name": "ardium-ui",
-  "version": "3.3.0-alpha.9",
   "scripts": {
     "ng": "ng",
     "start": "ng serve --port=4240 --project=playground",
