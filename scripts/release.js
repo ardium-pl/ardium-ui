@@ -168,7 +168,7 @@ const VERSION_ALIAS_MAP = {
     );
 
     // Publish
-    execSync(`cd dist/ui && npm publish --access public${isAlphaBump ? ' --tag alpha' : ''}`, {
+    execSync(`npm publish ./dist/ui --access public${isAlphaBump ? ' --tag alpha' : ''}`, {
       stdio: 'inherit',
     });
 
