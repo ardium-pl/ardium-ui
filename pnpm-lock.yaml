@@ -35,9 +35,9 @@ importers:
       '@angular/router':
         specifier: ^19.2.15
         version: 19.2.15(@angular/common@19.2.15(@angular/core@19.2.15(rxjs@7.8.1)(zone.js@0.15.1))(rxjs@7.8.1))(@angular/core@19.2.15(rxjs@7.8.1)(zone.js@0.15.1))(@angular/platform-browser@19.2.15(@angular/animations@19.2.15(@angular/common@19.2.15(@angular/core@19.2.15(rxjs@7.8.1)(zone.js@0.15.1))(rxjs@7.8.1))(@angular/core@19.2.15(rxjs@7.8.1)(zone.js@0.15.1)))(@angular/common@19.2.15(@angular/core@19.2.15(rxjs@7.8.1)(zone.js@0.15.1))(rxjs@7.8.1))(@angular/core@19.2.15(rxjs@7.8.1)(zone.js@0.15.1)))(rxjs@7.8.1)
-      '@ardium-ui/devkit':
-        specifier: 8.3.0
-        version: 8.3.0(@angular/common@19.2.15(@angular/core@19.2.15(rxjs@7.8.1)(zone.js@0.15.1))(rxjs@7.8.1))(@angular/core@19.2.15(rxjs@7.8.1)(zone.js@0.15.1))(@angular/platform-browser@19.2.15(@angular/animations@19.2.15(@angular/common@19.2.15(@angular/core@19.2.15(rxjs@7.8.1)(zone.js@0.15.1))(rxjs@7.8.1))(@angular/core@19.2.15(rxjs@7.8.1)(zone.js@0.15.1)))(@angular/common@19.2.15(@angular/core@19.2.15(rxjs@7.8.1)(zone.js@0.15.1))(rxjs@7.8.1))(@angular/core@19.2.15(rxjs@7.8.1)(zone.js@0.15.1)))
+      '@ardium-pl/devkit':
+        specifier: ^8.3.3
+        version: 8.3.3(@angular/common@19.2.15(@angular/core@19.2.15(rxjs@7.8.1)(zone.js@0.15.1))(rxjs@7.8.1))(@angular/core@19.2.15(rxjs@7.8.1)(zone.js@0.15.1))(@angular/platform-browser@19.2.15(@angular/animations@19.2.15(@angular/common@19.2.15(@angular/core@19.2.15(rxjs@7.8.1)(zone.js@0.15.1))(rxjs@7.8.1))(@angular/core@19.2.15(rxjs@7.8.1)(zone.js@0.15.1)))(@angular/common@19.2.15(@angular/core@19.2.15(rxjs@7.8.1)(zone.js@0.15.1))(rxjs@7.8.1))(@angular/core@19.2.15(rxjs@7.8.1)(zone.js@0.15.1)))
       first-last:
         specifier: ^1.1.1
         version: 1.1.1
@@ -365,8 +365,8 @@ packages:
       '@angular/platform-browser': 19.2.15
       rxjs: ^6.5.3 || ^7.4.0
 
-  '@ardium-ui/devkit@8.3.0':
-    resolution: {integrity: sha512-ea14Xd5um64fdtX9PZ6LGakRwjvCdCYZifCVP4uaHLG43CNEAdM1TdzJzaDrVJ7bU+namx/Ge7znK+Zp2AbTGw==}
+  '@ardium-pl/devkit@8.3.3':
+    resolution: {integrity: sha512-Ej5a6ceM/h+b6FkMXvUunobVLz0M4ad0m2779L5z4TTI95bbBroEPYLOMJMb2af5hEw3MJOkYkVnvxloVm+YRQ==}
     peerDependencies:
       '@angular/common': '>=19.0.0'
       '@angular/core': '>=19.0.0'
@@ -4898,9 +4898,6 @@ packages:
     resolution: {integrity: sha512-ZpzWAFHIFqyFE56dXqgX/DkDRZdz+rRcjoIk/RQU4IX0wiCv1l8S7ZrXDHcCc+uaf+6o7w3h2l3g6GYG5TKN9Q==}
     engines: {node: ^18.17.0 || >=20.5.0}
 
-  simple-bool@3.1.0:
-    resolution: {integrity: sha512-pQYhhdmATwTPoEUcKfydGF+NtHtWZVkBWu0CIKKeO+M6xR9AiICD77V0MYmCPqasvxLKwOPxs/USaS5uCn8wnA==}
-
   simple-bool@4.1.1:
     resolution: {integrity: sha512-+u+EHex2s5l+zFCwVOyxc+YScK1xOTH1ciT0tWlqnJ0BLTp9HdsW8cnfeD0M35dexizFSG1VxRqxYfmtUm1wIg==}
 
@@ -5838,7 +5835,7 @@ snapshots:
       rxjs: 7.8.1
       tslib: 2.8.1
 
-  '@ardium-ui/devkit@8.3.0(@angular/common@19.2.15(@angular/core@19.2.15(rxjs@7.8.1)(zone.js@0.15.1))(rxjs@7.8.1))(@angular/core@19.2.15(rxjs@7.8.1)(zone.js@0.15.1))(@angular/platform-browser@19.2.15(@angular/animations@19.2.15(@angular/common@19.2.15(@angular/core@19.2.15(rxjs@7.8.1)(zone.js@0.15.1))(rxjs@7.8.1))(@angular/core@19.2.15(rxjs@7.8.1)(zone.js@0.15.1)))(@angular/common@19.2.15(@angular/core@19.2.15(rxjs@7.8.1)(zone.js@0.15.1))(rxjs@7.8.1))(@angular/core@19.2.15(rxjs@7.8.1)(zone.js@0.15.1)))':
+  '@ardium-pl/devkit@8.3.3(@angular/common@19.2.15(@angular/core@19.2.15(rxjs@7.8.1)(zone.js@0.15.1))(rxjs@7.8.1))(@angular/core@19.2.15(rxjs@7.8.1)(zone.js@0.15.1))(@angular/platform-browser@19.2.15(@angular/animations@19.2.15(@angular/common@19.2.15(@angular/core@19.2.15(rxjs@7.8.1)(zone.js@0.15.1))(rxjs@7.8.1))(@angular/core@19.2.15(rxjs@7.8.1)(zone.js@0.15.1)))(@angular/common@19.2.15(@angular/core@19.2.15(rxjs@7.8.1)(zone.js@0.15.1))(rxjs@7.8.1))(@angular/core@19.2.15(rxjs@7.8.1)(zone.js@0.15.1)))':
     dependencies:
       '@angular/common': 19.2.15(@angular/core@19.2.15(rxjs@7.8.1)(zone.js@0.15.1))(rxjs@7.8.1)
       '@angular/core': 19.2.15(rxjs@7.8.1)(zone.js@0.15.1)
@@ -5847,7 +5844,7 @@ snapshots:
       key-display-names: 1.3.0
       lodash: 4.17.23
       more-rounding: 4.2.2
-      simple-bool: 3.1.0
+      simple-bool: 4.1.1
       tslib: 2.8.1
 
   '@babel/code-frame@7.26.2':
@@ -10634,8 +10631,6 @@ snapshots:
       '@sigstore/verify': 2.1.1
     transitivePeerDependencies:
       - supports-color
-
-  simple-bool@3.1.0: {}
 
   simple-bool@4.1.1: {}
 

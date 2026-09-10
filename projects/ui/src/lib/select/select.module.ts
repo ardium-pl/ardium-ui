@@ -4,24 +4,24 @@ import { ArdiumDropdownPanelModule } from '../dropdown-panel/dropdown-panel.modu
 import { ArdiumChipModule } from './../chip/chip.module';
 import { ArdiumSelectComponent } from './select.component';
 import {
-  ArdAddCustomTemplateDirective,
-  ArdDropdownFooterTemplateDirective,
-  ArdDropdownHeaderTemplateDirective,
-  ArdItemDisplayLimitTemplateDirective,
-  ArdItemLimitReachedTemplateDirective,
-  ArdLoadingPlaceholderTemplateDirective,
-  ArdLoadingSpinnerTemplateDirective,
-  ArdNoItemsFoundTemplateDirective,
-  ArdOptgroupTemplateDirective,
-  ArdOptionTemplateDirective,
-  ArdSelectDropdownArrowTemplateDirective,
-  ArdSelectPlaceholderTemplateDirective,
-  ArdSelectPrefixTemplateDirective,
-  ArdSelectSuffixTemplateDirective,
-  ArdValueTemplateDirective,
+    ArdAddCustomTemplateDirective,
+    ArdDropdownFooterTemplateDirective,
+    ArdDropdownHeaderTemplateDirective,
+    ArdItemDisplayLimitTemplateDirective,
+    ArdItemLimitReachedTemplateDirective,
+    ArdLoadingPlaceholderTemplateDirective,
+    ArdLoadingSpinnerTemplateDirective,
+    ArdNoItemsFoundTemplateDirective,
+    ArdOptgroupTemplateDirective,
+    ArdOptionTemplateDirective,
+    ArdSelectDropdownArrowTemplateDirective,
+    ArdSelectPlaceholderTemplateDirective,
+    ArdSelectPrefixTemplateDirective,
+    ArdSelectSuffixTemplateDirective,
+    ArdValueTemplateDirective,
 } from './select.directive';
 
-import { ArdiumClickOutsideModule, ArdiumEscapeHTMLModule } from '@ardium-ui/devkit';
+import { ArdiumClickOutsideModule, ArdiumEscapeHTMLModule } from '@ardium-pl/devkit';
 import { ArdiumFormFieldFrameModule } from '../form-field-frame/form-field-frame.module';
 import { _ClearButtonModule } from './../_internal/clear-button/clear-button.module';
 

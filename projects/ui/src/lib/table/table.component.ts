@@ -1,21 +1,21 @@
 import {
-  AfterContentInit,
-  ChangeDetectionStrategy,
-  Component,
-  computed,
-  contentChild,
-  contentChildren,
-  Inject,
-  Input,
-  input,
-  model,
-  OnChanges,
-  output,
-  SimpleChanges,
-  TemplateRef,
-  ViewEncapsulation,
+    AfterContentInit,
+    ChangeDetectionStrategy,
+    Component,
+    computed,
+    contentChild,
+    contentChildren,
+    Inject,
+    Input,
+    input,
+    model,
+    OnChanges,
+    output,
+    SimpleChanges,
+    TemplateRef,
+    ViewEncapsulation,
 } from '@angular/core';
-import { BooleanLike, coerceBooleanProperty, coerceNumberProperty, NumberLike } from '@ardium-ui/devkit';
+import { BooleanLike, coerceBooleanProperty, coerceNumberProperty, NumberLike } from '@ardium-pl/devkit';
 import { isDefined, isNumber } from 'simple-bool';
 import { _FocusableComponentBase } from '../_internal/focusable-component';
 import { CheckboxState } from '../checkbox/checkbox.types';
@@ -26,23 +26,23 @@ import { Nullable } from '../types/utility.types';
 import { ArdTableRow, HeaderCell, TableItemStorage, TableItemStorageHost } from './table-item-storage';
 import { ARD_TABLE_DEFAULTS, ArdTableDefaults } from './table.defaults';
 import {
-  ArdiumTableCaptionTemplateDirective,
-  ArdiumTableCheckboxTemplateDirective,
-  ArdiumTableHeaderCheckboxTemplateDirective,
-  ArdiumTableTemplateDirective,
+    ArdiumTableCaptionTemplateDirective,
+    ArdiumTableCheckboxTemplateDirective,
+    ArdiumTableHeaderCheckboxTemplateDirective,
+    ArdiumTableTemplateDirective,
 } from './table.directives';
 import {
-  TableAlignType,
-  TableAppearance,
-  TableCaptionContext,
-  TableCheckboxContext,
-  TableDataColumn,
-  TableHeaderCheckboxContext,
-  TableHeaderContext,
-  TablePaginationStrategy,
-  TableSubheader,
-  TableSubheaderContext,
-  TableVariant,
+    TableAlignType,
+    TableAppearance,
+    TableCaptionContext,
+    TableCheckboxContext,
+    TableDataColumn,
+    TableHeaderCheckboxContext,
+    TableHeaderContext,
+    TablePaginationStrategy,
+    TableSubheader,
+    TableSubheaderContext,
+    TableVariant,
 } from './table.types';
 import { isTableSubheader } from './utils';
 

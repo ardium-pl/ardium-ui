@@ -1,5 +1,5 @@
 import { computed, contentChild, contentChildren, Directive, inject, input } from '@angular/core';
-import { BooleanLike, coerceBooleanProperty } from '@ardium-ui/devkit';
+import { BooleanLike, coerceBooleanProperty } from '@ardium-pl/devkit';
 import { isFunction } from 'simple-bool';
 import { SimpleOneAxisAlignment } from '../types/alignment.types';
 import { ArdiumAutoErrorComponent } from './auto-error/auto-error.component';

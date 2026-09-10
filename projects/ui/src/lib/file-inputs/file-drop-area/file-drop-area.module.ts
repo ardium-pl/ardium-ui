@@ -1,16 +1,16 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import {
-  ArdiumClickOutsideModule,
-  ArdiumFilePipesModule
-} from '@ardium-ui/devkit';
+    ArdiumClickOutsideModule,
+    ArdiumFilePipesModule
+} from '@ardium-pl/devkit';
 import { ArdiumButtonModule } from '../../buttons/button/button.module';
 import { ArdiumIconModule } from '../../icon/icon.module';
 import { ArdiumFileDropAreaComponent } from './file-drop-area.component';
 import {
-  ArdiumFileDropAreaDragoverContentTemplateDirective,
-  ArdiumFileDropAreaIdleContentTemplateDirective,
-  ArdiumFileDropAreaUploadedContentTemplateDirective,
+    ArdiumFileDropAreaDragoverContentTemplateDirective,
+    ArdiumFileDropAreaIdleContentTemplateDirective,
+    ArdiumFileDropAreaUploadedContentTemplateDirective,
 } from './file-drop-area.directives';
 
 @NgModule({

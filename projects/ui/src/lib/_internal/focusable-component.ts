@@ -1,5 +1,5 @@
 import { computed, Directive, ElementRef, input, output, QueryList, signal, ViewChildren } from '@angular/core';
-import { coerceNumberProperty, NumberLike } from '@ardium-ui/devkit';
+import { coerceNumberProperty, NumberLike } from '@ardium-pl/devkit';
 import { _DisablableComponentBase, _disablableComponentDefaults, _DisablableComponentDefaults } from './disablable-component';
 
 export interface _FocusableComponentDefaults extends _DisablableComponentDefaults {

@@ -1,25 +1,25 @@
 import { AutofillMonitor } from '@angular/cdk/text-field';
 import {
-  AfterViewInit,
-  ChangeDetectionStrategy,
-  Component,
-  ElementRef,
-  Inject,
-  Input,
-  OnDestroy,
-  OnInit,
-  ViewEncapsulation,
-  computed,
-  effect,
-  forwardRef,
-  inject,
-  input,
-  output,
-  signal,
-  viewChildren,
+    AfterViewInit,
+    ChangeDetectionStrategy,
+    Component,
+    ElementRef,
+    Inject,
+    Input,
+    OnDestroy,
+    OnInit,
+    ViewEncapsulation,
+    computed,
+    effect,
+    forwardRef,
+    inject,
+    input,
+    output,
+    signal,
+    viewChildren,
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
-import { BooleanLike, coerceBooleanProperty } from '@ardium-ui/devkit';
+import { BooleanLike, coerceBooleanProperty } from '@ardium-pl/devkit';
 import { Subscription } from 'rxjs';
 import { _FormFieldComponentBase } from '../../_internal/form-field-component';
 import { ARD_FORM_FIELD_CONTROL } from '../../form-field/form-field-child.token';

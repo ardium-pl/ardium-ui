@@ -1,5 +1,5 @@
 import { computed, Directive, input, Signal } from '@angular/core';
-import { BooleanLike, coerceBooleanProperty, coerceNumberProperty, NumberLike } from '@ardium-ui/devkit';
+import { BooleanLike, coerceBooleanProperty, coerceNumberProperty, NumberLike } from '@ardium-pl/devkit';
 import { ButtonType } from '../types/button.types';
 import { ComponentColor } from '../types/colors.types';
 import { _ButtonBaseDefaults } from './_button-base.defaults';

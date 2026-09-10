@@ -1,17 +1,17 @@
 import {
-  ChangeDetectorRef,
-  Directive,
-  HostBinding,
-  HostListener,
-  Input,
-  computed,
-  inject,
-  input,
-  output,
-  signal,
+    ChangeDetectorRef,
+    Directive,
+    HostBinding,
+    HostListener,
+    Input,
+    computed,
+    inject,
+    input,
+    output,
+    signal,
 } from '@angular/core';
 import { ControlValueAccessor } from '@angular/forms';
-import { BooleanLike, coerceArrayProperty, coerceBooleanProperty, coerceNumberProperty } from '@ardium-ui/devkit';
+import { BooleanLike, coerceArrayProperty, coerceBooleanProperty, coerceNumberProperty } from '@ardium-pl/devkit';
 import { ArdFormFieldControl } from '../form-field/form-field-child.token';
 import { ArdOptionSimple, CompareWithFn, OptionContext } from '../types/item-storage.types';
 import { Nullable } from '../types/utility.types';

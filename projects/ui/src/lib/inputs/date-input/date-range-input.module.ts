@@ -1,6 +1,6 @@
 import { CommonModule, DATE_PIPE_DEFAULT_OPTIONS } from '@angular/common';
 import { NgModule } from '@angular/core';
-import { ArdiumClickOutsideModule } from '@ardium-ui/devkit';
+import { ArdiumClickOutsideModule } from '@ardium-pl/devkit';
 import { ArdiumButtonModule } from '../../buttons/button';
 import { ArdiumIconButtonModule } from '../../buttons/icon-button';
 import { ArdiumRangeCalendarModule } from '../../calendar';
@@ -10,19 +10,19 @@ import { ArdiumFormFieldFrameModule } from '../../form-field-frame/form-field-fr
 import { ArdiumIconModule } from '../../icon';
 import { ArdiumDateRangeInputComponent } from './date-range-input.component';
 import {
-  ArdDateRangeInputAcceptButtonsTemplateDirective,
-  ArdDateRangeInputCalendarIconTemplateDirective,
-  ArdDateRangeInputDaysViewHeaderTemplateDirective,
-  ArdDateRangeInputDayTemplateDirective,
-  ArdDateRangeInputFloatingMonthTemplateDirective,
-  ArdDateRangeInputMonthsViewHeaderTemplateDirective,
-  ArdDateRangeInputMonthTemplateDirective,
-  ArdDateRangeInputPrefixTemplateDirective,
-  ArdDateRangeInputSuffixTemplateDirective,
-  ArdDateRangeInputValueTemplateDirective,
-  ArdDateRangeInputWeekdayTemplateDirective,
-  ArdDateRangeInputYearsViewHeaderTemplateDirective,
-  ArdDateRangeInputYearTemplateDirective,
+    ArdDateRangeInputAcceptButtonsTemplateDirective,
+    ArdDateRangeInputCalendarIconTemplateDirective,
+    ArdDateRangeInputDaysViewHeaderTemplateDirective,
+    ArdDateRangeInputDayTemplateDirective,
+    ArdDateRangeInputFloatingMonthTemplateDirective,
+    ArdDateRangeInputMonthsViewHeaderTemplateDirective,
+    ArdDateRangeInputMonthTemplateDirective,
+    ArdDateRangeInputPrefixTemplateDirective,
+    ArdDateRangeInputSuffixTemplateDirective,
+    ArdDateRangeInputValueTemplateDirective,
+    ArdDateRangeInputWeekdayTemplateDirective,
+    ArdDateRangeInputYearsViewHeaderTemplateDirective,
+    ArdDateRangeInputYearTemplateDirective,
 } from './date-range-input.directives';
 
 @NgModule({

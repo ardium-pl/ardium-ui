@@ -1,18 +1,18 @@
 import {
-  ChangeDetectionStrategy,
-  ChangeDetectorRef,
-  Component,
-  HostBinding,
-  Inject,
-  Input,
-  ViewEncapsulation,
-  computed,
-  inject,
-  input,
-  output,
-  signal,
+    ChangeDetectionStrategy,
+    ChangeDetectorRef,
+    Component,
+    HostBinding,
+    Inject,
+    Input,
+    ViewEncapsulation,
+    computed,
+    inject,
+    input,
+    output,
+    signal,
 } from '@angular/core';
-import { coerceBooleanProperty } from '@ardium-ui/devkit';
+import { coerceBooleanProperty } from '@ardium-pl/devkit';
 import { TakeChance as Random } from 'take-chance';
 import { _FocusableComponentBase } from '../../_internal/focusable-component';
 import { SimpleComponentColor } from '../../types/colors.types';

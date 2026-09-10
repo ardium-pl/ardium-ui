@@ -1,15 +1,15 @@
 import {
-  ChangeDetectionStrategy,
-  Component,
-  computed,
-  HostListener,
-  Inject,
-  input,
-  OnInit,
-  signal,
-  ViewEncapsulation,
+    ChangeDetectionStrategy,
+    Component,
+    computed,
+    HostListener,
+    Inject,
+    input,
+    OnInit,
+    signal,
+    ViewEncapsulation,
 } from '@angular/core';
-import { coerceNumberProperty, NumberLike } from '@ardium-ui/devkit';
+import { coerceNumberProperty, NumberLike } from '@ardium-pl/devkit';
 import { roundToPrecision } from 'more-rounding';
 import { isNumber, isObject } from 'simple-bool';
 import { _AbstractSlider } from '../abstract-slider';

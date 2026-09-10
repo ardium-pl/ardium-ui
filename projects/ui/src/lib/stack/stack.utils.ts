@@ -1,4 +1,4 @@
-import { coerceArrayProperty } from '@ardium-ui/devkit';
+import { coerceArrayProperty } from '@ardium-pl/devkit';
 import { isNumber, isObject } from 'simple-bool';
 import { ArdBreakpointsConfig } from './../breakpoints/breakpoints';
 

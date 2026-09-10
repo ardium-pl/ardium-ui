@@ -1,5 +1,5 @@
 import { computed, Directive, effect, ElementRef, inject, Inject, input, Renderer2, signal, SimpleChanges } from '@angular/core';
-import { BooleanLike, coerceBooleanProperty } from '@ardium-ui/devkit';
+import { BooleanLike, coerceBooleanProperty } from '@ardium-pl/devkit';
 import { _ButtonBase } from '../_button-base';
 import { ButtonVariant } from '../general-button.types';
 import { ARD_BUTTON_DEFAULTS, ArdButtonDefaults } from './button.defaults';

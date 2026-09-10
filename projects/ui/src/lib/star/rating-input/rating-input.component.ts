@@ -1,21 +1,21 @@
 import {
-  ChangeDetectionStrategy,
-  Component,
-  computed,
-  contentChild,
-  effect,
-  forwardRef,
-  HostListener,
-  Inject,
-  input,
-  model,
-  output,
-  signal,
-  viewChildren,
-  ViewEncapsulation,
+    ChangeDetectionStrategy,
+    Component,
+    computed,
+    contentChild,
+    effect,
+    forwardRef,
+    HostListener,
+    Inject,
+    input,
+    model,
+    output,
+    signal,
+    viewChildren,
+    ViewEncapsulation,
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
-import { coerceNumberProperty, NumberLike } from '@ardium-ui/devkit';
+import { coerceNumberProperty, NumberLike } from '@ardium-pl/devkit';
 import { _FormFieldComponentBase } from '../../_internal/form-field-component';
 import { ArdFormFieldControl } from '../../form-field';
 import { ArdiumStarButtonComponent } from '../star-button/star-button.component';

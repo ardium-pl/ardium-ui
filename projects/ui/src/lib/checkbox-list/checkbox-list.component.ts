@@ -1,18 +1,18 @@
 import {
-  AfterViewInit,
-  ChangeDetectionStrategy,
-  Component,
-  computed,
-  contentChild,
-  HostBinding,
-  Inject,
-  Input,
-  input,
-  output,
-  signal,
-  ViewEncapsulation,
+    AfterViewInit,
+    ChangeDetectionStrategy,
+    Component,
+    computed,
+    contentChild,
+    HostBinding,
+    Inject,
+    Input,
+    input,
+    output,
+    signal,
+    ViewEncapsulation,
 } from '@angular/core';
-import { BooleanLike, coerceBooleanProperty, coerceNumberProperty, NumberLike } from '@ardium-ui/devkit';
+import { BooleanLike, coerceBooleanProperty, coerceNumberProperty, NumberLike } from '@ardium-pl/devkit';
 import { SimpleItemStorage, SimpleItemStorageHost } from '../_internal/item-storages/simple-item-storage';
 import { _NgModelComponentBase } from '../_internal/ngmodel-component';
 import { contextToInputsMultiple } from '../_internal/utils/context-to-inputs';

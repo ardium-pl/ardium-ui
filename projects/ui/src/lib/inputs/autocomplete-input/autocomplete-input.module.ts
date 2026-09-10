@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
-import { ArdiumClickOutsideModule } from '@ardium-ui/devkit';
+import { ArdiumClickOutsideModule } from '@ardium-pl/devkit';
 import { _ClearButtonModule } from '../../_internal/clear-button/clear-button.module';
 import { ArdiumDropdownPanelModule } from '../../dropdown-panel/dropdown-panel.module';
 import { ArdiumFormFieldFrameModule } from '../../form-field-frame/form-field-frame.module';

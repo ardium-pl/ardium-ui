@@ -1,5 +1,5 @@
 import { computed, Directive, inject, input } from '@angular/core';
-import { BooleanLike, coerceBooleanProperty } from '@ardium-ui/devkit';
+import { BooleanLike, coerceBooleanProperty } from '@ardium-pl/devkit';
 import { OneAxisAlignmentOrientational } from '../types/alignment.types';
 import { ARD_DIVIDER_DEFAULTS } from './divider.defaults';
 import { ArdDividerVariant } from './divider.types';

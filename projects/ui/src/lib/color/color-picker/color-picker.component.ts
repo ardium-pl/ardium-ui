@@ -1,37 +1,37 @@
 import {
-  ChangeDetectionStrategy,
-  Component,
-  ContentChild,
-  ElementRef,
-  HostListener,
-  Input,
-  OnChanges,
-  OnInit,
-  SimpleChanges,
-  TemplateRef,
-  ViewEncapsulation,
-  computed,
-  input,
-  model,
-  output,
-  signal,
-  viewChild,
+    ChangeDetectionStrategy,
+    Component,
+    ContentChild,
+    ElementRef,
+    HostListener,
+    Input,
+    OnChanges,
+    OnInit,
+    SimpleChanges,
+    TemplateRef,
+    ViewEncapsulation,
+    computed,
+    input,
+    model,
+    output,
+    signal,
+    viewChild,
 } from '@angular/core';
-import { BooleanLike, coerceBooleanProperty, coerceNumberProperty, getEventRelativePos } from '@ardium-ui/devkit';
+import { BooleanLike, coerceBooleanProperty, coerceNumberProperty, getEventRelativePos } from '@ardium-pl/devkit';
 import * as Color from 'color';
 import { round, roundToMultiple, roundToPrecision } from 'more-rounding';
 import { _NgModelComponentBase, _ngModelComponentDefaults } from '../../_internal/ngmodel-component';
 import {
-  ArdColorPickerColorReferenceTemplateDirective,
-  ArdColorPickerHueIndicatorTemplateDirective,
-  ArdColorPickerOpacityIndicatorTemplateDirective,
-  ArdColorPickerShadeIndicatorTemplateDirective,
+    ArdColorPickerColorReferenceTemplateDirective,
+    ArdColorPickerHueIndicatorTemplateDirective,
+    ArdColorPickerOpacityIndicatorTemplateDirective,
+    ArdColorPickerShadeIndicatorTemplateDirective,
 } from './color-picker.directives';
 import {
-  ColorPickerColorReferenceContext,
-  ColorPickerIndicatorContext,
-  ColorPickerVariant,
-  _ColorPickerInputsSectionType,
+    ColorPickerColorReferenceContext,
+    ColorPickerIndicatorContext,
+    ColorPickerVariant,
+    _ColorPickerInputsSectionType,
 } from './color-picker.types';
 
 const validHexColorRegex = /^#[0-9a-f]{3}(?:[0-9a-f]{3})?$/i;

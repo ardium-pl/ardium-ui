@@ -1,21 +1,21 @@
 import {
-  AfterContentInit,
-  ChangeDetectionStrategy,
-  Component,
-  OnChanges,
-  SimpleChanges,
-  TemplateRef,
-  ViewEncapsulation,
-  computed,
-  contentChild,
-  contentChildren,
-  inject,
-  input,
-  model,
-  output,
-  signal,
+    AfterContentInit,
+    ChangeDetectionStrategy,
+    Component,
+    OnChanges,
+    SimpleChanges,
+    TemplateRef,
+    ViewEncapsulation,
+    computed,
+    contentChild,
+    contentChildren,
+    inject,
+    input,
+    model,
+    output,
+    signal,
 } from '@angular/core';
-import { BooleanLike, coerceBooleanProperty } from '@ardium-ui/devkit';
+import { BooleanLike, coerceBooleanProperty } from '@ardium-pl/devkit';
 import { OneAxisAlignment } from '../types/alignment.types';
 import { ComponentColor } from '../types/colors.types';
 import { ArdiumTabComponent } from './tab/tab.component';

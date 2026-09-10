@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
-import { ArdiumFilePipesModule } from '@ardium-ui/devkit';
+import { ArdiumFilePipesModule } from '@ardium-pl/devkit';
 import { _ClearButtonModule } from '../../_internal/clear-button/clear-button.module';
 import { ArdiumFormFieldFrameModule } from '../../form-field-frame/form-field-frame.module';
 import { ArdiumIconModule } from '../../icon/icon.module';

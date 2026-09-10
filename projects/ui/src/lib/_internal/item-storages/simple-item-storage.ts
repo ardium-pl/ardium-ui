@@ -1,5 +1,5 @@
 import { Signal, computed } from '@angular/core';
-import { arraySignal } from '@ardium-ui/devkit';
+import { arraySignal } from '@ardium-pl/devkit';
 import { resolvePath } from 'resolve-object-path';
 import { evaluate, isArray, isDefined, isObject, isPrimitive } from 'simple-bool';
 import { ArdOptionSimple, CompareWithFn } from '../../types/item-storage.types';

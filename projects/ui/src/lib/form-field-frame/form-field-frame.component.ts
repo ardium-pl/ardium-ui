@@ -1,17 +1,17 @@
 import {
-  ChangeDetectionStrategy,
-  Component,
-  computed,
-  contentChild,
-  Inject,
-  Input,
-  input,
-  TemplateRef,
-  Type,
-  ViewEncapsulation
+    ChangeDetectionStrategy,
+    Component,
+    computed,
+    contentChild,
+    Inject,
+    Input,
+    input,
+    TemplateRef,
+    Type,
+    ViewEncapsulation
 } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
-import { BooleanLike, coerceBooleanProperty } from '@ardium-ui/devkit';
+import { BooleanLike, coerceBooleanProperty } from '@ardium-pl/devkit';
 import { delay, startWith, Subject } from 'rxjs';
 import { _FocusableComponentBase } from '../_internal/focusable-component';
 import { contextToInputs } from '../_internal/utils/context-to-inputs';

@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, computed, contentChild, inject, input, ViewEncapsulation } from '@angular/core';
-import { coerceNumberProperty, NumberLike } from '@ardium-ui/devkit';
+import { coerceNumberProperty, NumberLike } from '@ardium-pl/devkit';
 import { isArray, isNumber } from 'simple-bool';
 import { StarColor, StarFillMode } from './../star.types';
 import { ARD_RATING_DISPLAY_DEFAULTS } from './rating-display.defaults';

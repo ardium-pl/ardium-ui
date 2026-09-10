@@ -1,4 +1,4 @@
-import { coerceNumberProperty } from '@ardium-ui/devkit';
+import { coerceNumberProperty } from '@ardium-pl/devkit';
 import { isNull, isNumber } from 'simple-bool';
 import { ArdGridSize, isArdGridSize } from '../grid';
 import { fillInMissingBreakpoints, transformResponsiveValue } from '../grid/grid.utils';

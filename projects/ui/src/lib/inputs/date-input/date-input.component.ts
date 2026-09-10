@@ -1,37 +1,37 @@
 import {
-  AfterViewInit,
-  ChangeDetectionStrategy,
-  Component,
-  computed,
-  contentChild,
-  effect,
-  ElementRef,
-  forwardRef,
-  Inject,
-  input,
-  model,
-  signal,
-  viewChild,
-  ViewEncapsulation,
+    AfterViewInit,
+    ChangeDetectionStrategy,
+    Component,
+    computed,
+    contentChild,
+    effect,
+    ElementRef,
+    forwardRef,
+    Inject,
+    input,
+    model,
+    signal,
+    viewChild,
+    ViewEncapsulation,
 } from '@angular/core';
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
-import { BooleanLike, coerceBooleanProperty } from '@ardium-ui/devkit';
+import { BooleanLike, coerceBooleanProperty } from '@ardium-pl/devkit';
 import { isDefined, isNull } from 'simple-bool';
 import { getUTCDate } from '../../_internal/utils/date.utils';
 import { ARD_FORM_FIELD_CONTROL } from '../../form-field/form-field-child.token';
 import { _AbstractDateInput } from './abstract-date-input';
 import { ARD_DATE_INPUT_DEFAULTS, ArdDateInputDefaults } from './date-input.defaults';
 import {
-  ArdDateInputDaysViewHeaderTemplateDirective,
-  ArdDateInputDayTemplateDirective,
-  ArdDateInputFloatingMonthTemplateDirective,
-  ArdDateInputMonthsViewHeaderTemplateDirective,
-  ArdDateInputMonthTemplateDirective,
-  ArdDateInputPrefixTemplateDirective,
-  ArdDateInputSuffixTemplateDirective,
-  ArdDateInputWeekdayTemplateDirective,
-  ArdDateInputYearsViewHeaderTemplateDirective,
-  ArdDateInputYearTemplateDirective,
+    ArdDateInputDaysViewHeaderTemplateDirective,
+    ArdDateInputDayTemplateDirective,
+    ArdDateInputFloatingMonthTemplateDirective,
+    ArdDateInputMonthsViewHeaderTemplateDirective,
+    ArdDateInputMonthTemplateDirective,
+    ArdDateInputPrefixTemplateDirective,
+    ArdDateInputSuffixTemplateDirective,
+    ArdDateInputWeekdayTemplateDirective,
+    ArdDateInputYearsViewHeaderTemplateDirective,
+    ArdDateInputYearTemplateDirective,
 } from './date-input.directives';
 import { ArdDateInputDeserializeFn, ArdDateInputMinMaxStrategy, ArdDateInputSerializeFn } from './date-input.types';
 

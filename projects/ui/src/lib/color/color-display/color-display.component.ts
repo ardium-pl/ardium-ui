@@ -1,5 +1,5 @@
 import { AfterViewInit, ChangeDetectionStrategy, Component, ViewEncapsulation, computed, inject, input } from '@angular/core';
-import { BooleanLike, coerceBooleanProperty } from '@ardium-ui/devkit';
+import { BooleanLike, coerceBooleanProperty } from '@ardium-pl/devkit';
 import * as Color from 'color';
 import { Nullable } from '../../types/utility.types';
 import { ARD_COLOR_DISPLAY_DEFAULTS } from './color-display.defaults';

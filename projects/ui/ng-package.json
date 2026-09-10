@@ -17,6 +17,6 @@
     "lodash",
     "color",
     "string-similarity",
-    "@ardium-ui/devkit"
+    "@ardium-pl/devkit"
   ]
 }

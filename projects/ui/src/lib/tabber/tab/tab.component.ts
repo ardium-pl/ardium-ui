@@ -1,17 +1,17 @@
 import {
-  ChangeDetectionStrategy,
-  Component,
-  Input,
-  OnDestroy,
-  TemplateRef,
-  ViewEncapsulation,
-  computed,
-  inject,
-  input,
-  output,
-  signal,
+    ChangeDetectionStrategy,
+    Component,
+    Input,
+    OnDestroy,
+    TemplateRef,
+    ViewEncapsulation,
+    computed,
+    inject,
+    input,
+    output,
+    signal,
 } from '@angular/core';
-import { BooleanLike, coerceBooleanProperty } from '@ardium-ui/devkit';
+import { BooleanLike, coerceBooleanProperty } from '@ardium-pl/devkit';
 import { Subject } from 'rxjs';
 import { ARD_TABBER_DEFAULTS } from '../tabber.defaults';
 

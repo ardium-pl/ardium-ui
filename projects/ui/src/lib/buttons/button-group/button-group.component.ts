@@ -1,17 +1,17 @@
 import {
-  AfterContentInit,
-  ChangeDetectionStrategy,
-  Component,
-  SimpleChanges,
-  ViewEncapsulation,
-  computed,
-  contentChildren,
-  effect,
-  inject,
-  input,
-  signal,
+    AfterContentInit,
+    ChangeDetectionStrategy,
+    Component,
+    SimpleChanges,
+    ViewEncapsulation,
+    computed,
+    contentChildren,
+    effect,
+    inject,
+    input,
+    signal,
 } from '@angular/core';
-import { BooleanLike, coerceBooleanProperty } from '@ardium-ui/devkit';
+import { BooleanLike, coerceBooleanProperty } from '@ardium-pl/devkit';
 import { ArdiumButtonComponent, ArdiumButtonDirective } from '../button';
 import { ARD_BUTTON_GROUP_DEFAULTS } from './button-group.defaults';
 

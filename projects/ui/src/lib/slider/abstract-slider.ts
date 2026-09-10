@@ -1,25 +1,25 @@
 import { Overlay, ScrollStrategyOptions } from '@angular/cdk/overlay';
 import { DOCUMENT } from '@angular/common';
 import {
-  Directive,
-  ElementRef,
-  HostListener,
-  Input,
-  Renderer2,
-  Signal,
-  ViewContainerRef,
-  WritableSignal,
-  computed,
-  contentChild,
-  effect,
-  inject,
-  input,
-  output,
-  signal,
-  untracked,
-  viewChild,
+    Directive,
+    ElementRef,
+    HostListener,
+    Input,
+    Renderer2,
+    Signal,
+    ViewContainerRef,
+    WritableSignal,
+    computed,
+    contentChild,
+    effect,
+    inject,
+    input,
+    output,
+    signal,
+    untracked,
+    viewChild,
 } from '@angular/core';
-import { BooleanLike, NumberLike, coerceArrayProperty, coerceBooleanProperty, coerceNumberProperty } from '@ardium-ui/devkit';
+import { BooleanLike, NumberLike, coerceArrayProperty, coerceBooleanProperty, coerceNumberProperty } from '@ardium-pl/devkit';
 import { roundToMultiple, roundToPrecision } from 'more-rounding';
 import { isDefined } from 'simple-bool';
 import { _NgModelComponentBase, _NgModelComponentDefaults, _ngModelComponentDefaults } from '../_internal/ngmodel-component';
@@ -27,11 +27,11 @@ import { SimpleComponentColor } from '../types/colors.types';
 import { ArdRangeSelectionBehavior } from './range-slider/range-slider.types';
 import { ArdSliderTooltipDirective } from './slider.directive';
 import {
-  SliderDecorationPosition,
-  SliderLabelObject,
-  SliderTooltipBehavior,
-  SliderTooltipFormatFn,
-  _InternalSliderLabelObject,
+    SliderDecorationPosition,
+    SliderLabelObject,
+    SliderTooltipBehavior,
+    SliderTooltipFormatFn,
+    _InternalSliderLabelObject,
 } from './slider.types';
 
 export interface _AsbtractSliderDefaults extends _NgModelComponentDefaults {

@@ -1,16 +1,16 @@
 import {
-  AfterViewInit,
-  Directive,
-  ElementRef,
-  OnChanges,
-  OnDestroy,
-  Renderer2,
-  computed,
-  inject,
-  input,
-  signal,
+    AfterViewInit,
+    Directive,
+    ElementRef,
+    OnChanges,
+    OnDestroy,
+    Renderer2,
+    computed,
+    inject,
+    input,
+    signal,
 } from '@angular/core';
-import { BooleanLike, coerceBooleanProperty } from '@ardium-ui/devkit';
+import { BooleanLike, coerceBooleanProperty } from '@ardium-pl/devkit';
 import { ComponentColor } from '../types/colors.types';
 import { FormElementVariant } from '../types/theming.types';
 import { Nullable } from '../types/utility.types';

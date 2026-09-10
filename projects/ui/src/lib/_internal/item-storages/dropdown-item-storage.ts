@@ -1,5 +1,5 @@
 import { computed, Signal, signal } from '@angular/core';
-import { arraySignal } from '@ardium-ui/devkit';
+import { arraySignal } from '@ardium-pl/devkit';
 import { resolvePath } from 'resolve-object-path';
 import { firstValueFrom, isObservable, Observable } from 'rxjs';
 import { any, evaluate, isArray, isDefined, isObject, isPrimitive, isPromise } from 'simple-bool';

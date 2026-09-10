@@ -1,6 +1,6 @@
 import { Component, computed, effect, inject, input, OnDestroy, signal } from '@angular/core';
 import { AbstractControl, TouchedChangeEvent } from '@angular/forms';
-import { BooleanLike, coerceBooleanProperty } from '@ardium-ui/devkit';
+import { BooleanLike, coerceBooleanProperty } from '@ardium-pl/devkit';
 import { filter, map, startWith, Subscription } from 'rxjs';
 import { ARD_FORM_FIELD_DEFAULTS } from '../form-field.defaults';
 import { ARD_ERROR_MAP } from './auto-error.provider';

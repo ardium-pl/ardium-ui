@@ -1,17 +1,17 @@
 import {
-  AfterViewChecked,
-  ChangeDetectionStrategy,
-  Component,
-  ElementRef,
-  OnChanges,
-  OnDestroy,
-  SimpleChanges,
-  ViewEncapsulation,
-  computed,
-  inject,
-  input,
+    AfterViewChecked,
+    ChangeDetectionStrategy,
+    Component,
+    ElementRef,
+    OnChanges,
+    OnDestroy,
+    SimpleChanges,
+    ViewEncapsulation,
+    computed,
+    inject,
+    input,
 } from '@angular/core';
-import { BooleanLike, coerceBooleanProperty } from '@ardium-ui/devkit';
+import { BooleanLike, coerceBooleanProperty } from '@ardium-pl/devkit';
 import { Subject } from 'rxjs';
 import { Nullable } from '../types/utility.types';
 

@@ -1,38 +1,38 @@
 import { Overlay, OverlayConfig, OverlayRef, ScrollStrategyOptions } from '@angular/cdk/overlay';
 import { TemplatePortal } from '@angular/cdk/portal';
 import {
-  computed,
-  contentChild,
-  Directive,
-  effect,
-  ElementRef,
-  inject,
-  input,
-  InputSignal,
-  model,
-  OnDestroy,
-  output,
-  Signal,
-  signal,
-  SimpleChanges,
-  TemplateRef,
-  viewChild,
-  ViewContainerRef,
+    computed,
+    contentChild,
+    Directive,
+    effect,
+    ElementRef,
+    inject,
+    input,
+    InputSignal,
+    model,
+    OnDestroy,
+    output,
+    Signal,
+    signal,
+    SimpleChanges,
+    TemplateRef,
+    viewChild,
+    ViewContainerRef,
 } from '@angular/core';
 import { ControlValueAccessor } from '@angular/forms';
-import { BooleanLike, coerceBooleanProperty, coerceDateOnlyProperty, coerceNumberProperty, NumberLike } from '@ardium-ui/devkit';
+import { BooleanLike, coerceBooleanProperty, coerceDateOnlyProperty, coerceNumberProperty, NumberLike } from '@ardium-pl/devkit';
 import { _FormFieldComponentBase } from '../../_internal/form-field-component';
 import {
-  ArdCalendarDaysViewHeaderTemplateDirective,
-  ArdCalendarDayTemplateDirective,
-  ArdCalendarFilterFn,
-  ArdCalendarFloatingMonthTemplateDirective,
-  ArdCalendarMonthsViewHeaderTemplateDirective,
-  ArdCalendarMonthTemplateDirective,
-  ArdCalendarView,
-  ArdCalendarWeekdayTemplateDirective,
-  ArdCalendarYearsViewHeaderTemplateDirective,
-  ArdCalendarYearTemplateDirective,
+    ArdCalendarDaysViewHeaderTemplateDirective,
+    ArdCalendarDayTemplateDirective,
+    ArdCalendarFilterFn,
+    ArdCalendarFloatingMonthTemplateDirective,
+    ArdCalendarMonthsViewHeaderTemplateDirective,
+    ArdCalendarMonthTemplateDirective,
+    ArdCalendarView,
+    ArdCalendarWeekdayTemplateDirective,
+    ArdCalendarYearsViewHeaderTemplateDirective,
+    ArdCalendarYearTemplateDirective,
 } from '../../calendar';
 import { ArdiumDropdownPanelComponent, DropdownPanelAppearance, DropdownPanelVariant } from '../../dropdown-panel';
 import { ComponentColor } from '../../types/colors.types';
@@ -40,9 +40,9 @@ import { FormElementAppearance, FormElementVariant } from '../../types/theming.t
 import { Nullable } from '../../types/utility.types';
 import { ArdDateInputDefaults } from './date-input.defaults';
 import {
-  ArdDateInputAcceptButtonsTemplateDirective,
-  ArdDateInputCalendarIconTemplateDirective,
-  ArdDateInputValueTemplateDirective
+    ArdDateInputAcceptButtonsTemplateDirective,
+    ArdDateInputCalendarIconTemplateDirective,
+    ArdDateInputValueTemplateDirective
 } from './date-input.directives';
 import { ArdDateInputAcceptButtonsContext, ArdDateInputSerializeFn, ArdDateInputValueContext } from './date-input.types';
 

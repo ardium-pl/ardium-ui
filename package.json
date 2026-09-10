@@ -24,7 +24,7 @@
     "@angular/platform-browser": "^19.2.15",
     "@angular/platform-browser-dynamic": "^19.2.15",
     "@angular/router": "^19.2.15",
-    "@ardium-ui/devkit": "8.3.0",
+    "@ardium-pl/devkit": "^8.3.3",
     "first-last": "^1.1.1",
     "key-display-names": "^2.0.0",
     "lodash": "^4.17.23",

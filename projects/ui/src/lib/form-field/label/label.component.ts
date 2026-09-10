@@ -1,5 +1,5 @@
 import { Component, effect, inject, input } from '@angular/core';
-import { BooleanLike, coerceBooleanProperty } from '@ardium-ui/devkit';
+import { BooleanLike, coerceBooleanProperty } from '@ardium-pl/devkit';
 import { ARD_FORM_FIELD_DEFAULTS } from '../form-field.defaults';
 
 @Component({

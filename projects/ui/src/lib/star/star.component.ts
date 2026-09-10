@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, ViewEncapsulation, computed, contentChild, inject, input } from '@angular/core';
-import { coerceBooleanProperty } from '@ardium-ui/devkit';
+import { coerceBooleanProperty } from '@ardium-pl/devkit';
 import { ARD_STAR_DEFAULTS } from './star.defaults';
 import { ArdStarIconTemplateDirective } from './star.directives';
 import { ArdStarIconContext, StarColor, StarFillMode } from './star.types';

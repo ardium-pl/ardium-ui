@@ -1,15 +1,15 @@
 import {
-  AfterViewInit,
-  ChangeDetectionStrategy,
-  Component,
-  ElementRef,
-  ViewEncapsulation,
-  computed,
-  inject,
-  input,
-  viewChild,
+    AfterViewInit,
+    ChangeDetectionStrategy,
+    Component,
+    ElementRef,
+    ViewEncapsulation,
+    computed,
+    inject,
+    input,
+    viewChild,
 } from '@angular/core';
-import { BooleanLike, coerceBooleanProperty } from '@ardium-ui/devkit';
+import { BooleanLike, coerceBooleanProperty } from '@ardium-pl/devkit';
 import { FormElementAppearance } from './../types/theming.types';
 import { ARD_KBD_DEFAULTS } from './kbd.defaults';
 

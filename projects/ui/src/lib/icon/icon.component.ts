@@ -1,15 +1,15 @@
 import {
-  AfterViewInit,
-  ChangeDetectionStrategy,
-  Component,
-  ElementRef,
-  ViewEncapsulation,
-  computed,
-  inject,
-  input,
-  viewChild,
+    AfterViewInit,
+    ChangeDetectionStrategy,
+    Component,
+    ElementRef,
+    ViewEncapsulation,
+    computed,
+    inject,
+    input,
+    viewChild,
 } from '@angular/core';
-import { BooleanLike, coerceBooleanProperty, coerceNumberProperty } from '@ardium-ui/devkit';
+import { BooleanLike, coerceBooleanProperty, coerceNumberProperty } from '@ardium-pl/devkit';
 import { isDefined } from 'simple-bool';
 import { Nullable } from '../types/utility.types';
 import { ARD_ICON_DEFAULTS } from './icon.defaults';

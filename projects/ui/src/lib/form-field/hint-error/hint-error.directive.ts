@@ -1,5 +1,5 @@
 import { Directive, effect, input } from '@angular/core';
-import { BooleanLike, coerceBooleanProperty } from '@ardium-ui/devkit';
+import { BooleanLike, coerceBooleanProperty } from '@ardium-pl/devkit';
 
 @Directive({
   selector: '[ard-hint-error]',

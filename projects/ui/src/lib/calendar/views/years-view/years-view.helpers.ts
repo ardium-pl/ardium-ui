@@ -1,4 +1,4 @@
-import { getUTCDate } from '@ardium-ui/devkit';
+import { getUTCDate } from '@ardium-pl/devkit';
 import { isDefined } from 'simple-bool';
 import { CalendarArrayItem } from '../../calendar.internal-types';
 

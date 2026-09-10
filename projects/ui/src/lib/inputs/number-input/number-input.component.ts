@@ -1,22 +1,22 @@
 import {
-  AfterViewInit,
-  ChangeDetectionStrategy,
-  Component,
-  computed,
-  contentChild,
-  effect,
-  ElementRef,
-  forwardRef,
-  Inject,
-  Input,
-  input,
-  output,
-  untracked,
-  viewChild,
-  ViewEncapsulation,
+    AfterViewInit,
+    ChangeDetectionStrategy,
+    Component,
+    computed,
+    contentChild,
+    effect,
+    ElementRef,
+    forwardRef,
+    Inject,
+    Input,
+    input,
+    output,
+    untracked,
+    viewChild,
+    ViewEncapsulation,
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
-import { BooleanLike, coerceBooleanProperty, coerceNumberProperty, NumberLike } from '@ardium-ui/devkit';
+import { BooleanLike, coerceBooleanProperty, coerceNumberProperty, NumberLike } from '@ardium-pl/devkit';
 import { roundToPrecision } from 'more-rounding';
 import { isDefined } from 'simple-bool';
 import { _FormFieldComponentBase } from '../../_internal/form-field-component';
@@ -30,9 +30,9 @@ import { Nullable } from '../../types/utility.types';
 import { NumberInputModel, NumberInputModelHost } from '../input-utils';
 import { ARD_NUMBER_INPUT_DEFAULTS, ArdNumberInputDefaults } from './number-input.defaults';
 import {
-  ArdNumberInputPlaceholderTemplateDirective,
-  ArdNumberInputPrefixTemplateDirective,
-  ArdNumberInputSuffixTemplateDirective,
+    ArdNumberInputPlaceholderTemplateDirective,
+    ArdNumberInputPrefixTemplateDirective,
+    ArdNumberInputSuffixTemplateDirective,
 } from './number-input.directives';
 import { ArdNumberInputMinMaxBehavior } from './number-input.types';
 

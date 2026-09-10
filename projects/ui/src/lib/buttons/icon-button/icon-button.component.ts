@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, Inject, ViewEncapsulation, computed, input } from '@angular/core';
-import { BooleanLike, coerceBooleanProperty } from '@ardium-ui/devkit';
+import { BooleanLike, coerceBooleanProperty } from '@ardium-pl/devkit';
 import { _FocusableComponentBase } from '../../_internal/focusable-component';
 import { ButtonType } from '../../types/button.types';
 import { ComponentColor } from '../../types/colors.types';

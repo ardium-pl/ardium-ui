@@ -1,6 +1,6 @@
 import { computed, Directive, HostBinding, input, Input, output, signal } from '@angular/core';
 import { ControlValueAccessor } from '@angular/forms';
-import { BooleanLike, coerceBooleanProperty } from '@ardium-ui/devkit';
+import { BooleanLike, coerceBooleanProperty } from '@ardium-pl/devkit';
 import { _NgModelComponentBase, _ngModelComponentDefaults, _NgModelComponentDefaults } from './ngmodel-component';
 
 export interface _BooleanComponentDefaults extends _NgModelComponentDefaults {

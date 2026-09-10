@@ -1,6 +1,6 @@
 import { computed, Directive, input } from '@angular/core';
 import { ControlValueAccessor, Validators } from '@angular/forms';
-import { BooleanLike, coerceBooleanProperty } from '@ardium-ui/devkit';
+import { BooleanLike, coerceBooleanProperty } from '@ardium-pl/devkit';
 import { ArdFormFieldControl } from '../form-field/form-field-child.token';
 import { _NgModelComponentBase, _NgModelComponentDefaults, _ngModelComponentDefaults } from './ngmodel-component';
 

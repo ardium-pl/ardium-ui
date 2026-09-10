@@ -1,12 +1,12 @@
 import { computed, effect, signal } from '@angular/core';
-import { coerceArrayProperty } from '@ardium-ui/devkit';
+import { coerceArrayProperty } from '@ardium-pl/devkit';
 import { isAnyString, isArray, isFunction, isNull, isNumber, isRegExp } from 'simple-bool';
 import {
-  DigitInputAcceptObject,
-  DigitInputConfig,
-  DigitInputOption,
-  DigitInputPrimitiveOption,
-  TransformType,
+    DigitInputAcceptObject,
+    DigitInputConfig,
+    DigitInputOption,
+    DigitInputPrimitiveOption,
+    TransformType,
 } from './digit-input.types';
 import { DigitInputConfigData, DigitInputConfigDataType, DigitInputModelHost, _sanitizeRegExpString } from './digit-input.utils';
 

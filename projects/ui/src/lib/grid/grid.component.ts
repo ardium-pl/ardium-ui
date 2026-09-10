@@ -1,36 +1,36 @@
 import {
-  AfterContentInit,
-  ChangeDetectionStrategy,
-  Component,
-  computed,
-  contentChildren,
-  effect,
-  inject,
-  input,
-  OnChanges,
-  signal,
-  SimpleChanges,
-  ViewEncapsulation,
+    AfterContentInit,
+    ChangeDetectionStrategy,
+    Component,
+    computed,
+    contentChildren,
+    effect,
+    inject,
+    input,
+    OnChanges,
+    signal,
+    SimpleChanges,
+    ViewEncapsulation,
 } from '@angular/core';
-import { BooleanLike, coerceBooleanProperty } from '@ardium-ui/devkit';
+import { BooleanLike, coerceBooleanProperty } from '@ardium-pl/devkit';
 import { ArdiumBreakpointService } from '../breakpoints/breakpoint.service';
 import {
-  parseBooleanOrBreakpointConfig,
-  parseCSSUnitOrBreakpointConfig,
-  parseEnumOrBreakpointConfig,
-  parseNumberOrBreakpointConfig,
-  parseSizeOrBreakpointConfig,
+    parseBooleanOrBreakpointConfig,
+    parseCSSUnitOrBreakpointConfig,
+    parseEnumOrBreakpointConfig,
+    parseNumberOrBreakpointConfig,
+    parseSizeOrBreakpointConfig,
 } from '../breakpoints/breakpoint.utils';
 import { ArdBreakpointsConfig } from '../breakpoints/breakpoints';
 import { ARD_GRID_DEFAULTS } from './grid.defaults';
 import {
-  ArdGridAlign,
-  ArdGridJustify,
-  ArdGridSize,
-  ArdGridWrap,
-  isArdGridAlign,
-  isArdGridJustify,
-  isArdGridWrap,
+    ArdGridAlign,
+    ArdGridJustify,
+    ArdGridSize,
+    ArdGridWrap,
+    isArdGridAlign,
+    isArdGridJustify,
+    isArdGridWrap,
 } from './grid.types';
 
 @Component({

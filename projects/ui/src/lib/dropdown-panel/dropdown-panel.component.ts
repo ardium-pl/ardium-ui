@@ -11,7 +11,7 @@ import {
     output,
     viewChild,
 } from '@angular/core';
-import { BooleanLike, coerceBooleanProperty } from '@ardium-ui/devkit';
+import { BooleanLike, coerceBooleanProperty } from '@ardium-pl/devkit';
 import { Nullable } from '../types/utility.types';
 import { ARD_DROPDOWN_PANEL_DEFAULTS } from './dropdown-panel.defaults';
 import { DropdownPanelAppearance, DropdownPanelVariant, ScrollAlignment } from './dropdown-panel.types';

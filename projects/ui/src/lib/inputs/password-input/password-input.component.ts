@@ -1,21 +1,21 @@
 import {
-  ChangeDetectionStrategy,
-  Component,
-  ElementRef,
-  HostListener,
-  Inject,
-  OnDestroy,
-  OnInit,
-  ViewEncapsulation,
-  computed,
-  contentChild,
-  forwardRef,
-  input,
-  model,
-  viewChild,
+    ChangeDetectionStrategy,
+    Component,
+    ElementRef,
+    HostListener,
+    Inject,
+    OnDestroy,
+    OnInit,
+    ViewEncapsulation,
+    computed,
+    contentChild,
+    forwardRef,
+    input,
+    model,
+    viewChild,
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
-import { BooleanLike, coerceBooleanProperty, coerceNumberProperty } from '@ardium-ui/devkit';
+import { BooleanLike, coerceBooleanProperty, coerceNumberProperty } from '@ardium-pl/devkit';
 import { isAnyString, isDefined } from 'simple-bool';
 import { _FormFieldComponentBase } from '../../_internal/form-field-component';
 import { ARD_FORM_FIELD_CONTROL } from '../../form-field/form-field-child.token';
@@ -23,10 +23,10 @@ import { FormElementAppearance, FormElementVariant } from '../../types/theming.t
 import { Nullable } from '../../types/utility.types';
 import { ARD_PASSWORD_INPUT_DEFAULTS, ArdPasswordInputDefaults } from './password-input.defaults';
 import {
-  ArdPasswordInputPlaceholderTemplateDirective,
-  ArdPasswordInputPrefixTemplateDirective,
-  ArdPasswordInputRevealButtonTemplateDirective,
-  ArdPasswordInputSuffixTemplateDirective,
+    ArdPasswordInputPlaceholderTemplateDirective,
+    ArdPasswordInputPrefixTemplateDirective,
+    ArdPasswordInputRevealButtonTemplateDirective,
+    ArdPasswordInputSuffixTemplateDirective,
 } from './password-input.directives';
 import { PasswordInputRevealButtonContext } from './password-input.types';
 

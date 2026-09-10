@@ -1,16 +1,16 @@
 import {
-  ChangeDetectionStrategy,
-  Component,
-  Inject,
-  ViewEncapsulation,
-  computed,
-  contentChild,
-  forwardRef,
-  input,
-  model,
+    ChangeDetectionStrategy,
+    Component,
+    Inject,
+    ViewEncapsulation,
+    computed,
+    contentChild,
+    forwardRef,
+    input,
+    model,
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
-import { coerceBooleanProperty } from '@ardium-ui/devkit';
+import { coerceBooleanProperty } from '@ardium-pl/devkit';
 import { contextToInputs } from '../_internal/utils/context-to-inputs';
 import { SimpleComponentColor } from '../types/colors.types';
 import { _BooleanComponentBase } from './../_internal/boolean-component';

@@ -1,5 +1,5 @@
 import { Directive, HostBinding, Input, signal } from '@angular/core';
-import { coerceBooleanProperty } from '@ardium-ui/devkit';
+import { coerceBooleanProperty } from '@ardium-pl/devkit';
 
 export interface _DisablableComponentDefaults {
   readonly: boolean;

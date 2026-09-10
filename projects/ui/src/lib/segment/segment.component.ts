@@ -1,16 +1,16 @@
 import {
-  AfterContentInit,
-  ChangeDetectionStrategy,
-  Component,
-  computed,
-  contentChild,
-  forwardRef,
-  Inject,
-  input,
-  ViewEncapsulation
+    AfterContentInit,
+    ChangeDetectionStrategy,
+    Component,
+    computed,
+    contentChild,
+    forwardRef,
+    Inject,
+    input,
+    ViewEncapsulation
 } from '@angular/core';
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
-import { BooleanLike, coerceBooleanProperty, coerceNumberProperty, NumberLike } from '@ardium-ui/devkit';
+import { BooleanLike, coerceBooleanProperty, coerceNumberProperty, NumberLike } from '@ardium-pl/devkit';
 import { _SelectableListComponentBase } from '../_internal/selectable-list-component';
 import { ARD_FORM_FIELD_CONTROL } from '../form-field/form-field-child.token';
 import { OneAxisAlignment } from '../types/alignment.types';

@@ -1,14 +1,14 @@
 import {
-  ChangeDetectionStrategy,
-  Component,
-  Inject,
-  OnInit,
-  ViewEncapsulation,
-  computed,
-  input,
-  model
+    ChangeDetectionStrategy,
+    Component,
+    Inject,
+    OnInit,
+    ViewEncapsulation,
+    computed,
+    input,
+    model
 } from '@angular/core';
-import { BooleanLike, coerceBooleanProperty } from '@ardium-ui/devkit';
+import { BooleanLike, coerceBooleanProperty } from '@ardium-pl/devkit';
 import { _FocusableComponentBase } from '../_internal/focusable-component';
 import { PaginationModel } from '../_internal/models/pagination.model';
 import { ComponentColor } from '../types/colors.types';

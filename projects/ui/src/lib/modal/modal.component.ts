@@ -1,21 +1,21 @@
 import { Overlay, OverlayConfig, OverlayRef, ScrollStrategyOptions } from '@angular/cdk/overlay';
 import { TemplatePortal } from '@angular/cdk/portal';
 import {
-  ChangeDetectionStrategy,
-  Component,
-  Input,
-  TemplateRef,
-  ViewContainerRef,
-  ViewEncapsulation,
-  computed,
-  contentChild,
-  inject,
-  input,
-  output,
-  signal,
-  viewChild,
+    ChangeDetectionStrategy,
+    Component,
+    Input,
+    TemplateRef,
+    ViewContainerRef,
+    ViewEncapsulation,
+    computed,
+    contentChild,
+    inject,
+    input,
+    output,
+    signal,
+    viewChild,
 } from '@angular/core';
-import { BooleanLike, coerceBooleanProperty } from '@ardium-ui/devkit';
+import { BooleanLike, coerceBooleanProperty } from '@ardium-pl/devkit';
 import { PanelAppearance, PanelVariant } from '../types/theming.types';
 import { ARD_MODAL_DEFAULTS } from './modal.defaults';
 import { ArdModalCloseIconTemplateDirective } from './modal.directives';

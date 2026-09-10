@@ -1,17 +1,17 @@
 import {
-  ChangeDetectionStrategy,
-  Component,
-  Inject,
-  ViewEncapsulation,
-  computed,
-  contentChild,
-  forwardRef,
-  input,
-  output,
-  signal,
+    ChangeDetectionStrategy,
+    Component,
+    Inject,
+    ViewEncapsulation,
+    computed,
+    contentChild,
+    forwardRef,
+    input,
+    output,
+    signal,
 } from '@angular/core';
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
-import { BooleanLike, coerceBooleanProperty } from '@ardium-ui/devkit';
+import { BooleanLike, coerceBooleanProperty } from '@ardium-pl/devkit';
 import { ARD_FORM_FIELD_CONTROL } from '../../form-field/form-field-child.token';
 import { ComponentColor } from '../../types/colors.types';
 import { FormElementAppearance, FormElementVariant } from '../../types/theming.types';
@@ -19,12 +19,12 @@ import { _FileInputComponentBase } from '../file-input-base';
 import { FileInputBrowseContext, FileInputFileAmountContext, FileInputFilesContext } from '../file-input-types';
 import { ARD_FILE_INPUT_DEFAULTS, ArdFileInputDefaults } from './file-input.defaults';
 import {
-  ArdFileInputPrefixTemplateDirective,
-  ArdFileInputSuffixTemplateDirective,
-  ArdiumFileInputDragoverContentTemplateDirective,
-  ArdiumFileInputIdleContentTemplateDirective,
-  ArdiumFileInputUploadIconTemplateDirective,
-  ArdiumFileInputUploadedContentTemplateDirective
+    ArdFileInputPrefixTemplateDirective,
+    ArdFileInputSuffixTemplateDirective,
+    ArdiumFileInputDragoverContentTemplateDirective,
+    ArdiumFileInputIdleContentTemplateDirective,
+    ArdiumFileInputUploadIconTemplateDirective,
+    ArdiumFileInputUploadedContentTemplateDirective
 } from './file-input.directives';
 
 @Component({

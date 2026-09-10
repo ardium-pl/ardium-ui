@@ -1,5 +1,5 @@
 import { Signal, computed, signal } from '@angular/core';
-import { arraySignal } from '@ardium-ui/devkit';
+import { arraySignal } from '@ardium-pl/devkit';
 import { resolvePath } from 'resolve-object-path';
 import { any, isDefined, isPrimitive } from 'simple-bool';
 import { ArdSimplestStorageItem } from '../../types/item-storage.types';

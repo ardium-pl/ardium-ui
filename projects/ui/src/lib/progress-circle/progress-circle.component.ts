@@ -1,14 +1,14 @@
 import {
-  ChangeDetectionStrategy,
-  Component,
-  computed,
-  contentChild,
-  inject,
-  input,
-  TemplateRef,
-  ViewEncapsulation,
+    ChangeDetectionStrategy,
+    Component,
+    computed,
+    contentChild,
+    inject,
+    input,
+    TemplateRef,
+    ViewEncapsulation,
 } from '@angular/core';
-import { BooleanLike, coerceBooleanProperty, coerceNumberProperty, NumberLike } from '@ardium-ui/devkit';
+import { BooleanLike, coerceBooleanProperty, coerceNumberProperty, NumberLike } from '@ardium-pl/devkit';
 import { contextToInputs } from '../_internal/utils/context-to-inputs';
 import { SimpleComponentColor } from '../types/colors.types';
 import { ARD_PROGRESS_CIRCLE_DEFAULTS } from './progress-circle.defaults';
