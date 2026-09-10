@@ -108,17 +108,28 @@
     <ard-icon>home</ard-icon>
   </ard-button>
 </div>
+<div class="master flex">
+  <div class="title">Vertical button</div>
+  <ard-button vertical>
+    First line<br>
+    Second line<br>
+    Third line
+  </ard-button>
+  <ard-button vertical>
+    Single line
+  </ard-button>
+</div>
+<div class="master flex" style="width: 100%">
+  <div class="title">Full width button</div>
+  <ard-button style="width: 100%">
+    Short text
+  </ard-button>
+</div>
 <div class="master">
   <div class="title">Styled button</div>
   <div class="flex horiz">
     <ard-button
       appearance="outlined"
-      style="--ard-button-border-style: dashed; --ard-button-border-width: 2px"
-    >
-      Dashed
-    </ard-button>
-    <ard-button
-      appearance="outlined-strong"
       style="--ard-button-border-style: dashed; --ard-button-border-width: 2px"
     >
       Dashed

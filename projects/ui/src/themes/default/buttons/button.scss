@@ -31,6 +31,7 @@
   ard-button {
     display: flex;
     width: max-content;
+    min-width: max-content;
     height: max-content;
     justify-content: stretch;
   }
@@ -54,7 +55,6 @@
     height: var(--ard-button-height, 2.5em);
     padding: var(--ard-button-padding, 0 1.2em);
     width: 100%;
-    min-width: max-content;
     letter-spacing: 0.5px;
     justify-content: center;
     margin: 0;
@@ -74,6 +74,7 @@
     //! button variants
     &.ard-button-vertical {
       height: max-content;
+      min-height: var(--ard-button-height, 2.5em);
       padding: var(--ard-button-padding-vertical, 0.3em 1em);
       gap: 2px;
       flex-direction: column;
