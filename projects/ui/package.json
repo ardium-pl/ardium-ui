@@ -14,7 +14,7 @@
     "resolve-object-path": "^2.0.0",
     "lodash": "^4.17.23",
     "@ardium-ui/devkit": "8.3.0",
-    "simple-bool": "^3.0.1",
+    "simple-bool": "^4.1.1",
     "take-chance": "^4.3.2",
     "color": "^4.2.3"
   },
