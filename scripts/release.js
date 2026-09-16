@@ -99,17 +99,59 @@ const VERSION_ALIAS_MAP = {
     if (!isNoVersionBump) {
       const versionToBeSet = isAlphaBump ? bumpType + ' --preid=alpha' : bumpType;
 
-      execSync(`cd projects/ui && npm version ${versionToBeSet}`, {
+      // Update version only — do not create git commit/tag yet
+      execSync(`cd projects/ui && npm version ${versionToBeSet} --no-git-tag-version`, {
         stdio: 'ignore',
       });
+
       const newVersion = readVersion();
       finalVersion = newVersion;
+
+      console.log(`\n${ansis.redBright.bold(oldVersion)} ${ansis.whiteBright.bold('→')} ${ansis.greenBright.bold(newVersion)}`);
+
+      const { versionConfirmation } = await inquirer.prompt([
+        {
+          type: 'input',
+          name: 'versionConfirmation',
+          message: 'Do you want to keep this version? [Y/Enter = keep, C = cancel]',
+          default: 'Y',
+          validate: input => {
+            const value = input.trim().toLowerCase();
+
+            if (value === '' || value === 'y' || value === 'c') {
+              return true;
+            }
+
+            return 'Press Enter or type Y to keep the version, or C to cancel.';
+          },
+        },
+      ]);
+
+      if (versionConfirmation.trim().toLowerCase() === 'c') {
+        execSync('git restore -- projects/ui/package.json', {
+          stdio: 'ignore',
+        });
+
+        // Restore package lock if npm changed it
+        try {
+          execSync('git restore -- projects/ui/package-lock.json', {
+            stdio: 'ignore',
+          });
+        } catch {
+          // package-lock.json may not exist or may not be tracked
+        }
+
+        console.log(`${ansis.yellowBright.bold('↩')} Version change reverted: ${ansis.greenBright(oldVersion)}`);
+
+        return;
+      }
 
       console.log(
         `${ansis.greenBright.bold('✓')} Changed version from ${ansis.redBright.underline(
           oldVersion
-        )} -> ${ansis.blueBright.underline(newVersion)} (${new Date().valueOf() - startTime.valueOf()} ms)`
+        )} -> ${ansis.greenBright.underline(newVersion)} (${new Date().valueOf() - startTime.valueOf()} ms)`
       );
+
       startTime = new Date();
 
       // Commit and push changes
@@ -120,6 +162,7 @@ const VERSION_ALIAS_MAP = {
       console.log(
         `${ansis.greenBright.bold('✓')} Committed and pushed changes (${new Date().valueOf() - startTime.valueOf()} ms)`
       );
+
       startTime = new Date();
 
       // Create a new tag and push it
@@ -129,9 +172,9 @@ const VERSION_ALIAS_MAP = {
       console.log(`${ansis.greenBright.bold('✓')} Created a version tag (${new Date().valueOf() - startTime.valueOf()} ms)`);
     } else {
       console.log(
-        `${ansis.blueBright.bold('-')} Skipping version bump. Current version: ${ansis.blueBright.underline(oldVersion)} (${
-          new Date().valueOf() - startTime.valueOf()
-        } ms)`
+        `${ansis.blueBright.bold('-')} Skipping version bump. Current version: ${ansis.blueBright.underline(
+          oldVersion
+        )} (${new Date().valueOf() - startTime.valueOf()} ms)`
       );
     }
     startTime = new Date();
@@ -179,7 +222,9 @@ const VERSION_ALIAS_MAP = {
       `${ansis.greenBright.bold('✓')} Cleaned up dist directory again (${new Date().valueOf() - startTime.valueOf()} ms)`
     );
 
-    console.log(`\n${ansis.greenBright.bold('✓')} Successfully released version ${ansis.blueBright.underline(finalVersion)}! (total duration: ${new Date().valueOf() - overallStartTime.valueOf()} ms)`);
+    console.log(
+      `\n${ansis.greenBright.bold('✓')} Successfully released version ${ansis.blueBright.underline(finalVersion)}! (total duration: ${new Date().valueOf() - overallStartTime.valueOf()} ms)`
+    );
   } catch (error) {
     console.error('Error executing release steps:', error);
     process.exit(1);
