@@ -1,13 +1,13 @@
 import {
-    ChangeDetectionStrategy,
-    Component,
-    ViewEncapsulation,
-    computed,
-    contentChild,
-    inject,
-    input,
-    model,
-    output,
+  ChangeDetectionStrategy,
+  Component,
+  ViewEncapsulation,
+  computed,
+  contentChild,
+  inject,
+  input,
+  model,
+  output,
 } from '@angular/core';
 import { BooleanLike, coerceBooleanProperty } from '@ardium-pl/devkit';
 import { contextToInputs } from '../_internal/utils/context-to-inputs';
@@ -15,7 +15,11 @@ import { ButtonAppearance } from '../buttons/general-button.types';
 import { ComponentColor } from '../types/colors.types';
 import { PanelAppearance, PanelVariant } from '../types/theming.types';
 import { ARD_DIALOG_DEFAULTS } from './dialog.defaults';
-import { ArdDialogButtonsTemplateDirective, ArdDialogCloseIconTemplateDirective } from './dialog.directives';
+import {
+  ArdDialogButtonsTemplateDirective,
+  ArdDialogCloseIconTemplateDirective,
+  ArdDialogHeadingTemplateDirective,
+} from './dialog.directives';
 import { ArdDialogActionType, ArdDialogResult, DialogButtonsContext } from './dialog.types';
 
 @Component({
@@ -127,6 +131,7 @@ export class ArdiumDialogComponent {
   readonly buttonsTemplate = contentChild(ArdDialogButtonsTemplateDirective);
 
   readonly closeIconTemplate = contentChild(ArdDialogCloseIconTemplateDirective);
+  readonly headingTemplate = contentChild(ArdDialogHeadingTemplateDirective);
 
   readonly getButtonsContext = computed<DialogButtonsContext>(() => {
     return {

@@ -106,11 +106,16 @@
   </ard-dialog>
 </div>
 <div class="master">
+  <span class="title">Default buttons component</span>
+  <app-dialog-default-buttons-component />
+</div>
+<div class="master">
   <div class="title">Dialog without autoclose on button click</div>
   <button (click)="isOpen4.set(true)">Open</button>
   <ard-dialog
     [open]="isOpen4()"
     (openChange)="isOpen4.set($event)"
+    heading="Dialog heading"
     buttonActionType="no-op"
     (confirm)="performManualConfirm()"
     (reject)="performManualReject()"
@@ -129,12 +134,28 @@
     Dialog content
   </ard-dialog>
 </div>
+<div class="master">
+  <div class="title">Dialog with heading template</div>
+  <button (click)="isOpen6.set(true)">Open</button>
+  <ard-dialog
+    [(open)]="isOpen6"
+    heading="Dialog heading"
+  >
+    <ng-template
+      ard-heading-tmp
+      let-heading
+      >:: {{ heading }} ::</ng-template
+    >
+    Modal content
+  </ard-dialog>
+</div>
 
 <div class="master">
   <div class="title">Cover image dialog</div>
   <button (click)="isOpenCover.set(true)">Open</button>
   <ard-dialog
     [(open)]="isOpenCover"
+    noCloseButton
     confirmButtonText="Delete"
     confirmButtonAppearance="transparent"
     confirmButtonColor="danger"
@@ -144,7 +165,4 @@
   >
     Delete file?
   </ard-dialog>
-<div class="master">
-  <span class="title">Default buttons component</span>
-  <app-dialog-default-buttons-component />
 </div>

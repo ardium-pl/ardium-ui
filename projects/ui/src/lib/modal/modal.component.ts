@@ -1,24 +1,26 @@
 import { Overlay, OverlayConfig, OverlayRef, ScrollStrategyOptions } from '@angular/cdk/overlay';
 import { TemplatePortal } from '@angular/cdk/portal';
 import {
-    ChangeDetectionStrategy,
-    Component,
-    Input,
-    TemplateRef,
-    ViewContainerRef,
-    ViewEncapsulation,
-    computed,
-    contentChild,
-    inject,
-    input,
-    output,
-    signal,
-    viewChild,
+  ChangeDetectionStrategy,
+  Component,
+  Input,
+  TemplateRef,
+  ViewContainerRef,
+  ViewEncapsulation,
+  computed,
+  contentChild,
+  inject,
+  input,
+  output,
+  signal,
+  viewChild,
 } from '@angular/core';
 import { BooleanLike, coerceBooleanProperty } from '@ardium-pl/devkit';
+import { contextToInputs } from '../_internal/utils/context-to-inputs';
 import { PanelAppearance, PanelVariant } from '../types/theming.types';
 import { ARD_MODAL_DEFAULTS } from './modal.defaults';
-import { ArdModalCloseIconTemplateDirective } from './modal.directives';
+import { ArdModalCloseIconTemplateDirective, ArdModalHeadingTemplateDirective } from './modal.directives';
+import { ArdModalHeadingTemplateContext } from './modal.types';
 
 @Component({
   standalone: false,
@@ -48,7 +50,9 @@ export class ArdiumModalComponent {
   //! heading
   readonly heading = input<string>(this._DEFAULTS.heading);
 
-  readonly noCloseButton = input<boolean, BooleanLike>(this._DEFAULTS.noCloseButton, { transform: v => coerceBooleanProperty(v) });
+  readonly noCloseButton = input<boolean, BooleanLike>(this._DEFAULTS.noCloseButton, {
+    transform: v => coerceBooleanProperty(v),
+  });
 
   readonly panelClass = input<string>(this._DEFAULTS.panelClass);
   readonly backdropClass = input<string>(this._DEFAULTS.backdropClass);
@@ -123,4 +127,14 @@ export class ArdiumModalComponent {
 
   readonly _closeIconTemplate = input<ArdModalCloseIconTemplateDirective | undefined>(undefined);
   readonly closeIconComponent = this._DEFAULTS.CloseIconComponent;
+
+  readonly headingTemplate = contentChild(ArdModalHeadingTemplateDirective);
+
+  readonly _headingTemplate = input<ArdModalHeadingTemplateDirective | undefined>(undefined);
+  readonly headingComponent = this._DEFAULTS.HeadingComponent;
+
+  readonly headingTemplateContext = computed<ArdModalHeadingTemplateContext>(() => ({
+    $implicit: this.heading() || (this.noCloseButton() ? '' : '\u00A0'),
+  }));
+  readonly headingInputs = contextToInputs(this.headingTemplateContext, this.headingComponent);
 }

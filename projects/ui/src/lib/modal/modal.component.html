@@ -28,7 +28,27 @@
     (click)="$event.stopPropagation()"
   >
     <div class="ard-modal-heading">
-      <div class="ard-modal-heading-text">{{ heading() || (noCloseButton() ? '' : '&nbsp;') }}</div>
+      <div class="ard-modal-heading-text">
+        @if (headingComponent && !headingTemplate()) {
+          <!-- render the component -->
+          <ng-template
+            [ngComponentOutlet]="headingComponent"
+            [ngComponentOutletInputs]="headingInputs()"
+          />
+        } @else {
+          <ng-template
+            #defaultHeadingTemplate
+            let-headingText
+          >
+            {{ headingText }}
+          </ng-template>
+
+          <ng-template
+            [ngTemplateOutlet]="headingTemplate()?.template ?? _headingTemplate()?.template ?? defaultHeadingTemplate"
+            [ngTemplateOutletContext]="headingTemplateContext()"
+          />
+        }
+      </div>
       @if (!noCloseButton()) {
         <ard-icon-button
           class="ard-modal-close-button"

@@ -118,6 +118,20 @@
   <div class="title">Modal with default close icon component</div>
   <button (click)="isOpen5.set(true)">Open</button>
 
-  <app-modal-close-icon-default-component
-    [(open)]="isOpen5" />
+  <app-modal-close-icon-default-component [(open)]="isOpen5" />
+</div>
+<div class="master">
+  <div class="title">Modal with heading template</div>
+  <button (click)="isOpen6.set(true)">Open</button>
+  <ard-modal
+    [(open)]="isOpen6"
+    heading="Modal heading"
+  >
+    <ng-template
+      ard-heading-tmp
+      let-heading
+      >:: {{ heading }} ::</ng-template
+    >
+    Modal content
+  </ard-modal>
 </div>
