@@ -12,8 +12,8 @@ export interface ArdNumberInputDefaults extends _FormFieldComponentDefaults {
   placeholder: string;
   alignText: OneAxisAlignment;
   inputAttrs: Record<string, any>;
-  min: number;
-  max: number;
+  min: number | null;
+  max: number | null;
   minMaxBehavior: ArdNumberInputMinMaxBehavior;
   maxDecimalPlaces: number;
   fixedDecimalPlaces: boolean;
@@ -35,7 +35,7 @@ const _numberInputDefaults: ArdNumberInputDefaults = {
   alignText: OneAxisAlignment.Center,
   inputAttrs: {},
   min: 0,
-  max: Infinity,
+  max: null,
   minMaxBehavior: ArdNumberInputMinMaxBehavior.AdjustOnBlur,
   maxDecimalPlaces: Infinity,
   fixedDecimalPlaces: false,

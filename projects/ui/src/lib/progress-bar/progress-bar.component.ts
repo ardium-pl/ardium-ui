@@ -1,11 +1,11 @@
 import {
-    ChangeDetectionStrategy,
-    Component,
-    computed,
-    effect,
-    inject,
-    input,
-    ViewEncapsulation
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  effect,
+  inject,
+  input,
+  ViewEncapsulation
 } from '@angular/core';
 import { coerceNumberProperty, NumberLike } from '@ardium-pl/devkit';
 import { SimpleComponentColor } from '../types/colors.types';

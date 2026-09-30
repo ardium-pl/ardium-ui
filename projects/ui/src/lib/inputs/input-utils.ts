@@ -106,8 +106,8 @@ export class AutocompleteInputModel extends InputModel {
 }
 
 export interface NumberInputModelHost {
-  readonly max: Signal<number>;
-  readonly min: Signal<number>;
+  readonly max: Signal<number | null>;
+  readonly min: Signal<number | null>;
   readonly minMaxBehavior: Signal<ArdNumberInputMinMaxBehavior>;
   readonly maxDecimalPlaces: Signal<number>;
   readonly fixedDecimalPlaces: Signal<boolean>;
@@ -279,8 +279,10 @@ export class NumberInputModel {
       numericString = numericString.replaceAll(sep, '.');
     }
     const numericValue = Number(numericString);
-    if (numericValue > this._ardHostCmp.max()) return this._ardHostCmp.max().toString();
-    if (numericValue < this._ardHostCmp.min()) return this._ardHostCmp.min().toString();
+    const min = this._ardHostCmp.min();
+    const max = this._ardHostCmp.max();
+    if (max !== null && numericValue > max) return max.toString();
+    if (min !== null && numericValue < min) return min.toString();
     return v;
   }
 

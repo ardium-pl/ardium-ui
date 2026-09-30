@@ -1,19 +1,19 @@
 import {
-    AfterViewInit,
-    ChangeDetectionStrategy,
-    Component,
-    computed,
-    contentChild,
-    effect,
-    ElementRef,
-    forwardRef,
-    Inject,
-    Input,
-    input,
-    output,
-    untracked,
-    viewChild,
-    ViewEncapsulation,
+  AfterViewInit,
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  contentChild,
+  effect,
+  ElementRef,
+  forwardRef,
+  Inject,
+  Input,
+  input,
+  output,
+  untracked,
+  viewChild,
+  ViewEncapsulation,
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { BooleanLike, coerceBooleanProperty, coerceNumberProperty, NumberLike } from '@ardium-pl/devkit';
@@ -30,9 +30,9 @@ import { Nullable } from '../../types/utility.types';
 import { NumberInputModel, NumberInputModelHost } from '../input-utils';
 import { ARD_NUMBER_INPUT_DEFAULTS, ArdNumberInputDefaults } from './number-input.defaults';
 import {
-    ArdNumberInputPlaceholderTemplateDirective,
-    ArdNumberInputPrefixTemplateDirective,
-    ArdNumberInputSuffixTemplateDirective,
+  ArdNumberInputPlaceholderTemplateDirective,
+  ArdNumberInputPrefixTemplateDirective,
+  ArdNumberInputSuffixTemplateDirective,
 } from './number-input.directives';
 import { ArdNumberInputMinMaxBehavior } from './number-input.types';
 
@@ -185,8 +185,8 @@ export class ArdiumNumberInputComponent
   }>({ alias: 'quickChange' });
 
   //! min/max and number type
-  readonly min = input<number, NumberLike>(this._DEFAULTS.min, { transform: v => coerceNumberProperty(v, this._DEFAULTS.min) });
-  readonly max = input<number, NumberLike>(this._DEFAULTS.max, { transform: v => coerceNumberProperty(v, this._DEFAULTS.max) });
+  readonly min = input<number | null, NumberLike>(this._DEFAULTS.min, { transform: v => v === null ? null : coerceNumberProperty(v, this._DEFAULTS.min) });
+  readonly max = input<number | null, NumberLike>(this._DEFAULTS.max, { transform: v => v === null ? null : coerceNumberProperty(v, this._DEFAULTS.max) });
 
   readonly minMaxBehavior = input<ArdNumberInputMinMaxBehavior>(this._DEFAULTS.minMaxBehavior);
 
@@ -248,8 +248,10 @@ export class ArdiumNumberInputComponent
     const hasAnyValue = isDefined(num);
     if (!num) num = 0;
 
-    if (direction === 1 && num >= this.max() && hasAnyValue) return;
-    if (direction === -1 && num <= this.min() && hasAnyValue) return;
+    const min = this.min();
+    const max = this.max();
+    if (direction === 1 && max !== null && num >= max && hasAnyValue) return;
+    if (direction === -1 && min !== null && num <= min && hasAnyValue) return;
 
     if (event) event.stopPropagation();
 
@@ -285,11 +287,13 @@ export class ArdiumNumberInputComponent
 
   readonly canIncrement = computed<boolean>(() => {
     const num = this.inputModel.numberValue();
-    return !isDefined(num) || num < this.max();
+    const max = this.max();
+    return !isDefined(num) || (max !== null && num < max) || max === null;
   });
   readonly canDecrement = computed<boolean>(() => {
     const num = this.inputModel.numberValue();
-    return !isDefined(num) || num > this.min();
+    const min = this.min();
+    return !isDefined(num) || (min !== null && num > min) || min === null;
   });
 
   //! event handlers
