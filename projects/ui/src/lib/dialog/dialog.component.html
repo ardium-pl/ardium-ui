@@ -20,6 +20,7 @@
     </div>
     <div class="ard-dialog-buttons">
       @if (buttonsComponent && !buttonsTemplate()) {
+        <!-- render the component -->
         <ng-template
           [ngComponentOutlet]="buttonsComponent"
           [ngComponentOutletInputs]="buttonsComponentInputs()"

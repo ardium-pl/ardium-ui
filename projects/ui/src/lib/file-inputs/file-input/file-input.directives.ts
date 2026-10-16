@@ -1,6 +1,7 @@
 import { Directive, TemplateRef } from '@angular/core';
 import { FormFieldFrameTemplateContext } from '../../form-field-frame';
-import { FileInputBrowseContext, FileInputFilesContext } from '../file-input-types';
+import { TemplateComponent } from '../../types/utility.types';
+import { FileInputBrowseContext, FileInputFileAmountContext, FileInputFilesContext } from '../file-input-types';
 
 @Directive({ standalone: false, selector: 'ard-file-input > ng-template[ard-placeholder-tmp]' })
 export class ArdFileInputPlaceholderTemplateDirective {
@@ -27,7 +28,7 @@ export class ArdiumFileInputIdleContentTemplateDirective {
   selector: 'ard-file-input > ng-template[ard-dragover-content-tmp]',
 })
 export class ArdiumFileInputDragoverContentTemplateDirective {
-  constructor(public template: TemplateRef<FileInputFilesContext>) {}
+  constructor(public template: TemplateRef<FileInputFileAmountContext>) {}
 }
 
 @Directive({
@@ -45,3 +46,8 @@ export class ArdiumFileInputUploadedContentTemplateDirective {
 export class ArdiumFileInputUploadIconTemplateDirective {
   constructor(public template: TemplateRef<undefined>) {}
 }
+
+export interface ArdFileInputIdleContent extends TemplateComponent<FileInputBrowseContext> {}
+export interface ArdFileInputDragoverContent extends TemplateComponent<FileInputFileAmountContext> {}
+export interface ArdFileInputUploadedContent extends TemplateComponent<FileInputFilesContext> {}
+export interface ArdFileInputUploadIcon extends TemplateComponent<{}> {}

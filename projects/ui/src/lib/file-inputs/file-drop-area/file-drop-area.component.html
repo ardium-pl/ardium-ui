@@ -9,20 +9,46 @@
   <div class="ard-file-drop-area-outline">
     <div class="ard-file-drop-area-content">
       @if (currentViewState() === 'idle') {
-      <ng-template
-        [ngTemplateOutlet]="idleTemplate()?.template ?? defaultIdleTemplate"
-        [ngTemplateOutletContext]="getIdleContext()"
-      />
-      } @if (currentViewState() === 'dragover') {
-      <ng-template
-        [ngTemplateOutlet]="dragoverTemplate()?.template ?? defaultDragoverTemplate"
-        [ngTemplateOutletContext]="getDragoverContext()"
-      />
-      } @if (currentViewState() === 'uploaded') {
-      <ng-template
-        [ngTemplateOutlet]="uploadedTemplate()?.template ?? defaultUploadedTemplate"
-        [ngTemplateOutletContext]="getUploadedContext()"
-      />
+        @if (idleContentComponent && !idleTemplate()) {
+          <!-- render the component -->
+          <ng-template
+            [ngComponentOutlet]="idleContentComponent"
+            [ngComponentOutletInputs]="idleContentComponentInputs()"
+          />
+        } @else {
+          <ng-template
+            [ngTemplateOutlet]="idleTemplate()?.template ?? defaultIdleTemplate"
+            [ngTemplateOutletContext]="idleContext()"
+          />
+        }
+      }
+      @if (currentViewState() === 'dragover') {
+        @if (dragoverContentComponent && !dragoverTemplate()) {
+          <!-- render the component -->
+          <ng-template
+            [ngComponentOutlet]="dragoverContentComponent"
+            [ngComponentOutletInputs]="dragoverContentComponentInputs()"
+          />
+        } @else {
+          <ng-template
+            [ngTemplateOutlet]="dragoverTemplate()?.template ?? defaultDragoverTemplate"
+            [ngTemplateOutletContext]="dragoverContext()"
+          />
+        }
+      }
+      @if (currentViewState() === 'uploaded') {
+        @if (uploadedContentComponent && !uploadedTemplate()) {
+          <!-- render the component -->
+          <ng-template
+            [ngComponentOutlet]="uploadedContentComponent"
+            [ngComponentOutletInputs]="uploadedContentComponentInputs()"
+          />
+        } @else {
+          <ng-template
+            [ngTemplateOutlet]="uploadedTemplate()?.template ?? defaultUploadedTemplate"
+            [ngTemplateOutletContext]="uploadedContext()"
+          />
+        }
       }
     </div>
   </div>
@@ -47,10 +73,11 @@
   <ard-icon class="ard-file-drop-area-icon">upload</ard-icon>
   <strong class="ard-file-drop-area-drop-text">
     @if (!multiple()) {
-    <span>Drag & Drop a file</span>
+      <span>Drag & Drop a file</span>
     } @else {
-    <span>Drag & Drop files</span>
-    } here
+      <span>Drag & Drop files</span>
+    }
+    here
   </strong>
   <span class="ard-file-drop-area-or-text">or</span>
   <ard-button
@@ -81,7 +108,7 @@
   </span>
   <span class="ard-file-drop-area-dragover-text"> here to upload. </span>
   @if (amount > 1 && !multiple()) {
-  <strong class="ard-file-drop-area-dragover-warning"> Only the first file will be uploaded! </strong>
+    <strong class="ard-file-drop-area-dragover-warning"> Only the first file will be uploaded! </strong>
   }
 </ng-template>
 
@@ -103,16 +130,16 @@
     </div>
     <div class="ard-file-drop-area-uploaded-files">
       @for (file of files; track $index) {
-      <div class="ard-file-drop-area-file">
-        <ard-icon>draft</ard-icon>
-        <div class="ard-file-drop-area-file-info">
-          <span class="ard-file-drop-area-filename">
-            <span class="ard-file-drop-area-filename-name">{{ file | filename }}</span>
-            <span class="ard-file-drop-area-filename-ext">{{ file | fileext : true }}</span>
-          </span>
-          <span class="ard-file-drop-area-filesize">{{ file.size | filesize }}</span>
+        <div class="ard-file-drop-area-file">
+          <ard-icon>draft</ard-icon>
+          <div class="ard-file-drop-area-file-info">
+            <span class="ard-file-drop-area-filename">
+              <span class="ard-file-drop-area-filename-name">{{ file | filename }}</span>
+              <span class="ard-file-drop-area-filename-ext">{{ file | fileext: true }}</span>
+            </span>
+            <span class="ard-file-drop-area-filesize">{{ file.size | filesize }}</span>
+          </div>
         </div>
-      </div>
       }
     </div>
   </div>

@@ -3,6 +3,7 @@ import { ArdFormFieldFramePrefixSuffix } from '../../form-field-frame';
 import { _fileInputBaseDefaults, _FileInputBaseDefaults } from '../file-input-base.defaults';
 import { ComponentColor } from './../../types/colors.types';
 import { FormElementAppearance, FormElementVariant } from './../../types/theming.types';
+import { ArdFileInputDragoverContent, ArdFileInputIdleContent, ArdFileInputUploadedContent, ArdFileInputUploadIcon } from './file-input.directives';
 
 export interface ArdFileInputDefaults extends _FileInputBaseDefaults {
   appearance: FormElementAppearance;
@@ -13,6 +14,10 @@ export interface ArdFileInputDefaults extends _FileInputBaseDefaults {
   clearButtonTitle: string;
   PrefixComponent?: Type<ArdFormFieldFramePrefixSuffix>;
   SuffixComponent?: Type<ArdFormFieldFramePrefixSuffix>;
+  IdleContentComponent?: Type<ArdFileInputIdleContent>;
+  DragoverContentComponent?: Type<ArdFileInputDragoverContent>;
+  UploadedContentComponent?: Type<ArdFileInputUploadedContent>;
+  UploadIconComponent?: Type<ArdFileInputUploadIcon>;
 }
 
 const _fileInputDefaults: ArdFileInputDefaults = {

@@ -1,23 +1,23 @@
 import {
-    AfterViewInit,
-    computed,
-    Directive,
-    ElementRef,
-    inject,
-    Input,
-    input,
-    OnInit,
-    output,
-    signal,
-    viewChild,
+  AfterViewInit,
+  computed,
+  Directive,
+  ElementRef,
+  inject,
+  Input,
+  input,
+  OnInit,
+  output,
+  signal,
+  viewChild,
 } from '@angular/core';
 import {
-    BooleanLike,
-    coerceBooleanProperty,
-    coerceNumberProperty,
-    FileSystemMethod,
-    FileSystemService,
-    FileSystemStartDirectory,
+  BooleanLike,
+  coerceBooleanProperty,
+  coerceNumberProperty,
+  FileSystemMethod,
+  FileSystemService,
+  FileSystemStartDirectory,
 } from '@ardium-pl/devkit';
 import { isDefined } from 'simple-bool';
 import { _FormFieldComponentBase } from '../_internal/form-field-component';
@@ -118,10 +118,10 @@ export abstract class _FileInputComponentBase extends _FormFieldComponentBase im
   });
 
   //! value
-  protected _value: File[] | null = null;
+  protected readonly _value = signal<File[] | null>(null);
   @Input()
   get value(): File[] | null {
-    return this._value;
+    return this._value();
   }
   set value(v: File | File[] | null) {
     this.writeValue(v);
@@ -160,7 +160,7 @@ export abstract class _FileInputComponentBase extends _FormFieldComponentBase im
     } else {
       this.currentViewState.set('uploaded');
     }
-    this._value = v;
+    this._value.set(v);
 
     if (this._wasViewInit) this._updateElementValue();
 
@@ -212,7 +212,7 @@ export abstract class _FileInputComponentBase extends _FormFieldComponentBase im
 
   //! temporary value
   //for drag event handling
-  protected _draggedFiles: number | null = null;
+  protected _draggedFiles = signal<number | null>(null);
 
   //! view state
   readonly currentViewState = signal<'idle' | 'dragover' | 'uploaded'>('idle');
@@ -229,9 +229,9 @@ export abstract class _FileInputComponentBase extends _FormFieldComponentBase im
     }
     if (this.currentViewState() === 'dragover') return;
 
-    this._draggedFiles = this._countDragenterFiles(event.dataTransfer);
+    this._draggedFiles.set(this._countDragenterFiles(event.dataTransfer));
 
-    if (!this._draggedFiles) return;
+    if (!this._draggedFiles()) return;
 
     this._beforeDragoverState = this.currentViewState() as 'idle' | 'uploaded';
     this.currentViewState.set('dragover');

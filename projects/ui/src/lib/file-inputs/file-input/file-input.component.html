@@ -23,22 +23,46 @@
     <div class="ard-input-container">
       <div class="ard-file-input__value">
         @if (currentViewState() === 'idle') {
-          <ng-template
-            [ngTemplateOutlet]="idleTemplate()?.template ?? defaultIdleTemplate"
-            [ngTemplateOutletContext]="getIdleContext()"
-          />
+          @if (idleContentComponent && !idleTemplate()) {
+            <!-- render the component -->
+            <ng-template
+              [ngComponentOutlet]="idleContentComponent"
+              [ngComponentOutletInputs]="idleContentComponentInputs()"
+            />
+          } @else {
+            <ng-template
+              [ngTemplateOutlet]="idleTemplate()?.template ?? defaultIdleTemplate"
+              [ngTemplateOutletContext]="idleContext()"
+            />
+          }
         }
         @if (currentViewState() === 'dragover') {
-          <ng-template
-            [ngTemplateOutlet]="dragoverTemplate()?.template ?? defaultDragoverTemplate"
-            [ngTemplateOutletContext]="getDragoverContext()"
-          />
+          @if (dragoverContentComponent && !dragoverTemplate()) {
+            <!-- render the component -->
+            <ng-template
+              [ngComponentOutlet]="dragoverContentComponent"
+              [ngComponentOutletInputs]="dragoverContentComponentInputs()"
+            />
+          } @else {
+            <ng-template
+              [ngTemplateOutlet]="dragoverTemplate()?.template ?? defaultDragoverTemplate"
+              [ngTemplateOutletContext]="dragoverContext()"
+            />
+          }
         }
         @if (currentViewState() === 'uploaded') {
-          <ng-template
-            [ngTemplateOutlet]="uploadedTemplate()?.template ?? defaultUploadedTemplate"
-            [ngTemplateOutletContext]="getUploadedContext()"
-          />
+          @if (uploadedContentComponent && !uploadedTemplate()) {
+            <!-- render the component -->
+            <ng-template
+              [ngComponentOutlet]="uploadedContentComponent"
+              [ngComponentOutletInputs]="uploadedContentComponentInputs()"
+            />
+          } @else {
+            <ng-template
+              [ngTemplateOutlet]="uploadedTemplate()?.template ?? defaultUploadedTemplate"
+              [ngTemplateOutletContext]="uploadedContext()"
+            />
+          }
         }
       </div>
     </div>
@@ -63,11 +87,16 @@
       >
         <div class="ard-focus-overlay"></div>
 
-        <ng-template #defaultUploadIconTemplate>
-          <ard-icon>folder</ard-icon>
-        </ng-template>
+        @if (uploadIconComponent && !uploadIconTemplate()) {
+          <!-- render the component -->
+          <ng-template [ngComponentOutlet]="uploadIconComponent" />
+        } @else {
+          <ng-template #defaultUploadIconTemplate>
+            <ard-icon>folder</ard-icon>
+          </ng-template>
 
-        <ng-template [ngTemplateOutlet]="uploadIconTemplate()?.template || defaultUploadIconTemplate" />
+          <ng-template [ngTemplateOutlet]="uploadIconTemplate()?.template || defaultUploadIconTemplate" />
+        }
       </button>
     }
   </div>

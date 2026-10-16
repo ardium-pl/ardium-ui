@@ -5,8 +5,10 @@ import {
   ViewEncapsulation,
   computed,
   contentChild,
-  input
+  input,
+  untracked,
 } from '@angular/core';
+import { contextToInputs } from '../../_internal/utils/context-to-inputs';
 import { ComponentColor } from '../../types/colors.types';
 import { FormElementVariant } from '../../types/theming.types';
 import { _FileInputComponentBase } from '../file-input-base';
@@ -61,30 +63,35 @@ export class ArdiumFileDropAreaComponent extends _FileInputComponentBase {
   readonly dragoverTemplate = contentChild(ArdiumFileDropAreaDragoverContentTemplateDirective);
   readonly uploadedTemplate = contentChild(ArdiumFileDropAreaUploadedContentTemplateDirective);
 
-  getIdleContext(): FileInputBrowseContext {
-    return {
-      browse: () => {
-        this.openBrowseDialog();
-      },
-    };
-  }
-  getDragoverContext(): FileInputFileAmountContext {
-    return {
-      amount: this._draggedFiles!,
-      browse: () => {
-        this.openBrowseDialog();
-      },
-    };
-  }
-  getUploadedContext(): FileInputFilesContext {
-    const files = this.value!;
+  readonly idleContext = computed<FileInputBrowseContext>(() => ({
+    browse: () => {
+      untracked(() => this.openBrowseDialog());
+    },
+  }));
+  readonly dragoverContext = computed<FileInputFileAmountContext>(() => ({
+    amount: this._draggedFiles()!,
+    browse: () => {
+      untracked(() => this.openBrowseDialog());
+    },
+  }));
+  readonly uploadedContext = computed<FileInputFilesContext>(() => {
+    const files = this._value()!;
     return {
       $implicit: files,
       amount: files.length,
       files,
       browse: () => {
-        this.openBrowseDialog();
+        untracked(() => this.openBrowseDialog());
       },
     };
-  }
+  });
+
+  //! template components
+  readonly idleContentComponent = this._DEFAULTS.IdleContentComponent;
+  readonly dragoverContentComponent = this._DEFAULTS.DragoverContentComponent;
+  readonly uploadedContentComponent = this._DEFAULTS.UploadedContentComponent;
+
+  readonly idleContentComponentInputs = contextToInputs(this.idleContext, this.idleContentComponent);
+  readonly dragoverContentComponentInputs = contextToInputs(this.dragoverContext, this.dragoverContentComponent);
+  readonly uploadedContentComponentInputs = contextToInputs(this.uploadedContext, this.uploadedContentComponent);
 }

@@ -1,17 +1,19 @@
 import {
-    ChangeDetectionStrategy,
-    Component,
-    Inject,
-    ViewEncapsulation,
-    computed,
-    contentChild,
-    forwardRef,
-    input,
-    output,
-    signal,
+  ChangeDetectionStrategy,
+  Component,
+  Inject,
+  ViewEncapsulation,
+  computed,
+  contentChild,
+  forwardRef,
+  input,
+  output,
+  signal,
+  untracked,
 } from '@angular/core';
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
 import { BooleanLike, coerceBooleanProperty } from '@ardium-pl/devkit';
+import { contextToInputs } from '../../_internal/utils/context-to-inputs';
 import { ARD_FORM_FIELD_CONTROL } from '../../form-field/form-field-child.token';
 import { ComponentColor } from '../../types/colors.types';
 import { FormElementAppearance, FormElementVariant } from '../../types/theming.types';
@@ -19,12 +21,12 @@ import { _FileInputComponentBase } from '../file-input-base';
 import { FileInputBrowseContext, FileInputFileAmountContext, FileInputFilesContext } from '../file-input-types';
 import { ARD_FILE_INPUT_DEFAULTS, ArdFileInputDefaults } from './file-input.defaults';
 import {
-    ArdFileInputPrefixTemplateDirective,
-    ArdFileInputSuffixTemplateDirective,
-    ArdiumFileInputDragoverContentTemplateDirective,
-    ArdiumFileInputIdleContentTemplateDirective,
-    ArdiumFileInputUploadIconTemplateDirective,
-    ArdiumFileInputUploadedContentTemplateDirective
+  ArdFileInputPrefixTemplateDirective,
+  ArdFileInputSuffixTemplateDirective,
+  ArdiumFileInputDragoverContentTemplateDirective,
+  ArdiumFileInputIdleContentTemplateDirective,
+  ArdiumFileInputUploadIconTemplateDirective,
+  ArdiumFileInputUploadedContentTemplateDirective,
 } from './file-input.directives';
 
 @Component({
@@ -112,30 +114,36 @@ export class ArdiumFileInputComponent extends _FileInputComponentBase {
   readonly uploadedTemplate = contentChild(ArdiumFileInputUploadedContentTemplateDirective);
   readonly uploadIconTemplate = contentChild(ArdiumFileInputUploadIconTemplateDirective);
 
-  getIdleContext(): FileInputBrowseContext {
-    return {
-      browse: () => {
-        this.openBrowseDialog();
-      },
-    };
-  }
-  getDragoverContext(): FileInputFileAmountContext {
-    return {
-      amount: this._draggedFiles!,
-      browse: () => {
-        this.openBrowseDialog();
-      },
-    };
-  }
-  getUploadedContext(): FileInputFilesContext {
-    const files = this.value!;
+  readonly idleContext = computed<FileInputBrowseContext>(() => ({
+    browse: () => {
+      untracked(() => this.openBrowseDialog());
+    },
+  }));
+  readonly dragoverContext = computed<FileInputFileAmountContext>(() => ({
+    amount: this._draggedFiles()!,
+    browse: () => {
+      untracked(() => this.openBrowseDialog());
+    },
+  }));
+  readonly uploadedContext = computed<FileInputFilesContext>(() => {
+    const files = this._value()!;
     return {
       $implicit: files,
       amount: files.length,
       files,
       browse: () => {
-        this.openBrowseDialog();
+        untracked(() => this.openBrowseDialog());
       },
     };
-  }
+  });
+
+  //! template components
+  readonly idleContentComponent = this._DEFAULTS.IdleContentComponent;
+  readonly dragoverContentComponent = this._DEFAULTS.DragoverContentComponent;
+  readonly uploadedContentComponent = this._DEFAULTS.UploadedContentComponent;
+  readonly uploadIconComponent = this._DEFAULTS.UploadIconComponent;
+
+  readonly idleContentComponentInputs = contextToInputs(this.idleContext, this.idleContentComponent);
+  readonly dragoverContentComponentInputs = contextToInputs(this.dragoverContext, this.dragoverContentComponent);
+  readonly uploadedContentComponentInputs = contextToInputs(this.uploadedContext, this.uploadedContentComponent);
 }
