@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { FormElementAppearance } from 'projects/ui/src/public-api';
+import { FormElementAppearance } from '../../../../../../ui/src/public-api';
 import { Logger } from './../../../services/logger.service';
 
 @Component({

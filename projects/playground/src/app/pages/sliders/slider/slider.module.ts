@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
-import { ArdiumIconModule, ArdiumSliderModule } from 'projects/ui/src/public-api';
+import { ArdiumIconModule, ArdiumSliderModule } from '../../../../../../ui/src/public-api';
 import { SliderPage } from './slider.page';
 
 @NgModule({

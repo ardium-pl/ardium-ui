@@ -1,5 +1,5 @@
 import { Component, signal } from '@angular/core';
-import { ComponentColor, SegmentAppearance, SegmentVariant } from 'projects/ui/src/public-api';
+import { ComponentColor, SegmentAppearance, SegmentVariant } from '../../../../../ui/src/public-api';
 import { Logger } from '../../services/logger.service';
 
 @Component({

@@ -8,7 +8,7 @@ import {
   ArdiumRadioModule,
   ArdiumSegmentModule,
   ArdiumSelectModule,
-} from 'projects/ui/src/public-api';
+} from '../../../../../ui/src/public-api';
 import { BadgePage } from './badge.page';
 
 @NgModule({

@@ -1,5 +1,5 @@
 import { Component, input } from '@angular/core';
-import { ArdCheckboxIcon, ArdiumCheckboxModule, provideCheckboxDefaults } from 'projects/ui/src/public-api';
+import { ArdCheckboxIcon, ArdiumCheckboxModule, provideCheckboxDefaults } from '../../../../../ui/src/public-api';
 
 
 @Component({

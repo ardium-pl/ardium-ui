@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { SimpleComponentColor as SCC } from 'projects/ui/src/public-api';
+import { SimpleComponentColor as SCC } from '../../../../../ui/src/public-api';
 
 @Component({
   standalone: false,

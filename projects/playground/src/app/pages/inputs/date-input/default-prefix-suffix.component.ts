@@ -1,8 +1,5 @@
 import { Component } from '@angular/core';
-import {
-    ArdiumDateInputModule,
-    provideDateInputDefaults,
-} from 'projects/ui/src/public-api';
+import { ArdiumDateInputModule, provideDateInputDefaults } from '../../../../../../ui/src/public-api';
 
 @Component({
   selector: 'app-date-input-default-prefix',

@@ -1,6 +1,5 @@
 import { Component, model } from '@angular/core';
-import { ArdModalCloseIcon } from 'projects/ui/src/lib/modal/modal.types';
-import { ArdiumCheckboxModule, ArdiumModalModule, provideModalDefaults } from 'projects/ui/src/public-api';
+import { ArdModalCloseIcon, ArdiumCheckboxModule, ArdiumModalModule, provideModalDefaults } from '../../../../../ui/src/public-api';
 
 @Component({
   selector: 'app-modal-close-icon-default',

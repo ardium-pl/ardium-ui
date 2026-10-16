@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { ComponentColor as CC, ArdSlideToggleAppearance as STA } from 'projects/ui/src/public-api';
+import { ComponentColor as CC, ArdSlideToggleAppearance as STA } from '../../../../../ui/src/public-api';
 import { Logger } from '../../services/logger.service';
 
 @Component({

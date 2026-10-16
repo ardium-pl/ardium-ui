@@ -1,5 +1,5 @@
 import { Component, OnDestroy, signal } from '@angular/core';
-import { TableDataColumn, TableSubheader } from 'projects/ui/src/public-api';
+import { TableDataColumn, TableSubheader } from '../../../../../ui/src/public-api';
 import { Logger } from '../../services/logger.service';
 
 @Component({

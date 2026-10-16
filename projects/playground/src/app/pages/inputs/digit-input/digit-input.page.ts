@@ -1,11 +1,6 @@
 import { Component, viewChild } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
-import {
-  ArdiumDigitInputComponent,
-  DigitInputConfig,
-  DigitInputPrimitiveOption,
-  TransformType,
-} from 'projects/ui/src/public-api';
+import { ArdiumDigitInputComponent, DigitInputConfig, DigitInputPrimitiveOption, TransformType } from '../../../../../../ui/src/public-api';
 import { Logger } from '../../../services/logger.service';
 
 @Component({

@@ -1,5 +1,5 @@
-import { Directive, ElementRef, Inject, Input, Renderer2, OnInit, OnChanges, OnDestroy } from '@angular/core';
-import { DOCUMENT } from '@angular/common';
+import { Directive, ElementRef, Inject, Input, Renderer2, OnInit, OnChanges, OnDestroy, DOCUMENT } from '@angular/core';
+
 import { RoundedSelectionData } from '../types';
 import { getRoundedSelectionHTMLData } from '../html';
 

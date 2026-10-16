@@ -1,6 +1,6 @@
 import { Component, signal } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import { SliderRange, SliderTooltipFormatFn } from 'projects/ui/src/public-api';
+import { SliderRange, SliderTooltipFormatFn } from '../../../../../../ui/src/public-api';
 import { Logger } from '../../../services/logger.service';
 
 @Component({

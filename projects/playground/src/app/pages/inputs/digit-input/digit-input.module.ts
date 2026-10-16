@@ -2,7 +2,7 @@ import { CdkAutofill } from '@angular/cdk/text-field';
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
-import { ArdiumDigitInputModule } from 'projects/ui/src/public-api';
+import { ArdiumDigitInputModule } from '../../../../../../ui/src/public-api';
 import { DigitInputPage } from './digit-input.page';
 
 @NgModule({

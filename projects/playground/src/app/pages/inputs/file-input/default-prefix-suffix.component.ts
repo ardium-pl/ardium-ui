@@ -1,8 +1,5 @@
 import { Component } from '@angular/core';
-import {
-    ArdiumFileInputModule,
-    provideFileInputDefaults,
-} from 'projects/ui/src/public-api';
+import { ArdiumFileInputModule, provideFileInputDefaults } from '../../../../../../ui/src/public-api';
 
 @Component({
   selector: 'app-file-input-default-prefix',

@@ -1,10 +1,5 @@
 import { Component, input } from '@angular/core';
-import {
-  ArdCheckboxListLabelComponent,
-  ArdiumCheckboxListModule,
-  provideCheckboxDefaults,
-  provideCheckboxListDefaults,
-} from 'projects/ui/src/public-api';
+import { ArdCheckboxListLabelComponent, ArdiumCheckboxListModule, provideCheckboxDefaults, provideCheckboxListDefaults } from '../../../../../ui/src/public-api';
 import { DefaultCheckboxIcon } from '../checkbox/checkbox-default-component.component';
 
 @Component({

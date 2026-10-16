@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
-import { ArdiumRadioModule } from 'projects/ui/src/public-api';
+import { ArdiumRadioModule } from '../../../../../ui/src/public-api';
 import { RadioPage } from './radio.page';
 
 @NgModule({

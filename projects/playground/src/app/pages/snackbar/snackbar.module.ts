@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
-import { ArdiumButtonModule, ArdiumSnackbarService } from 'projects/ui/src/public-api';
+import { ArdiumButtonModule, ArdiumSnackbarService } from '../../../../../ui/src/public-api';
 import { SnackbarPage } from './snackbar.page';
 
 @NgModule({

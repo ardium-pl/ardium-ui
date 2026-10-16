@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
-import { ArdiumDateRangeInputModule } from 'projects/ui/src/lib/inputs/date-input/date-range-input.module';
+import { ArdiumDateRangeInputModule } from '../../../../../../ui/src/public-api';
 import { DateRangeInputPage } from './date-range-input.page';
 import { DateRangeInputDefaultPrefixDemoComponent } from './default-prefix-suffix.component';
 

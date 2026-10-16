@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { ButtonAppearance as BA, ComponentColor as CC, FabSize as FS } from 'projects/ui/src/public-api';
+import { ButtonAppearance as BA, ComponentColor as CC, FabSize as FS } from '../../../../../ui/src/public-api';
 import { Logger } from '../../services/logger.service';
 
 @Component({

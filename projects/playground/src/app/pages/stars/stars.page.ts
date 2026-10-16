@@ -1,5 +1,5 @@
 import { Component, signal } from '@angular/core';
-import { StarColor as SC, StarFillMode as SF } from 'projects/ui/src/public-api';
+import { StarColor as SC, StarFillMode as SF } from '../../../../../ui/src/public-api';
 import { Logger } from '../../services/logger.service';
 
 @Component({

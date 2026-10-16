@@ -1,8 +1,5 @@
 import { Component } from '@angular/core';
-import {
-  ArdiumPasswordInputModule,
-  providePasswordInputDefaults,
-} from 'projects/ui/src/public-api';
+import { ArdiumPasswordInputModule, providePasswordInputDefaults } from '../../../../../../ui/src/public-api';
 
 @Component({
   selector: 'app-password-input-default-prefix',

@@ -8,7 +8,7 @@
     "inlineSources": true,
     "types": ["node"],
     "paths": {
-      "@public-api": ["projects/ui/src/public-api"]
+      "@public-api": ["./projects/ui/src/public-api"]
     }
   },
   "exclude": ["src/test.ts", "**/*.spec.ts"]

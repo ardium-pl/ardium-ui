@@ -1,6 +1,6 @@
 import { Component, inject } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
-import { FileInputFileTypes } from 'projects/ui/src/lib/file-inputs/file-input-types';
+import { FileInputFileTypes } from '../../../../../../ui/src/lib/file-inputs/file-input-types';
 import { Logger } from '../../../services/logger.service';
 
 @Component({

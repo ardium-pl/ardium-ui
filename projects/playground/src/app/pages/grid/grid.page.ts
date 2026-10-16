@@ -1,5 +1,5 @@
 import { Component, inject } from '@angular/core';
-import { ArdiumBreakpointService } from 'projects/ui/src/public-api';
+import { ArdiumBreakpointService } from '../../../../../ui/src/public-api';
 
 @Component({
   standalone: false,

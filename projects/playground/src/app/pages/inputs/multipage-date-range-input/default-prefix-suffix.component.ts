@@ -1,8 +1,5 @@
 import { Component } from '@angular/core';
-import {
-    ArdiumMultipageDateRangeInputModule,
-    provideDateInputDefaults,
-} from 'projects/ui/src/public-api';
+import { ArdiumMultipageDateRangeInputModule, provideDateInputDefaults } from '../../../../../../ui/src/public-api';
 
 @Component({
   selector: 'app-multipage-date-range-input-default-prefix',

@@ -6,7 +6,7 @@
     "experimentalDecorators": true,
     "types": ["node"],
     "paths": {
-      "projects/ui/src/public-api": ["projects/ui/src/public-api", "dist/ui/ui", "dist/ui"]
+      "./projects/ui/src/public-api": ["./projects/ui/src/public-api", "./dist/ui/ui", "./dist/ui"]
     }
   },
   "files": ["src/main.ts", "src/polyfills.ts"],

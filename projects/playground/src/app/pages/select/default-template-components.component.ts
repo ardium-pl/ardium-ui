@@ -1,15 +1,12 @@
 import { Component, input } from '@angular/core';
 import {
+  ArdSelectDropdownArrowComponent,
   ArdSelectNoItemsFoundComponent,
   ArdSelectOptionComponent,
-  ArdSelectDropdownArrowComponent,
   ArdSelectPlaceholderComponent,
   ArdiumSelectModule,
   provideSelectDefaults,
-} from 'projects/ui/src/public-api';
-import { OptionContext } from 'projects/ui/src/lib/types/item-storage.types';
-import { ArdOption } from 'projects/ui/src/lib/types/item-storage.types';
-import { PlaceholderContext, SearchContext } from 'projects/ui/src/lib/select/select.types';
+} from '../../../../../ui/src/public-api';
 
 // Example 1: Custom option component
 @Component({
@@ -24,7 +21,10 @@ export class SelectDefaultOptionComponent implements ArdSelectOptionComponent {
 
 @Component({
   selector: 'app-select-default-option-demo',
-  template: `<ard-select [items]="items" searchable />`,
+  template: `<ard-select
+    [items]="items"
+    searchable
+  />`,
   standalone: true,
   imports: [ArdiumSelectModule],
   providers: [
@@ -49,7 +49,10 @@ export class SelectDefaultPlaceholderComponent implements ArdSelectPlaceholderCo
 
 @Component({
   selector: 'app-select-default-placeholder-demo',
-  template: `<ard-select [items]="items" placeholder="Pick a fruit..." />`,
+  template: `<ard-select
+    [items]="items"
+    placeholder="Pick a fruit..."
+  />`,
   standalone: true,
   imports: [ArdiumSelectModule],
   providers: [
@@ -97,7 +100,10 @@ export class SelectDefaultNoItemsFoundComponent implements ArdSelectNoItemsFound
 
 @Component({
   selector: 'app-select-default-no-items-found-demo',
-  template: `<ard-select [items]="items" searchable />`,
+  template: `<ard-select
+    [items]="items"
+    searchable
+  />`,
   standalone: true,
   imports: [ArdiumSelectModule],
   providers: [

@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
-import { ArdiumProgressBarModule } from 'projects/ui/src/public-api';
+import { ArdiumProgressBarModule } from '../../../../../ui/src/public-api';
 import { ProgressBarPage } from './progress-bar.page';
 
 @NgModule({

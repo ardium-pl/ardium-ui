@@ -1,7 +1,7 @@
-import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { NgModule } from '@angular/core';
+import { ArdiumTabberModule } from '../../../../../ui/src/public-api';
 import { TabberPage } from './tabber.page';
-import { ArdiumTabberModule } from 'projects/ui/src/public-api';
 
 @NgModule({
   declarations: [TabberPage],

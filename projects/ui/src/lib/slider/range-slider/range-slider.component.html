@@ -51,14 +51,14 @@
       [style]="{ left: handlePositionsPercent()[0] }"
     >
       <ng-template
-        #defaultTooltipTemplate
+        #defaultTooltipTemplate1
         let-value
       >
         <div class="ard-slider-tooltip">{{ value }}</div>
       </ng-template>
 
       <ng-template
-        [ngTemplateOutlet]="tooltipTemplate()?.template || defaultTooltipTemplate"
+        [ngTemplateOutlet]="tooltipTemplate()?.template || defaultTooltipTemplate1"
         [ngTemplateOutletContext]="tooltipContexts().from"
       >
       </ng-template>
@@ -85,14 +85,14 @@
       [style]="{ left: handlePositionsPercent()[1] }"
     >
       <ng-template
-        #defaultTooltipTemplate
+        #defaultTooltipTemplate2
         let-value
       >
         <div class="ard-slider-tooltip">{{ value }}</div>
       </ng-template>
 
       <ng-template
-        [ngTemplateOutlet]="tooltipTemplate()?.template || defaultTooltipTemplate"
+        [ngTemplateOutlet]="tooltipTemplate()?.template || defaultTooltipTemplate2"
         [ngTemplateOutletContext]="tooltipContexts().to"
       >
       </ng-template>

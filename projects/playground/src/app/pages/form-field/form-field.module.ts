@@ -1,17 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
-import {
-  ArdiumDigitInputModule,
-  ArdiumFileInputModule,
-  ArdiumFormFieldModule,
-  ArdiumInputModule,
-  ArdiumNumberInputModule,
-  ArdiumRadioModule,
-  ArdiumSegmentModule,
-  ArdiumSelectModule,
-  provideErrorMap,
-} from 'projects/ui/src/public-api';
+import { ArdiumDigitInputModule, ArdiumFileInputModule, ArdiumFormFieldModule, ArdiumInputModule, ArdiumNumberInputModule, ArdiumRadioModule, ArdiumSegmentModule, ArdiumSelectModule, provideErrorMap } from '../../../../../ui/src/public-api';
 import { FormFieldPage } from './form-field.page';
 
 @NgModule({

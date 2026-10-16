@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { ArdiumAutocompleteInputModule, ArdiumIconModule } from 'projects/ui/src/public-api';
+import { ArdiumAutocompleteInputModule, ArdiumIconModule } from '../../../../../../ui/src/public-api';
 import { AutocompleteInputPage } from './autocomplete-input.page';
 import { AutocompleteInputDefaultPrefixDemoComponent } from './default-prefix-suffix.component';
 

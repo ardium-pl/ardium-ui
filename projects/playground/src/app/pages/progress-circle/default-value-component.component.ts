@@ -1,5 +1,5 @@
 import { Component, input } from '@angular/core';
-import { ArdiumProgressCircleModule, ArdProgressCircleValueComponent, provideProgressCircleDefaults } from 'projects/ui/src/public-api';
+import { ArdProgressCircleValueComponent, ArdiumProgressCircleModule, provideProgressCircleDefaults } from '../../../../../ui/src/public-api';
 
 @Component({
   standalone: true,

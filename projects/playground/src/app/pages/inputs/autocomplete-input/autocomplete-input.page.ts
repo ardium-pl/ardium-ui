@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { findBestSuggestions } from '@ardium-pl/devkit';
-import { FormElementAppearance } from 'projects/ui/src/public-api';
 import { BehaviorSubject } from 'rxjs';
+import { FormElementAppearance } from '../../../../../../ui/src/public-api';
 import { DataService } from './../../../services/data.service';
 import { Logger } from './../../../services/logger.service';
 

@@ -1,5 +1,5 @@
 import { Component, signal } from '@angular/core';
-import { PanelAppearance, PanelVariant } from 'projects/ui/src/public-api';
+import { PanelAppearance, PanelVariant } from '../../../../../ui/src/public-api';
 import { Logger } from '../../services/logger.service';
 
 @Component({

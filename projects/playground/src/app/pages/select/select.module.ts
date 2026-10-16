@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
-import { ArdiumChipModule, ArdiumIconModule, ArdiumOptionModule, ArdiumSelectModule } from 'projects/ui/src/public-api';
+import { ArdiumChipModule, ArdiumIconModule, ArdiumOptionModule, ArdiumSelectModule } from '../../../../../ui/src/public-api';
 import { SelectDefaultPrefixDemoComponent } from './default-prefix-suffix.component';
 import {
   SelectDefaultDropdownArrowDemoComponent,

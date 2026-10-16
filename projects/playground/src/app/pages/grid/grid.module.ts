@@ -1,7 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
-import { ArdiumStackModule } from "projects/ui/src/lib/stack/stack.module";
-import { ArdiumGridModule, provideBreakpoints } from 'projects/ui/src/public-api';
+import { ArdiumGridModule, ArdiumStackModule, provideBreakpoints } from '../../../../../ui/src/public-api';
 import { GridPage } from './grid.page';
 
 @NgModule({

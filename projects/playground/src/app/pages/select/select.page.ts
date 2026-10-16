@@ -1,6 +1,6 @@
 import { Component, effect, signal } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
-import { ArdSearchFunction } from 'projects/ui/src/public-api';
+import { ArdSearchFunction } from '../../../../../ui/src/public-api';
 import { Logger } from '../../services/logger.service';
 import { DataService } from './../../services/data.service';
 

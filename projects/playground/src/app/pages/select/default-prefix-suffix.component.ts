@@ -1,5 +1,5 @@
 import { Component, input } from '@angular/core';
-import { ArdFormFieldFramePrefixSuffix, ArdiumSelectModule, provideSelectDefaults } from 'projects/ui/src/public-api';
+import { ArdFormFieldFramePrefixSuffix, ArdiumSelectModule, provideSelectDefaults } from '../../../../../ui/src/public-api';
 
 @Component({
   selector: 'app-select-default-prefix',

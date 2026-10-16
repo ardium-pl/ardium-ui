@@ -1,6 +1,6 @@
 import { Component, computed, inject, signal } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import { ArdiumDateInputComponent } from 'projects/ui/src/public-api';
+import { ArdiumDateInputComponent } from '../../../../../../ui/src/public-api';
 import { Logger } from '../../../services/logger.service';
 
 @Component({

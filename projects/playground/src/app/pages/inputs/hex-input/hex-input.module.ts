@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { ArdiumHexInputModule, ArdiumIconModule } from 'projects/ui/src/public-api';
+import { ArdiumHexInputModule, ArdiumIconModule } from '../../../../../../ui/src/public-api';
 import { HexInputDefaultPrefixDemoComponent } from './default-prefix-suffix.component';
 import { HexInputPage } from './hex-input.page';
 

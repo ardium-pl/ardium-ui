@@ -1,8 +1,5 @@
 import { Component } from '@angular/core';
-import {
-  ArdiumAutocompleteInputModule,
-  provideAutocompleteInputDefaults,
-} from 'projects/ui/src/public-api';
+import { ArdiumAutocompleteInputModule, provideAutocompleteInputDefaults } from '../../../../../../ui/src/public-api';
 
 @Component({
   selector: 'app-autocomplete-input-default-prefix',

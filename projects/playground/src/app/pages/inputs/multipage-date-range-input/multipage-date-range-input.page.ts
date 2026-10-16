@@ -1,7 +1,7 @@
 import { Component, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormControl } from '@angular/forms';
-import { DateRange } from 'projects/ui/src/public-api';
+import { DateRange } from '../../../../../../ui/src/public-api';
 import { Logger } from '../../../services/logger.service';
 
 @Component({

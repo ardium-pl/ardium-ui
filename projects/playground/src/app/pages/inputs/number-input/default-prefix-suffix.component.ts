@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { ArdFormFieldFramePrefixSuffix, ArdiumNumberInputModule, provideNumberInputDefaults } from 'projects/ui/src/public-api';
+import { ArdFormFieldFramePrefixSuffix, ArdiumNumberInputModule, provideNumberInputDefaults } from '../../../../../../ui/src/public-api';
 
 @Component({
   selector: 'app-number-input-default-prefix',

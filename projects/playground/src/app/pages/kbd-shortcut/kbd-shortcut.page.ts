@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { FormElementAppearance } from 'projects/ui/src/public-api';
+import { FormElementAppearance } from '../../../../../ui/src/public-api';
 
 @Component({
   standalone: false,

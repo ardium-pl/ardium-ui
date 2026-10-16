@@ -1,8 +1,5 @@
 import { Component } from '@angular/core';
-import {
-    ArdiumInputModule,
-    provideInputDefaults,
-} from 'projects/ui/src/public-api';
+import { ArdiumInputModule, provideInputDefaults } from '../../../../../../ui/src/public-api';
 
 @Component({
   selector: 'app-input-default-prefix',

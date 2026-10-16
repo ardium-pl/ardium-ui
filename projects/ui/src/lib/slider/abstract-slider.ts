@@ -1,23 +1,24 @@
 import { Overlay, ScrollStrategyOptions } from '@angular/cdk/overlay';
-import { DOCUMENT } from '@angular/common';
+
 import {
-    Directive,
-    ElementRef,
-    HostListener,
-    Input,
-    Renderer2,
-    Signal,
-    ViewContainerRef,
-    WritableSignal,
-    computed,
-    contentChild,
-    effect,
-    inject,
-    input,
-    output,
-    signal,
-    untracked,
-    viewChild,
+  Directive,
+  ElementRef,
+  HostListener,
+  Input,
+  Renderer2,
+  Signal,
+  ViewContainerRef,
+  WritableSignal,
+  computed,
+  contentChild,
+  effect,
+  inject,
+  input,
+  output,
+  signal,
+  untracked,
+  viewChild,
+  DOCUMENT
 } from '@angular/core';
 import { BooleanLike, NumberLike, coerceArrayProperty, coerceBooleanProperty, coerceNumberProperty } from '@ardium-pl/devkit';
 import { roundToMultiple, roundToPrecision } from 'more-rounding';

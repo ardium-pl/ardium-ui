@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import { CheckboxState, SimpleComponentColor as SCC } from 'projects/ui/src/public-api';
+import { CheckboxState, SimpleComponentColor as SCC } from '../../../../../ui/src/public-api';
 import { Logger } from '../../services/logger.service';
 
 @Component({

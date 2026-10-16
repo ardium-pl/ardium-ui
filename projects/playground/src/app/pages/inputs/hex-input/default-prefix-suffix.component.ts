@@ -1,8 +1,5 @@
 import { Component } from '@angular/core';
-import {
-    ArdiumHexInputModule,
-    provideHexInputDefaults,
-} from 'projects/ui/src/public-api';
+import { ArdiumHexInputModule, provideHexInputDefaults } from '../../../../../../ui/src/public-api';
 
 @Component({
   selector: 'app-hex-input-default-prefix',
