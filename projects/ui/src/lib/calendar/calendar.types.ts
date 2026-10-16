@@ -1,5 +1,5 @@
-import { TemplateComponent } from 'dist/ui';
 import { isDate, isNumber } from 'simple-bool';
+import { TemplateComponent } from '../types/utility.types';
 
 export const ArdCalendarView = {
   Days: 'days',
