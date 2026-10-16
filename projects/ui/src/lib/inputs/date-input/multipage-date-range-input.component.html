@@ -29,35 +29,45 @@
         class="ard-date-input__value"
         [class.ard-date-input__value-hidden]="!shouldDisplayValue()"
       >
-        <ng-template
-          #defaultValueTemplate
-          let-date
-        >
-          {{ date }}
-        </ng-template>
+        @if (valueComponent && !valueTemplate()) {
+          <!-- render the component -->
+          <ng-template
+            [ngComponentOutlet]="valueComponent"
+            [ngComponentOutletInputs]="valueComponentInputs()"
+          />
+        } @else {
+          <ng-template
+            #defaultValueTemplate
+            let-date
+          >
+            {{ date }}
+          </ng-template>
 
-        <ng-template
-          [ngTemplateOutlet]="valueTemplate()?.template || defaultValueTemplate"
-          [ngTemplateOutletContext]="valueContext()"
-        />
+          <ng-template
+            [ngTemplateOutlet]="valueTemplate()?.template || defaultValueTemplate"
+            [ngTemplateOutletContext]="valueContext()"
+          />
+        }
       </div>
     </div>
 
     @if (!calendarHidden() && !readonly()) {
-    <ard-icon-button
-      color="none"
-      [disabled]="calendarDisabled()"
-      (click)="onCalendarButtonClick($event)"
-    >
-      <ng-template
-        #defaultCalendarIconTemplate
-        let-date
+      <ard-icon-button
+        color="none"
+        [disabled]="calendarDisabled()"
+        (click)="onCalendarButtonClick($event)"
       >
-        <ard-icon filled>today</ard-icon>
-      </ng-template>
+        @if (calendarIconComponent && !calendarIconTemplate()) {
+          <!-- render the component -->
+          <ng-template [ngComponentOutlet]="calendarIconComponent" />
+        } @else {
+          <ng-template #defaultCalendarIconTemplate>
+            <ard-icon filled>today</ard-icon>
+          </ng-template>
 
-      <ng-template [ngTemplateOutlet]="calendarIconTemplate()?.template || defaultCalendarIconTemplate" />
-    </ard-icon-button>
+          <ng-template [ngTemplateOutlet]="calendarIconTemplate()?.template || defaultCalendarIconTemplate" />
+        }
+      </ard-icon-button>
     }
   </div>
 </ard-form-field-frame>
@@ -74,84 +84,95 @@
   >
     <div class="ard-date-input__multipage-wrapper">
       @for (calendarData of calendarDataArray(); track $index) {
-      <ard-range-calendar
-        class="ard-date-input__calendar"
-        [activeMonth]="calendarData.activeDate.getMonth()"
-        [activeYear]="calendarData.activeDate.getFullYear()"
-        (activePageChange)="onActivePageChange($event, $index)"
-        (highlightDay)="onHighlightDate($event)"
-        [highlightedDay]="calendarData.highlightedDay"
-        [(activeView)]="activeView"
-        [firstWeekday]="firstWeekday()"
-        [min]="min()"
-        [max]="max()"
-        [UTC]="_UTCAfterInit()"
-        [autoFocus]="$index === 0"
-        hideFloatingMonth
-        staticHeight
-        [multipleYearPageChangeModifier]="multipleYearPageChangeModifier()"
-        [color]="color()"
-        [disabled]="disabled() || calendarDisabled()"
-        [tabIndex]="tabIndex()"
-        [value]="value()"
-        [multiCalendarLocation]="calendarData.location"
-        [daysViewHeaderDateFormat]="calendarDaysViewHeaderDateFormat()"
-        [yearsViewHeaderDateFormat]="calendarYearsViewHeaderDateFormat()"
-        [monthsViewHeaderDateFormat]="calendarMonthsViewHeaderDateFormat()"
-        [weekdayDateFormat]="calendarWeekdayDateFormat()"
-        [weekdayTitleDateFormat]="calendarWeekdayTitleDateFormat()"
-        [yearDateFormat]="calendarYearDateFormat()"
-        [monthDateFormat]="calendarMonthDateFormat()"
-        [dayDateFormat]="calendarDayDateFormat()"
-        (valueChange)="onCalendarSelectedChange($event)"
-        (yearSelect)="yearSelect.emit($event)"
-        (monthSelect)="monthSelect.emit($event)"
-      >
-        <ng-template
-          _ard-tmp-repository
-          [daysViewHeaderTmp]="calendarDaysViewHeaderTemplate() ?? { template: defaultDaysViewHeaderTemplate }"
-          [yearsViewHeaderTmp]="calendarYearsViewHeaderTemplate()"
-          [monthsViewHeaderTmp]="calendarMonthsViewHeaderTemplate()"
-          [weekdayTmp]="calendarWeekdayTemplate()"
-          [floatingMonthTmp]="calendarFloatingMonthTemplate()"
-          [yearTmp]="calendarYearTemplate()"
-          [monthTmp]="calendarMonthTemplate()"
-          [dayTmp]="calendarDayTemplate()"
-        />
-      </ard-range-calendar>
+        <ard-range-calendar
+          class="ard-date-input__calendar"
+          [activeMonth]="calendarData.activeDate.getMonth()"
+          [activeYear]="calendarData.activeDate.getFullYear()"
+          (activePageChange)="onActivePageChange($event, $index)"
+          (highlightDay)="onHighlightDate($event)"
+          [highlightedDay]="calendarData.highlightedDay"
+          [(activeView)]="activeView"
+          [firstWeekday]="firstWeekday()"
+          [min]="min()"
+          [max]="max()"
+          [UTC]="_UTCAfterInit()"
+          [autoFocus]="$index === 0"
+          hideFloatingMonth
+          staticHeight
+          [multipleYearPageChangeModifier]="multipleYearPageChangeModifier()"
+          [color]="color()"
+          [disabled]="disabled() || calendarDisabled()"
+          [tabIndex]="tabIndex()"
+          [value]="value()"
+          [multiCalendarLocation]="calendarData.location"
+          [daysViewHeaderDateFormat]="calendarDaysViewHeaderDateFormat()"
+          [yearsViewHeaderDateFormat]="calendarYearsViewHeaderDateFormat()"
+          [monthsViewHeaderDateFormat]="calendarMonthsViewHeaderDateFormat()"
+          [weekdayDateFormat]="calendarWeekdayDateFormat()"
+          [weekdayTitleDateFormat]="calendarWeekdayTitleDateFormat()"
+          [yearDateFormat]="calendarYearDateFormat()"
+          [monthDateFormat]="calendarMonthDateFormat()"
+          [dayDateFormat]="calendarDayDateFormat()"
+          (valueChange)="onCalendarSelectedChange($event)"
+          (yearSelect)="yearSelect.emit($event)"
+          (monthSelect)="monthSelect.emit($event)"
+        >
+          <ng-template
+            _ard-tmp-repository
+            [daysViewHeaderTmp]="
+              calendarDaysViewHeaderTemplate() ??
+              (!HAS_DAYS_VIEW_HEADER_COMPONENT ? { template: defaultDaysViewHeaderTemplate } : undefined)
+            "
+            [yearsViewHeaderTmp]="calendarYearsViewHeaderTemplate()"
+            [monthsViewHeaderTmp]="calendarMonthsViewHeaderTemplate()"
+            [weekdayTmp]="calendarWeekdayTemplate()"
+            [floatingMonthTmp]="calendarFloatingMonthTemplate()"
+            [yearTmp]="calendarYearTemplate()"
+            [monthTmp]="calendarMonthTemplate()"
+            [dayTmp]="calendarDayTemplate()"
+          />
+        </ard-range-calendar>
       }
     </div>
     @if (useAcceptButtonToSelect()) {
-    <div class="ard-date-input__accept-buttons-container">
-      <ng-template
-        #defaultAcceptButtonsTemplate
-        let-accept="accept"
-        let-cancel="cancel"
-        let-disabled="disabled"
-      >
-        <ard-button
-          appearance="outlined"
-          color="none"
-          [disabled]="disabled"
-          (click)="cancel()"
-        >
-          {{ cancelButtonText() }}
-        </ard-button>
-        <ard-button
-          appearance="raised"
-          [color]="color()"
-          [disabled]="disabled"
-          (click)="accept()"
-        >
-          {{ acceptButtonText() }}
-        </ard-button>
-      </ng-template>
+      <div class="ard-date-input__accept-buttons-container">
+        @if (acceptButtonsComponent && !acceptButtonsTemplate()) {
+          <!-- render the component -->
+          <ng-template
+            [ngComponentOutlet]="acceptButtonsComponent"
+            [ngComponentOutletInputs]="acceptButtonsComponentInputs()"
+          />
+        } @else {
+          <ng-template
+            #defaultAcceptButtonsTemplate
+            let-accept="accept"
+            let-cancel="cancel"
+            let-disabled="disabled"
+          >
+            <ard-button
+              appearance="outlined"
+              color="none"
+              [disabled]="disabled"
+              (click)="cancel()"
+            >
+              {{ cancelButtonText() }}
+            </ard-button>
+            <ard-button
+              appearance="raised"
+              [color]="color()"
+              [disabled]="disabled"
+              (click)="accept()"
+            >
+              {{ acceptButtonText() }}
+            </ard-button>
+          </ng-template>
 
-      <ng-template
-        [ngTemplateOutlet]="acceptButtonsTemplate()?.template || defaultAcceptButtonsTemplate"
-        [ngTemplateOutletContext]="acceptButtonsContext()"
-      />
-    </div>
+          <ng-template
+            [ngTemplateOutlet]="acceptButtonsTemplate()?.template || defaultAcceptButtonsTemplate"
+            [ngTemplateOutletContext]="acceptButtonsContext()"
+          />
+        }
+      </div>
     }
   </ard-dropdown-panel>
 </ng-template>
@@ -169,33 +190,33 @@
   <div class="ard-calendar__calendar-header">
     <div>
       @if (!hidePreviousPageButton) {
-      <ard-icon-button
-        size="small"
-        appearance="transparent"
-        color="none"
-        (click)="prevMonth()"
-        [tabIndex]="tabIndex()"
-        [disabled]="!canGoToPreviousMonth"
-      >
-        <ard-icon>chevron_left</ard-icon>
-      </ard-icon-button>
+        <ard-icon-button
+          size="small"
+          appearance="transparent"
+          color="none"
+          (click)="prevMonth()"
+          [tabIndex]="tabIndex()"
+          [disabled]="!canGoToPreviousMonth"
+        >
+          <ard-icon>chevron_left</ard-icon>
+        </ard-icon-button>
       }
     </div>
     <span class="ard-calendar__header-button">
-      {{ currDate | date : calendarDaysViewHeaderDateFormat() | uppercase }}
+      {{ currDate | date: calendarDaysViewHeaderDateFormat() | uppercase }}
     </span>
     <div>
       @if (!hideNextPageButton) {
-      <ard-icon-button
-        size="small"
-        appearance="transparent"
-        color="none"
-        (click)="nextMonth()"
-        [tabIndex]="tabIndex()"
-        [disabled]="!canGoToNextMonth"
-      >
-        <ard-icon>chevron_right</ard-icon>
-      </ard-icon-button>
+        <ard-icon-button
+          size="small"
+          appearance="transparent"
+          color="none"
+          (click)="nextMonth()"
+          [tabIndex]="tabIndex()"
+          [disabled]="!canGoToNextMonth"
+        >
+          <ard-icon>chevron_right</ard-icon>
+        </ard-icon-button>
       }
     </div>
   </div>

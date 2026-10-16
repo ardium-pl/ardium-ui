@@ -27,4 +27,5 @@ export type StarColor = (typeof StarColor)[keyof typeof StarColor];
 
 export interface ArdStarIconContext {
   $implicit: StarFillMode;
+  filled: StarFillMode;
 }

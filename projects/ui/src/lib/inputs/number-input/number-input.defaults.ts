@@ -1,8 +1,8 @@
 import { InjectionToken, Provider, Type } from '@angular/core';
 import { _FormFieldComponentDefaults, _formFieldComponentDefaults } from '../../_internal/form-field-component';
-import { ArdFormFieldFramePrefixSuffix } from '../../form-field-frame';
 import { OneAxisAlignment } from './../../types/alignment.types';
 import { FormElementAppearance, FormElementVariant } from './../../types/theming.types';
+import { ArdNumberInputPlaceholder, ArdNumberInputPrefix, ArdNumberInputSuffix } from './number-input.directives';
 import { ArdNumberInputMinMaxBehavior } from './number-input.types';
 
 export interface ArdNumberInputDefaults extends _FormFieldComponentDefaults {
@@ -22,8 +22,9 @@ export interface ArdNumberInputDefaults extends _FormFieldComponentDefaults {
   noButtons: boolean;
   stepSize: number;
   keepFocusOnQuickChangeButton: boolean;
-  PrefixComponent?: Type<ArdFormFieldFramePrefixSuffix>;
-  SuffixComponent?: Type<ArdFormFieldFramePrefixSuffix>;
+  PrefixComponent?: Type<ArdNumberInputPrefix>;
+  SuffixComponent?: Type<ArdNumberInputSuffix>;
+  PlaceholderComponent?: Type<ArdNumberInputPlaceholder>;
 }
 
 const _numberInputDefaults: ArdNumberInputDefaults = {
@@ -46,6 +47,7 @@ const _numberInputDefaults: ArdNumberInputDefaults = {
   keepFocusOnQuickChangeButton: true,
   PrefixComponent: undefined,
   SuffixComponent: undefined,
+  PlaceholderComponent: undefined,
 };
 
 export const ARD_NUMBER_INPUT_DEFAULTS = new InjectionToken<ArdNumberInputDefaults>('ard-number-input-defaults', {

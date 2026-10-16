@@ -1,7 +1,7 @@
 import { TemplateRef } from '@angular/core';
-import { ComponentColor } from '../types/colors.types';
-import { NonEmptyArray } from '../types/utility.types';
 import { CheckboxState } from '../checkbox/checkbox.types';
+import { ComponentColor } from '../types/colors.types';
+import { NonEmptyArray, Nullable } from '../types/utility.types';
 
 export type DataSource = string | { type: 'checkbox' | 'autocount' };
 
@@ -53,7 +53,12 @@ export interface TableHeaderCheckboxContext {
   onChange: () => void;
 }
 export interface TableCaptionContext {
-  $implicit: string;
+  $implicit: Nullable<string>;
+  caption: Nullable<string>;
+}
+export interface TableCellContext {
+  $implicit: any;
+  cellData: any;
 }
 
 //! appearance-related

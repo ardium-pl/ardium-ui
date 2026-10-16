@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component, computed, contentChild, inject, input, ViewEncapsulation } from '@angular/core';
 import { coerceNumberProperty, NumberLike } from '@ardium-pl/devkit';
 import { isArray, isNumber } from 'simple-bool';
+import { contextToInputs } from '../../_internal/utils/context-to-inputs';
 import { StarColor, StarFillMode } from './../star.types';
 import { ARD_RATING_DISPLAY_DEFAULTS } from './rating-display.defaults';
 import { ArdRatingDisplayStarTemplateDirective } from './rating-display.directives';
@@ -78,4 +79,8 @@ export class ArdiumRatingDisplayComponent {
       color: this.color(),
     })
   );
+
+  readonly starComponent = this._DEFAULTS.StarIconComponent;
+
+  readonly starComponentInputs = contextToInputs(this.getStarTemplateContext, this.starComponent);
 }

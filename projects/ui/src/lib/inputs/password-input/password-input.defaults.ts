@@ -1,8 +1,13 @@
 import { InjectionToken, Provider, Type } from '@angular/core';
 import { _FormFieldComponentDefaults, _formFieldComponentDefaults } from '../../_internal/form-field-component';
-import { ArdFormFieldFramePrefixSuffix } from '../../form-field-frame';
 import { FormElementAppearance, FormElementVariant } from './../../types/theming.types';
 import { Nullable } from './../../types/utility.types';
+import {
+  ArdPassowrdInputPlaceholder,
+  ArdPasswordInputPrefix,
+  ArdPasswordInputRevealButton,
+  ArdPasswordInputSuffix,
+} from './password-input.directives';
 
 export interface ArdPasswordInputDefaults extends _FormFieldComponentDefaults {
   appearance: FormElementAppearance;
@@ -14,8 +19,10 @@ export interface ArdPasswordInputDefaults extends _FormFieldComponentDefaults {
   autoHideTimeoutMs: Nullable<number>;
   revealed: boolean;
   inputAttrs: Record<string, any>;
-  PrefixComponent?: Type<ArdFormFieldFramePrefixSuffix>;
-  SuffixComponent?: Type<ArdFormFieldFramePrefixSuffix>;
+  PrefixComponent?: Type<ArdPasswordInputPrefix>;
+  SuffixComponent?: Type<ArdPasswordInputSuffix>;
+  PlaceholderComponent?: Type<ArdPassowrdInputPlaceholder>;
+  RevealButtonComponent?: Type<ArdPasswordInputRevealButton>;
 }
 
 const _passwordInputDefaults: ArdPasswordInputDefaults = {
@@ -31,6 +38,8 @@ const _passwordInputDefaults: ArdPasswordInputDefaults = {
   inputAttrs: {},
   PrefixComponent: undefined,
   SuffixComponent: undefined,
+  PlaceholderComponent: undefined,
+  RevealButtonComponent: undefined,
 };
 
 export const ARD_PASSWORD_INPUT_DEFAULTS = new InjectionToken<ArdPasswordInputDefaults>('ard-password-input-defaults', {

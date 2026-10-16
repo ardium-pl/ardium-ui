@@ -26,17 +26,25 @@
       >
         <div class="ard-focus-overlay"></div>
         <div class="ard-button-content">
-          <ng-template
-            #defaultLabelTemplate
-            let-label
-          >
-            {{ label }}
-          </ng-template>
+          @if (labelComponent && !labelTemplate()) {
+            <!-- render the component -->
+            <ng-template
+              [ngComponentOutlet]="labelComponent"
+              [ngComponentOutletInputs]="labelComponentInputs()($index)"
+            />
+          } @else {
+            <ng-template
+              #defaultLabelTemplate
+              let-label
+            >
+              {{ label }}
+            </ng-template>
 
-          <ng-template
-            [ngTemplateOutlet]="tabObj.template ?? labelTemplate()?.template ?? defaultLabelTemplate"
-            [ngTemplateOutletContext]="tabObj.templateContext"
-          />
+            <ng-template
+              [ngTemplateOutlet]="labelTemplate()?.template || defaultLabelTemplate"
+              [ngTemplateOutletContext]="labelTemplateContext()($index)"
+            />
+          }
         </div>
       </button>
     }

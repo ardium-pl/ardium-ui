@@ -1,29 +1,30 @@
 import { ConnectedPosition, Overlay, OverlayConfig, OverlayRef, ScrollStrategyOptions } from '@angular/cdk/overlay';
 import { TemplatePortal } from '@angular/cdk/portal';
 import {
-    AfterViewInit,
-    ChangeDetectionStrategy,
-    Component,
-    ElementRef,
-    HostListener,
-    Inject,
-    Input,
-    TemplateRef,
-    ViewContainerRef,
-    ViewEncapsulation,
-    computed,
-    contentChild,
-    forwardRef,
-    inject,
-    input,
-    output,
-    signal,
-    viewChild,
+  AfterViewInit,
+  ChangeDetectionStrategy,
+  Component,
+  ElementRef,
+  HostListener,
+  Inject,
+  Input,
+  TemplateRef,
+  ViewContainerRef,
+  ViewEncapsulation,
+  computed,
+  contentChild,
+  forwardRef,
+  inject,
+  input,
+  output,
+  signal,
+  viewChild,
 } from '@angular/core';
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
 import { BooleanLike, coerceArrayProperty, coerceBooleanProperty } from '@ardium-pl/devkit';
 import { isString } from 'simple-bool';
 import { SimplestItemStorage, SimplestItemStorageHost } from '../../_internal/item-storages/simplest-item-storage';
+import { contextToInputs } from '../../_internal/utils/context-to-inputs';
 import { DropdownPanelAppearance, DropdownPanelVariant } from '../../dropdown-panel/dropdown-panel.types';
 import { ARD_FORM_FIELD_CONTROL } from '../../form-field/form-field-child.token';
 import { ArdSimplestStorageItem } from '../../types/item-storage.types';
@@ -34,11 +35,11 @@ import { OptionContext } from './../../types/item-storage.types';
 import { InputModel, InputModelHost, escapeAndCreateRegex } from './../input-utils';
 import { ARD_AUTOCOMPLETE_INPUT_DEFAULTS, ArdAutocompleteInputDefaults } from './autocomplete-input.defaults';
 import {
-    ArdAutocompleteInputLoadingTemplateDirective,
-    ArdAutocompleteInputPlaceholderTemplateDirective,
-    ArdAutocompleteInputPrefixTemplateDirective,
-    ArdAutocompleteInputSuffixTemplateDirective,
-    ArdAutocompleteInputSuggestionTemplateDirective,
+  ArdAutocompleteInputLoadingTemplateDirective,
+  ArdAutocompleteInputPlaceholderTemplateDirective,
+  ArdAutocompleteInputPrefixTemplateDirective,
+  ArdAutocompleteInputSuffixTemplateDirective,
+  ArdAutocompleteInputSuggestionTemplateDirective,
 } from './autocomplete-input.directives';
 
 @Component({
@@ -126,6 +127,10 @@ export class ArdiumAutocompleteInputComponent
   //! placeholder
   override readonly placeholderTemplate = contentChild(ArdAutocompleteInputPlaceholderTemplateDirective);
 
+  readonly placeholderComponent = this._DEFAULTS.PlaceholderComponent;
+
+  readonly placeholderComponentInputs = contextToInputs(this.placeholderTemplateContext, this.placeholderComponent);
+
   //! suggestions
   readonly suggestionStorage = new SimplestItemStorage(this);
 
@@ -157,6 +162,9 @@ export class ArdiumAutocompleteInputComponent
 
   readonly suggestionTemplate = contentChild(ArdAutocompleteInputSuggestionTemplateDirective);
   readonly suggestionLoadingTemplate = contentChild(ArdAutocompleteInputLoadingTemplateDirective);
+
+  readonly suggestionComponent = this._DEFAULTS.SuggestionComponent;
+  readonly suggestionLoadingComponent = this._DEFAULTS.LoadingComponent;
 
   //! suggestions overlay
   readonly dropdownHost = viewChild<ElementRef<HTMLDivElement>>('suggestionsHost');
@@ -200,16 +208,20 @@ export class ArdiumAutocompleteInputComponent
     this.dropdownOverlay.updateSize({ width: rect?.width });
   }
 
-  readonly optionContextGenerator = computed<(item: ArdSimplestStorageItem) => OptionContext<ArdSimplestStorageItem>>(() => item => ({
-    $implicit: item,
-    item,
-    index: item.index,
-    value: item.value,
-    label: item.label,
-    selected: item.selected,
-    highlighted: item.highlighted,
-    itemData: item.itemData,
-  }));
+  readonly optionContextGenerator = computed<(item: ArdSimplestStorageItem) => OptionContext<ArdSimplestStorageItem>>(
+    () => item => ({
+      $implicit: item,
+      item,
+      index: item.index,
+      value: item.value,
+      label: item.label,
+      selected: item.selected,
+      highlighted: item.highlighted,
+      itemData: item.itemData,
+    })
+  );
+
+  readonly suggestionComponentInputs = contextToInputs(this.optionContextGenerator, this.suggestionComponent);
 
   //! suggestion-highligh-related
   private _isMouseBeingUsed = false;
@@ -287,7 +299,7 @@ export class ArdiumAutocompleteInputComponent
   @HostListener('keydown', ['$event'])
   onKeyPress(event: KeyboardEvent): void {
     if (this.disabled() || this.readonly()) return;
-    
+
     switch (event.code) {
       case 'Enter': {
         this._onTabOrEnterPress(event);

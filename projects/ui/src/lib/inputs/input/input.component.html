@@ -19,11 +19,19 @@
   >
     <div class="ard-input-container">
       @if (shouldDisplayPlaceholder()) {
-        <ng-template #defaultPlaceholderTemplate>
-          <div class="ard-placeholder">{{ placeholder() }}</div>
-        </ng-template>
+        @if (placeholderComponent && !placeholderTemplate()) {
+          <!-- render the component -->
+          <ng-template
+            [ngComponentOutlet]="placeholderComponent"
+            [ngComponentOutletInputs]="placeholderComponentInputs()"
+          />
+        } @else {
+          <ng-template #defaultPlaceholderTemplate>
+            <div class="ard-placeholder">{{ placeholder() }}</div>
+          </ng-template>
 
-        <ng-template [ngTemplateOutlet]="placeholderTemplate()?.template || defaultPlaceholderTemplate"></ng-template>
+          <ng-template [ngTemplateOutlet]="placeholderTemplate()?.template || defaultPlaceholderTemplate"></ng-template>
+        }
       }
 
       <input

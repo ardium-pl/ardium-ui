@@ -1,4 +1,5 @@
 import { Directive, TemplateRef } from '@angular/core';
+import { TemplateComponent } from '../../types/utility.types';
 import { ArdRatingDisplayStarTemplateContext } from './rating-display.types';
 
 @Directive({
@@ -8,3 +9,5 @@ import { ArdRatingDisplayStarTemplateContext } from './rating-display.types';
 export class ArdRatingDisplayStarTemplateDirective {
   constructor(public template: TemplateRef<ArdRatingDisplayStarTemplateContext>) {}
 }
+
+export interface ArdRatingDisplayStar extends TemplateComponent<ArdRatingDisplayStarTemplateContext> {}

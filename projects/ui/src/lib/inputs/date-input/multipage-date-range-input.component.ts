@@ -1,33 +1,34 @@
 import {
-    ChangeDetectionStrategy,
-    Component,
-    computed,
-    contentChild,
-    forwardRef,
-    Inject,
-    input,
-    signal,
-    ViewEncapsulation,
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  contentChild,
+  forwardRef,
+  inject,
+  Inject,
+  input,
+  signal,
+  ViewEncapsulation,
 } from '@angular/core';
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
 import { coerceNumberProperty, NumberLike } from '@ardium-pl/devkit';
 import { isDate, isDefined, isNull, isObject } from 'simple-bool';
-import { ArdMultiCalendarLocation, DateRange, isDateRange, PartialDateRange } from '../../calendar';
+import { ARD_CALENDAR_DEFAULTS, ArdMultiCalendarLocation, DateRange, isDateRange, PartialDateRange } from '../../calendar';
 import { ARD_FORM_FIELD_CONTROL } from '../../form-field/form-field-child.token';
 import { _AbstractDateInput } from './abstract-date-input';
 import { ARD_DATE_INPUT_DEFAULTS, ArdDateInputDefaults } from './date-input.defaults';
 import { ArdDateInputSerializeFn } from './date-input.types';
 import {
-    ArdMultipageDateRangeInputDaysViewHeaderTemplateDirective,
-    ArdMultipageDateRangeInputDayTemplateDirective,
-    ArdMultipageDateRangeInputFloatingMonthTemplateDirective,
-    ArdMultipageDateRangeInputMonthsViewHeaderTemplateDirective,
-    ArdMultipageDateRangeInputMonthTemplateDirective,
-    ArdMultipageDateRangeInputPrefixTemplateDirective,
-    ArdMultipageDateRangeInputSuffixTemplateDirective,
-    ArdMultipageDateRangeInputWeekdayTemplateDirective,
-    ArdMultipageDateRangeInputYearsViewHeaderTemplateDirective,
-    ArdMultipageDateRangeInputYearTemplateDirective,
+  ArdMultipageDateRangeInputDaysViewHeaderTemplateDirective,
+  ArdMultipageDateRangeInputDayTemplateDirective,
+  ArdMultipageDateRangeInputFloatingMonthTemplateDirective,
+  ArdMultipageDateRangeInputMonthsViewHeaderTemplateDirective,
+  ArdMultipageDateRangeInputMonthTemplateDirective,
+  ArdMultipageDateRangeInputPrefixTemplateDirective,
+  ArdMultipageDateRangeInputSuffixTemplateDirective,
+  ArdMultipageDateRangeInputWeekdayTemplateDirective,
+  ArdMultipageDateRangeInputYearsViewHeaderTemplateDirective,
+  ArdMultipageDateRangeInputYearTemplateDirective,
 } from './multipage-date-range-input.directives';
 
 type CalendarDataItem = { location: ArdMultiCalendarLocation; activeDate: Date; highlightedDay: number | null };
@@ -60,6 +61,8 @@ export class ArdiumMultipageDateRangeInputComponent extends _AbstractDateInput<D
   constructor(@Inject(ARD_DATE_INPUT_DEFAULTS) defaults: ArdDateInputDefaults) {
     super(defaults);
   }
+  protected readonly _CALENDAR_DEFAULTS = inject(ARD_CALENDAR_DEFAULTS);
+  readonly HAS_DAYS_VIEW_HEADER_COMPONENT = !!this._CALENDAR_DEFAULTS.DaysViewHeaderComponent;
 
   readonly serializeFn = input<ArdDateInputSerializeFn<PartialDateRange>>(this._DEFAULTS.rangeSerializeFn);
 

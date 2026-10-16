@@ -1,32 +1,34 @@
 import {
-    ChangeDetectionStrategy,
-    Component,
-    ElementRef,
-    HostListener,
-    Inject,
-    OnDestroy,
-    OnInit,
-    ViewEncapsulation,
-    computed,
-    contentChild,
-    forwardRef,
-    input,
-    model,
-    viewChild,
+  ChangeDetectionStrategy,
+  Component,
+  ElementRef,
+  HostListener,
+  Inject,
+  OnDestroy,
+  OnInit,
+  ViewEncapsulation,
+  computed,
+  contentChild,
+  forwardRef,
+  input,
+  model,
+  viewChild,
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { BooleanLike, coerceBooleanProperty, coerceNumberProperty } from '@ardium-pl/devkit';
 import { isAnyString, isDefined } from 'simple-bool';
 import { _FormFieldComponentBase } from '../../_internal/form-field-component';
+import { contextToInputs } from '../../_internal/utils/context-to-inputs';
 import { ARD_FORM_FIELD_CONTROL } from '../../form-field/form-field-child.token';
+import { ArdPlaceholderContext } from '../../types/templates.types';
 import { FormElementAppearance, FormElementVariant } from '../../types/theming.types';
 import { Nullable } from '../../types/utility.types';
 import { ARD_PASSWORD_INPUT_DEFAULTS, ArdPasswordInputDefaults } from './password-input.defaults';
 import {
-    ArdPasswordInputPlaceholderTemplateDirective,
-    ArdPasswordInputPrefixTemplateDirective,
-    ArdPasswordInputRevealButtonTemplateDirective,
-    ArdPasswordInputSuffixTemplateDirective,
+  ArdPasswordInputPlaceholderTemplateDirective,
+  ArdPasswordInputPrefixTemplateDirective,
+  ArdPasswordInputRevealButtonTemplateDirective,
+  ArdPasswordInputSuffixTemplateDirective,
 } from './password-input.directives';
 import { PasswordInputRevealButtonContext } from './password-input.types';
 
@@ -75,7 +77,16 @@ export class ArdiumPasswordInputComponent extends _FormFieldComponentBase implem
   //! placeholder
   readonly placeholderTemplate = contentChild(ArdPasswordInputPlaceholderTemplateDirective);
 
+  readonly placeholderTemplateContext = computed<ArdPlaceholderContext>(() => ({
+    $implicit: this.placeholder(),
+    placeholder: this.placeholder(),
+  }));
+
   readonly shouldDisplayPlaceholder = computed(() => !!this.placeholder() && !this.value());
+
+  readonly placeholderComponent = this._DEFAULTS.PlaceholderComponent;
+
+  readonly placeholderComponentInputs = contextToInputs(this.placeholderTemplateContext, this.placeholderComponent);
 
   //! revealing
   readonly revealable = input<boolean, BooleanLike>(this._DEFAULTS.revealable, { transform: v => coerceBooleanProperty(v) });
@@ -119,8 +130,13 @@ export class ArdiumPasswordInputComponent extends _FormFieldComponentBase implem
   readonly revealButtonContext = computed(
     (): PasswordInputRevealButtonContext => ({
       $implicit: this.revealed(),
+      isRevealed: this.revealed(),
     })
   );
+
+  readonly revealButtonComponent = this._DEFAULTS.RevealButtonComponent;
+
+  readonly revealButtonComponentInputs = contextToInputs(this.revealButtonContext, this.revealButtonComponent);
 
   //! appearance
   readonly appearance = input<FormElementAppearance>(this._DEFAULTS.appearance);

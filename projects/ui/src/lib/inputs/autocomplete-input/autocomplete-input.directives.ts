@@ -1,6 +1,8 @@
 import { Directive, TemplateRef } from '@angular/core';
-import { FormFieldFrameTemplateContext } from '../../form-field-frame';
+import { ArdFormFieldFramePrefixSuffix, FormFieldFrameTemplateContext } from '../../form-field-frame';
 import { ArdSimplestStorageItem, OptionContext } from '../../types/item-storage.types';
+import { ArdPlaceholderContext } from '../../types/templates.types';
+import { TemplateComponent } from '../../types/utility.types';
 
 @Directive({ standalone: false, selector: 'ard-autocomplete-input > ng-template[ard-suggestion-tmp]' })
 export class ArdAutocompleteInputSuggestionTemplateDirective {
@@ -9,7 +11,7 @@ export class ArdAutocompleteInputSuggestionTemplateDirective {
 
 @Directive({ standalone: false, selector: 'ard-autocomplete-input > ng-template[ard-placeholder-tmp]' })
 export class ArdAutocompleteInputPlaceholderTemplateDirective {
-  constructor(public template: TemplateRef<undefined>) {}
+  constructor(public template: TemplateRef<ArdPlaceholderContext>) {}
 }
 
 @Directive({ standalone: false, selector: 'ard-autocomplete-input > ng-template[ard-loading-tmp]' })
@@ -26,3 +28,9 @@ export class ArdAutocompleteInputPrefixTemplateDirective {
 export class ArdAutocompleteInputSuffixTemplateDirective {
   constructor(public template: TemplateRef<FormFieldFrameTemplateContext>) {}
 }
+
+export interface ArdAutocompleteInputSuggestion extends TemplateComponent<OptionContext<ArdSimplestStorageItem>> {}
+export interface ArdAutocompleteInputPlaceholder extends TemplateComponent<ArdPlaceholderContext> {}
+export interface ArdAutocompleteInputLoading extends TemplateComponent<{}> {}
+export interface ArdAutocompleteInputPrefix extends ArdFormFieldFramePrefixSuffix {}
+export interface ArdAutocompleteInputSuffix extends ArdFormFieldFramePrefixSuffix {}

@@ -1,10 +1,11 @@
 import { AfterViewInit, computed, Directive, ElementRef, input, Input, output, viewChild } from '@angular/core';
 import { BooleanLike, coerceBooleanProperty, coerceNumberProperty } from '@ardium-pl/devkit';
 import {
-    _FormFieldComponentBase,
-    _FormFieldComponentDefaults,
-    _formFieldComponentDefaults,
+  _FormFieldComponentBase,
+  _FormFieldComponentDefaults,
+  _formFieldComponentDefaults,
 } from '../_internal/form-field-component';
+import { ArdPlaceholderContext } from '../types/templates.types';
 import { SimpleOneAxisAlignment } from './../types/alignment.types';
 import { FormElementAppearance, FormElementVariant } from './../types/theming.types';
 import { Nullable } from './../types/utility.types';
@@ -70,6 +71,11 @@ export abstract class _SimpleInputComponentBase extends _FormFieldComponentBase 
   abstract readonly placeholderTemplate: any;
 
   readonly shouldDisplayPlaceholder = computed<boolean>(() => Boolean(this.placeholder()) && !this.inputModel.value());
+
+  readonly placeholderTemplateContext = computed<ArdPlaceholderContext>(() => ({
+    $implicit: this.placeholder(),
+    placeholder: this.placeholder(),
+  }));
 
   //! appearance
   readonly appearance = input<FormElementAppearance>(this._DEFAULTS.appearance);

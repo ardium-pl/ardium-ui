@@ -3,6 +3,11 @@ import { DropdownPanelAppearance, DropdownPanelVariant } from '../../dropdown-pa
 import { ArdFormFieldFramePrefixSuffix } from '../../form-field-frame';
 import { Nullable } from '../../types/utility.types';
 import { _SimpleInputComponentDefaults, _simpleInputComponentDefaults } from '../_simple-input-base';
+import {
+  ArdAutocompleteInputLoading,
+  ArdAutocompleteInputPlaceholder,
+  ArdAutocompleteInputSuggestion,
+} from './autocomplete-input.directives';
 
 export interface ArdAutocompleteInputDefaults extends _SimpleInputComponentDefaults {
   suggValueFrom: string;
@@ -12,6 +17,9 @@ export interface ArdAutocompleteInputDefaults extends _SimpleInputComponentDefau
   charlistCaseInsensitive: boolean;
   dropdownAppearance: Nullable<DropdownPanelAppearance>;
   dropdownVariant: Nullable<DropdownPanelVariant>;
+  SuggestionComponent?: Type<ArdAutocompleteInputSuggestion>;
+  PlaceholderComponent?: Type<ArdAutocompleteInputPlaceholder>;
+  LoadingComponent?: Type<ArdAutocompleteInputLoading>;
   PrefixComponent?: Type<ArdFormFieldFramePrefixSuffix>;
   SuffixComponent?: Type<ArdFormFieldFramePrefixSuffix>;
 }
@@ -25,15 +33,21 @@ const _inputDefaults: ArdAutocompleteInputDefaults = {
   charlistCaseInsensitive: false,
   dropdownAppearance: undefined,
   dropdownVariant: undefined,
+  SuggestionComponent: undefined,
+  PlaceholderComponent: undefined,
+  LoadingComponent: undefined,
   PrefixComponent: undefined,
   SuffixComponent: undefined,
 };
 
-export const ARD_AUTOCOMPLETE_INPUT_DEFAULTS = new InjectionToken<ArdAutocompleteInputDefaults>('ard-autocomplete-input-defaults', {
-  factory: () => ({
-    ..._inputDefaults,
-  }),
-});
+export const ARD_AUTOCOMPLETE_INPUT_DEFAULTS = new InjectionToken<ArdAutocompleteInputDefaults>(
+  'ard-autocomplete-input-defaults',
+  {
+    factory: () => ({
+      ..._inputDefaults,
+    }),
+  }
+);
 
 export function provideAutocompleteInputDefaults(config: Partial<ArdAutocompleteInputDefaults>): Provider {
   return { provide: ARD_AUTOCOMPLETE_INPUT_DEFAULTS, useValue: { ..._inputDefaults, ...config } };

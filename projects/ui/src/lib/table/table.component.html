@@ -5,17 +5,25 @@
   @if (caption()) {
     <caption class="ard-table__caption">
       <div class="ard-table__caption-container">
-        <ng-template
-          #defaultCaptionTemplate
-          let-captionText
-        >
-          {{ captionText }}
-        </ng-template>
+        @if (captionComponent && !captionTemplate()) {
+          <!-- render the component -->
+          <ng-template
+            [ngComponentOutlet]="captionComponent"
+            [ngComponentOutletInputs]="captionComponentInputs()"
+          />
+        } @else {
+          <ng-template
+            #defaultCaptionTemplate
+            let-captionText
+          >
+            {{ captionText }}
+          </ng-template>
 
-        <ng-template
-          [ngTemplateOutlet]="captionTemplate() ?? defaultCaptionTemplate"
-          [ngTemplateOutletContext]="{ $implicit: caption() }"
-        />
+          <ng-template
+            [ngTemplateOutlet]="captionTemplate() ?? defaultCaptionTemplate"
+            [ngTemplateOutletContext]="captionContext()"
+          />
+        }
       </div>
     </caption>
   }
@@ -38,69 +46,86 @@
               [style.minWidth]="cell.minWidth"
             >
               @if (isHeaderCellCheckbox(cell)) {
-                <ng-template
-                  #defaultHeaderCheckboxTemplate
-                  let-state
-                  let-onChange="onChange"
-                >
-                  <ard-checkbox
-                    [tabIndex]="isLoading() ? -1 : tabIndex()"
-                    [state]="state"
-                    [color]="getHeaderCheckboxColor()"
-                    unselectedColor="currentColor"
-                    (change)="onChange()"
+                @if (headerCheckboxComponent && !headerCheckboxTemplate()) {
+                  <!-- render the component -->
+                  <ng-template
+                    [ngComponentOutlet]="headerCheckboxComponent"
+                    [ngComponentOutletInputs]="headerCheckboxComponentInputs()"
                   />
-                </ng-template>
-
-                <ng-template
-                  [ngTemplateOutlet]="headerCheckboxTemplate() ?? defaultHeaderCheckboxTemplate"
-                  [ngTemplateOutletContext]="getHeaderCheckboxContext()"
-                />
-              } @else {
-                <ng-template
-                  #defaultHeaderCellTemplate
-                  let-content
-                  let-sortable="sortable"
-                  let-sortType="sortType"
-                  let-onTriggerSort="onTriggerSort"
-                  let-onTriggerResetSort="onTriggerResetSort"
-                >
-                  <div
-                    class="ard-table__header-template-container"
-                    [class.ard-sortable]="sortable"
-                    [class.ard-nonsortable]="!sortable"
+                } @else {
+                  <ng-template
+                    #defaultHeaderCheckboxTemplate
+                    let-state
+                    let-onChange="onChange"
                   >
-                    @if (sortable) {
-                      <button
-                        type="button"
-                        class="ard-table__header-content-container"
-                        (click)="onTriggerSort($event)"
-                        [tabindex]="tabIndex()"
-                        (keydown.Esc)="onTriggerResetSort($event)"
-                      >
-                        <div class="ard-table__header-content">{{ content }}</div>
-                        @if (sortType !== null) {
-                          <div class="ard-table__header-sort-icon">
-                            @if (sortType === 'ascending') {
-                              <ard-icon>south</ard-icon>
-                            } @else if (sortType === 'descending') {
-                              <ard-icon>north</ard-icon>
-                            }
-                          </div>
-                        }
-                      </button>
-                    } @else {
-                      <div class="ard-table__header-content-container">
-                        <div class="ard-table__header-content">{{ content }}</div>
-                      </div>
-                    }
-                  </div>
-                </ng-template>
+                    <ard-checkbox
+                      [tabIndex]="isLoading() ? -1 : tabIndex()"
+                      [state]="state"
+                      [color]="getHeaderCheckboxColor()"
+                      unselectedColor="currentColor"
+                      (change)="onChange()"
+                    />
+                  </ng-template>
 
-                <ng-template
-                  [ngTemplateOutlet]="getHeaderTemplate(cell.cell().header) ?? defaultHeaderCellTemplate"
-                  [ngTemplateOutletContext]="getHeaderContext(cell.cell(), $index)"
-                />
+                  <ng-template
+                    [ngTemplateOutlet]="headerCheckboxTemplate() ?? defaultHeaderCheckboxTemplate"
+                    [ngTemplateOutletContext]="headerCheckboxContext()"
+                  />
+                }
+              } @else {
+                @let headerCellTemplate = getHeaderTemplate(cell.cell().header);
+                @if (headerCellComponent && !headerCellTemplate) {
+                  <!-- render the component -->
+                  <ng-template
+                    [ngComponentOutlet]="headerCellComponent"
+                    [ngComponentOutletInputs]="headerCellComponentInputs()({ cell: cell.cell(), columnIndex: $index })"
+                  />
+                } @else {
+                  <ng-template
+                    #defaultHeaderCellTemplate
+                    let-content
+                    let-sortable="sortable"
+                    let-sortType="sortType"
+                    let-onTriggerSort="onTriggerSort"
+                    let-onTriggerResetSort="onTriggerResetSort"
+                  >
+                    <div
+                      class="ard-table__header-template-container"
+                      [class.ard-sortable]="sortable"
+                      [class.ard-nonsortable]="!sortable"
+                    >
+                      @if (sortable) {
+                        <button
+                          type="button"
+                          class="ard-table__header-content-container"
+                          (click)="onTriggerSort($event)"
+                          [tabindex]="tabIndex()"
+                          (keydown.Esc)="onTriggerResetSort($event)"
+                        >
+                          <div class="ard-table__header-content">{{ content }}</div>
+                          @if (sortType !== null) {
+                            <div class="ard-table__header-sort-icon">
+                              @if (sortType === 'ascending') {
+                                <ard-icon>south</ard-icon>
+                              } @else if (sortType === 'descending') {
+                                <ard-icon>north</ard-icon>
+                              }
+                            </div>
+                          }
+                        </button>
+                      } @else {
+                        <div class="ard-table__header-content-container">
+                          <div class="ard-table__header-content">{{ content }}</div>
+                        </div>
+                      }
+                    </div>
+                  </ng-template>
+
+                  <ng-template
+                    [ngTemplateOutlet]="headerCellTemplate ?? defaultHeaderCellTemplate"
+                    [ngTemplateOutletContext]="headerCellContext()({ cell: cell.cell(), columnIndex: $index })"
+                  />
+                }
               }
             </div>
           </th>
@@ -153,38 +178,55 @@
                 [style]="getCellStyle(row.dataColumns()[$index])"
               >
                 @if (isCellCheckbox(cell)) {
-                  <ng-template
-                    #defaultCheckboxTemplate
-                    let-isChecked
-                    let-onChange="onChange"
-                    let-disabled="disabled"
-                  >
-                    <ard-checkbox
-                      [tabIndex]="isLoading() ? -1 : tabIndex()"
-                      [selected]="isChecked"
-                      [color]="color()"
-                      [disabled]="disabled"
-                      (change)="onChange()"
-                      (click)="$event.stopPropagation()"
+                  @if (checkboxComponent && !checkboxTemplate()) {
+                    <!-- render the component -->
+                    <ng-template
+                      [ngComponentOutlet]="checkboxComponent"
+                      [ngComponentOutletInputs]="checkboxComponentInputs()(row.index())"
                     />
-                  </ng-template>
+                  } @else {
+                    <ng-template
+                      #defaultCheckboxTemplate
+                      let-isChecked
+                      let-onChange="onChange"
+                      let-disabled="disabled"
+                    >
+                      <ard-checkbox
+                        [tabIndex]="isLoading() ? -1 : tabIndex()"
+                        [selected]="isChecked"
+                        [color]="color()"
+                        [disabled]="disabled"
+                        (change)="onChange()"
+                        (click)="$event.stopPropagation()"
+                      />
+                    </ng-template>
 
-                  <ng-template
-                    [ngTemplateOutlet]="checkboxTemplate() ?? defaultCheckboxTemplate"
-                    [ngTemplateOutletContext]="getCheckboxContext(row.index())"
-                  />
+                    <ng-template
+                      [ngTemplateOutlet]="checkboxTemplate() ?? defaultCheckboxTemplate"
+                      [ngTemplateOutletContext]="checkboxContext()(row.index())"
+                    />
+                  }
                 } @else {
-                  <ng-template
-                    #defaultCellTemplate
-                    let-content
-                  >
-                    {{ content }}
-                  </ng-template>
+                  @let cellTemplate = getCellTemplate(row.dataColumns()[$index].template);
+                  @if (cellComponent && !cellTemplate) {
+                    <!-- render the component -->
+                    <ng-template
+                      [ngComponentOutlet]="cellComponent"
+                      [ngComponentOutletInputs]="cellComponentInputs()({ rowIndex: row.index(), columnIndex: cell.index() })"
+                    />
+                  } @else {
+                    <ng-template
+                      #defaultCellTemplate
+                      let-content
+                    >
+                      {{ content }}
+                    </ng-template>
 
-                  <ng-template
-                    [ngTemplateOutlet]="getCellTemplate(row.dataColumns()[$index].template) ?? defaultCellTemplate"
-                    [ngTemplateOutletContext]="{ $implicit: cell }"
-                  />
+                    <ng-template
+                      [ngTemplateOutlet]="getCellTemplate(row.dataColumns()[$index].template) ?? defaultCellTemplate"
+                      [ngTemplateOutletContext]="cellContext()({ rowIndex: row.index(), columnIndex: cell.index() })"
+                    />
+                  }
                 }
               </div>
             </ng-template>

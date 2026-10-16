@@ -9,3 +9,5 @@ export interface FormFieldFrameTemplateContext {
 }
 
 export interface ArdFormFieldFramePrefixSuffix extends TemplateComponent<FormFieldFrameTemplateContext> {}
+export interface ArdFormFieldFramePrefix extends ArdFormFieldFramePrefixSuffix {}
+export interface ArdFormFieldFrameSuffix extends ArdFormFieldFramePrefixSuffix {}

@@ -1,23 +1,25 @@
 import {
-    AfterContentInit,
-    ChangeDetectionStrategy,
-    Component,
-    computed,
-    contentChild,
-    contentChildren,
-    Inject,
-    Input,
-    input,
-    model,
-    OnChanges,
-    output,
-    SimpleChanges,
-    TemplateRef,
-    ViewEncapsulation,
+  AfterContentInit,
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  contentChild,
+  contentChildren,
+  Inject,
+  Input,
+  input,
+  model,
+  OnChanges,
+  output,
+  SimpleChanges,
+  TemplateRef,
+  untracked,
+  ViewEncapsulation,
 } from '@angular/core';
 import { BooleanLike, coerceBooleanProperty, coerceNumberProperty, NumberLike } from '@ardium-pl/devkit';
 import { isDefined, isNumber } from 'simple-bool';
 import { _FocusableComponentBase } from '../_internal/focusable-component';
+import { contextToInputs } from '../_internal/utils/context-to-inputs';
 import { CheckboxState } from '../checkbox/checkbox.types';
 import { ProgressBarMode } from '../progress-bar';
 import { CurrentItemsFormatFn, PaginationAlign } from '../table-pagination/table-pagination.types';
@@ -26,23 +28,24 @@ import { Nullable } from '../types/utility.types';
 import { ArdTableRow, HeaderCell, TableItemStorage, TableItemStorageHost } from './table-item-storage';
 import { ARD_TABLE_DEFAULTS, ArdTableDefaults } from './table.defaults';
 import {
-    ArdiumTableCaptionTemplateDirective,
-    ArdiumTableCheckboxTemplateDirective,
-    ArdiumTableHeaderCheckboxTemplateDirective,
-    ArdiumTableTemplateDirective,
+  ArdiumTableCaptionTemplateDirective,
+  ArdiumTableCheckboxTemplateDirective,
+  ArdiumTableHeaderCheckboxTemplateDirective,
+  ArdiumTableTemplateDirective,
 } from './table.directives';
 import {
-    TableAlignType,
-    TableAppearance,
-    TableCaptionContext,
-    TableCheckboxContext,
-    TableDataColumn,
-    TableHeaderCheckboxContext,
-    TableHeaderContext,
-    TablePaginationStrategy,
-    TableSubheader,
-    TableSubheaderContext,
-    TableVariant,
+  TableAlignType,
+  TableAppearance,
+  TableCaptionContext,
+  TableCellContext,
+  TableCheckboxContext,
+  TableDataColumn,
+  TableHeaderCheckboxContext,
+  TableHeaderContext,
+  TablePaginationStrategy,
+  TableSubheader,
+  TableSubheaderContext,
+  TableVariant,
 } from './table.types';
 import { isTableSubheader } from './utils';
 
@@ -67,14 +70,20 @@ export class ArdiumTableComponent extends _FocusableComponentBase implements Tab
   readonly invertRowDisabled = input<boolean, BooleanLike>(this._DEFAULTS.invertRowDisabled, {
     transform: v => coerceBooleanProperty(v),
   });
-  readonly invertRowBold = input<boolean, BooleanLike>(this._DEFAULTS.invertRowBold, { transform: v => coerceBooleanProperty(v) });
+  readonly invertRowBold = input<boolean, BooleanLike>(this._DEFAULTS.invertRowBold, {
+    transform: v => coerceBooleanProperty(v),
+  });
 
-  readonly selectableRows = input<boolean, BooleanLike>(this._DEFAULTS.selectableRows, { transform: v => coerceBooleanProperty(v) });
+  readonly selectableRows = input<boolean, BooleanLike>(this._DEFAULTS.selectableRows, {
+    transform: v => coerceBooleanProperty(v),
+  });
   readonly maxSelectedItems = input<Nullable<number>, any>(this._DEFAULTS.maxSelectedItems, {
     transform: v => coerceNumberProperty(v, this._DEFAULTS.maxSelectedItems),
   });
 
-  readonly clickableRows = input<boolean, BooleanLike>(this._DEFAULTS.clickableRows, { transform: v => coerceBooleanProperty(v) });
+  readonly clickableRows = input<boolean, BooleanLike>(this._DEFAULTS.clickableRows, {
+    transform: v => coerceBooleanProperty(v),
+  });
 
   readonly caption = input<Nullable<string>>(this._DEFAULTS.caption);
 
@@ -399,7 +408,7 @@ export class ArdiumTableComponent extends _FocusableComponentBase implements Tab
       },
     };
   }
-  readonly getHeaderCheckboxContext = computed<TableHeaderCheckboxContext>(() => {
+  readonly headerCheckboxContext = computed<TableHeaderCheckboxContext>(() => {
     let state: CheckboxState = CheckboxState.Unselected;
     if (this._itemStorage.isAnyItemSelected()) {
       state = CheckboxState.Indeterminate;
@@ -411,11 +420,11 @@ export class ArdiumTableComponent extends _FocusableComponentBase implements Tab
       $implicit: state,
       state,
       onChange: () => {
-        this.toggleAllRowsSelected();
+        untracked(() => this.toggleAllRowsSelected());
       },
     };
   });
-  getCheckboxContext(index: number): TableCheckboxContext {
+  readonly checkboxContext = computed<(index: number) => TableCheckboxContext>(() => (index: number) => {
     const item = this._itemStorage.items().find(v => v.index() === index)!;
     const selected = item.selected();
     return {
@@ -426,5 +435,43 @@ export class ArdiumTableComponent extends _FocusableComponentBase implements Tab
         this.onCheckboxClick(index);
       },
     };
-  }
+  });
+  readonly cellContext = computed<(data: { rowIndex: number; columnIndex: number }) => TableCellContext>(
+    () =>
+      ({ rowIndex, columnIndex }) => {
+        const row = this.dataRows().find(v => v.index() === rowIndex)!;
+        const cell = row.data().find(v => v.index() === columnIndex)!;
+
+        return {
+          $implicit: cell.data(),
+          cellData: cell.data(),
+        };
+      }
+  );
+  readonly headerCellContext = computed<
+    (data: { cell: TableDataColumn | TableSubheader; columnIndex: number }) => TableHeaderContext | TableSubheaderContext
+  >(() => ({ cell, columnIndex }) => {
+    return this.getHeaderContext(cell, columnIndex)!;
+  });
+  readonly captionContext = computed<TableCaptionContext>(() => {
+    const caption = this.caption();
+    return {
+      $implicit: caption,
+      caption: caption,
+    };
+  });
+
+  //! template components
+  readonly checkboxComponent = this._DEFAULTS.CheckboxComponent;
+  readonly headerCheckboxComponent = this._DEFAULTS.HeaderCheckboxComponent;
+  readonly captionComponent = this._DEFAULTS.CaptionComponent;
+  readonly cellComponent = this._DEFAULTS.CellComponent;
+  readonly headerCellComponent = this._DEFAULTS.HeaderCellComponent;
+  readonly subheaderCellComponent = this._DEFAULTS.SubheaderCellComponent;
+
+  readonly checkboxComponentInputs = contextToInputs(this.checkboxContext, this.checkboxComponent);
+  readonly headerCheckboxComponentInputs = contextToInputs(this.headerCheckboxContext, this.headerCheckboxComponent);
+  readonly captionComponentInputs = contextToInputs(this.captionContext, this.captionComponent);
+  readonly cellComponentInputs = contextToInputs(this.cellContext, this.cellComponent);
+  readonly headerCellComponentInputs = contextToInputs(this.headerCellContext, this.headerCellComponent);
 }

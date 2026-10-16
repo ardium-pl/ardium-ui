@@ -23,11 +23,19 @@
         <div class="ard-autocomplete">{{ autocomplete() }}</div>
       }
       @if (shouldDisplayPlaceholder()) {
-        <ng-template #defaultPlaceholderTemplate>
-          <div class="ard-placeholder">{{ placeholder() }}</div>
-        </ng-template>
+        @if (placeholderComponent && !placeholderTemplate()) {
+          <!-- render the component -->
+          <ng-template
+            [ngComponentOutlet]="placeholderComponent"
+            [ngComponentOutletInputs]="placeholderComponentInputs()"
+          />
+        } @else {
+          <ng-template #defaultPlaceholderTemplate>
+            <div class="ard-placeholder">{{ placeholder() }}</div>
+          </ng-template>
 
-        <ng-template [ngTemplateOutlet]="placeholderTemplate()?.template || defaultPlaceholderTemplate"></ng-template>
+          <ng-template [ngTemplateOutlet]="placeholderTemplate()?.template || defaultPlaceholderTemplate"/>
+        }
       }
       <input
         #textInput
@@ -79,23 +87,38 @@
         (mouseleave)="onSuggestionMouseLeave(item, $event)"
       >
         <span class="ard-option-label">
-          <ng-template #defaultOptionTemplate>
-            {{ item.label }}
-          </ng-template>
+          @if (suggestionComponent && !suggestionTemplate()) {
+            <!-- render the component -->
+            <ng-template
+              [ngComponentOutlet]="suggestionComponent"
+              [ngComponentOutletInputs]="suggestionComponentInputs()(item)"
+            />
+          } @else {
+            <ng-template #defaultOptionTemplate>
+              {{ item.label }}
+            </ng-template>
 
-          <ng-template
-            [ngTemplateOutlet]="suggestionTemplate()?.template || defaultOptionTemplate"
-            [ngTemplateOutletContext]="optionContextGenerator()(item)"
-          ></ng-template>
+            <ng-template
+              [ngTemplateOutlet]="suggestionTemplate()?.template || defaultOptionTemplate"
+              [ngTemplateOutletContext]="optionContextGenerator()(item)"
+            />
+          }
         </span>
       </div>
     }
     @if (areSuggestionsLoading()) {
-      <ng-template #defaultLoadingPlaceholderTemplate>
-        <div class="ard-option ard-option-disabled">{{ suggestionsLoadingText() }}</div>
-      </ng-template>
+      @if (suggestionLoadingComponent && !suggestionLoadingTemplate()) {
+        <!-- render the component -->
+        <ng-template [ngComponentOutlet]="suggestionLoadingComponent" />
+      } @else {
+        <ng-template #defaultLoadingPlaceholderTemplate>
+          <div class="ard-option ard-option-disabled">{{ suggestionsLoadingText() }}</div>
+        </ng-template>
 
-      <ng-template [ngTemplateOutlet]="suggestionLoadingTemplate()?.template || defaultLoadingPlaceholderTemplate"></ng-template>
+        <ng-template
+          [ngTemplateOutlet]="suggestionLoadingTemplate()?.template || defaultLoadingPlaceholderTemplate"
+        />
+      }
     }
   </ard-dropdown-panel>
 </ng-template>

@@ -1,17 +1,18 @@
 import {
-    AfterContentInit,
-    ChangeDetectionStrategy,
-    Component,
-    computed,
-    contentChild,
-    forwardRef,
-    Inject,
-    input,
-    ViewEncapsulation
+  AfterContentInit,
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  contentChild,
+  forwardRef,
+  Inject,
+  input,
+  ViewEncapsulation,
 } from '@angular/core';
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
 import { BooleanLike, coerceBooleanProperty, coerceNumberProperty, NumberLike } from '@ardium-pl/devkit';
 import { _SelectableListComponentBase } from '../_internal/selectable-list-component';
+import { contextToInputs } from '../_internal/utils/context-to-inputs';
 import { ARD_FORM_FIELD_CONTROL } from '../form-field/form-field-child.token';
 import { OneAxisAlignment } from '../types/alignment.types';
 import { ComponentColor } from '../types/colors.types';
@@ -77,7 +78,9 @@ export class ArdiumSegmentComponent extends _SelectableListComponentBase impleme
 
   //! coerced properties
   readonly autoFocus = input<boolean, BooleanLike>(this._DEFAULTS.autoFocus, { transform: v => coerceBooleanProperty(v) });
-  readonly uniformWidths = input<boolean, BooleanLike>(this._DEFAULTS.uniformWidths, { transform: v => coerceBooleanProperty(v) });
+  readonly uniformWidths = input<boolean, BooleanLike>(this._DEFAULTS.uniformWidths, {
+    transform: v => coerceBooleanProperty(v),
+  });
 
   readonly itemsPerRow = input<number, NumberLike>(this._DEFAULTS.itemsPerRow, {
     transform: v => {
@@ -103,6 +106,10 @@ export class ArdiumSegmentComponent extends _SelectableListComponentBase impleme
 
   //! option template
   readonly optionTemplate = contentChild(ArdSegmentOptionTemplateDirective);
+
+  readonly optionComponent = this._DEFAULTS.OptionComponent;
+
+  readonly optionComponentInputs = contextToInputs(this.optionContextGenerator, this.optionComponent);
 
   //! lifecycle hooks
   ngAfterContentInit(): void {

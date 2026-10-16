@@ -30,17 +30,25 @@
         class="ard-date-input__value"
         [class.ard-date-input__value-hidden]="!shouldDisplayValue()"
       >
-        <ng-template
-          #defaultValueTemplate
-          let-date
-        >
-          {{ date }}
-        </ng-template>
+        @if (valueComponent && !valueTemplate()) {
+          <!-- render the component -->
+          <ng-template
+            [ngComponentOutlet]="valueComponent"
+            [ngComponentOutletInputs]="valueComponentInputs()"
+          />
+        } @else {
+          <ng-template
+            #defaultValueTemplate
+            let-date
+          >
+            {{ date }}
+          </ng-template>
 
-        <ng-template
-          [ngTemplateOutlet]="valueTemplate()?.template || defaultValueTemplate"
-          [ngTemplateOutletContext]="valueContext()"
-        />
+          <ng-template
+            [ngTemplateOutlet]="valueTemplate()?.template || defaultValueTemplate"
+            [ngTemplateOutletContext]="valueContext()"
+          />
+        }
       </div>
       @if (!readonly()) {
         <div
@@ -79,14 +87,16 @@
         (focus)="onFocus($event)"
         (blur)="onBlur($event)"
       >
-        <ng-template
-          #defaultCalendarIconTemplate
-          let-date
-        >
-          <ard-icon filled>today</ard-icon>
-        </ng-template>
+        @if (calendarIconComponent && !calendarIconTemplate()) {
+          <!-- render the component -->
+          <ng-template [ngComponentOutlet]="calendarIconComponent" />
+        } @else {
+          <ng-template #defaultCalendarIconTemplate>
+            <ard-icon filled>today</ard-icon>
+          </ng-template>
 
-        <ng-template [ngTemplateOutlet]="calendarIconTemplate()?.template || defaultCalendarIconTemplate" />
+          <ng-template [ngTemplateOutlet]="calendarIconTemplate()?.template || defaultCalendarIconTemplate" />
+        }
       </ard-icon-button>
     }
   </div>
@@ -149,34 +159,42 @@
     </ard-calendar>
     @if (useAcceptButtonToSelect()) {
       <div class="ard-date-input__accept-buttons-container">
-        <ng-template
-          #defaultAcceptButtonsTemplate
-          let-accept="accept"
-          let-cancel="cancel"
-          let-disabled="disabled"
-        >
-          <ard-button
-            appearance="outlined"
-            color="none"
-            [disabled]="disabled"
-            (click)="cancel()"
+        @if (acceptButtonsComponent && !acceptButtonsTemplate()) {
+          <!-- render the component -->
+          <ng-template
+            [ngComponentOutlet]="acceptButtonsComponent"
+            [ngComponentOutletInputs]="acceptButtonsComponentInputs()"
+          />
+        } @else {
+          <ng-template
+            #defaultAcceptButtonsTemplate
+            let-accept="accept"
+            let-cancel="cancel"
+            let-disabled="disabled"
           >
-            {{ cancelButtonText() }}
-          </ard-button>
-          <ard-button
-            appearance="raised"
-            [color]="color()"
-            [disabled]="disabled"
-            (click)="accept()"
-          >
-            {{ acceptButtonText() }}
-          </ard-button>
-        </ng-template>
+            <ard-button
+              appearance="outlined"
+              color="none"
+              [disabled]="disabled"
+              (click)="cancel()"
+            >
+              {{ cancelButtonText() }}
+            </ard-button>
+            <ard-button
+              appearance="raised"
+              [color]="color()"
+              [disabled]="disabled"
+              (click)="accept()"
+            >
+              {{ acceptButtonText() }}
+            </ard-button>
+          </ng-template>
 
-        <ng-template
-          [ngTemplateOutlet]="acceptButtonsTemplate()?.template || defaultAcceptButtonsTemplate"
-          [ngTemplateOutletContext]="acceptButtonsContext()"
-        />
+          <ng-template
+            [ngTemplateOutlet]="acceptButtonsTemplate()?.template || defaultAcceptButtonsTemplate"
+            [ngTemplateOutletContext]="acceptButtonsContext()"
+          />
+        }
       </div>
     }
   </ard-dropdown-panel>

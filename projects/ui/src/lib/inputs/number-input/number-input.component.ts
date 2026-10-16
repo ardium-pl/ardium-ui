@@ -25,6 +25,7 @@ import { ButtonAppearance, ButtonVariant } from '../../buttons/general-button.ty
 import { FormFieldFrameTemplateContext } from '../../form-field-frame';
 import { ARD_FORM_FIELD_CONTROL } from '../../form-field/form-field-child.token';
 import { OneAxisAlignment } from '../../types/alignment.types';
+import { ArdPlaceholderContext } from '../../types/templates.types';
 import { FormElementAppearance, FormElementVariant } from '../../types/theming.types';
 import { Nullable } from '../../types/utility.types';
 import { NumberInputModel, NumberInputModelHost } from '../input-utils';
@@ -102,6 +103,15 @@ export class ArdiumNumberInputComponent
   readonly placeholderTemplate = contentChild(ArdNumberInputPlaceholderTemplateDirective);
 
   readonly shouldDisplayPlaceholder = computed<boolean>(() => !!this.placeholder() && !this.inputModel.stringValue());
+
+  readonly placeholderTemplateContext = computed<ArdPlaceholderContext>(() => ({
+    $implicit: this.placeholder(),
+    placeholder: this.placeholder(),
+  }));
+
+  readonly placeholderComponent = this._DEFAULTS.PlaceholderComponent;
+
+  readonly placeholderComponentInputs = contextToInputs(this.placeholderTemplateContext, this.placeholderComponent);
 
   //! prefix and suffix templates
   readonly prefixTemplate = contentChild(ArdNumberInputPrefixTemplateDirective);
@@ -185,8 +195,12 @@ export class ArdiumNumberInputComponent
   }>({ alias: 'quickChange' });
 
   //! min/max and number type
-  readonly min = input<number | null, NumberLike>(this._DEFAULTS.min, { transform: v => v === null ? null : coerceNumberProperty(v, this._DEFAULTS.min) });
-  readonly max = input<number | null, NumberLike>(this._DEFAULTS.max, { transform: v => v === null ? null : coerceNumberProperty(v, this._DEFAULTS.max) });
+  readonly min = input<number | null, NumberLike>(this._DEFAULTS.min, {
+    transform: v => (v === null ? null : coerceNumberProperty(v, this._DEFAULTS.min)),
+  });
+  readonly max = input<number | null, NumberLike>(this._DEFAULTS.max, {
+    transform: v => (v === null ? null : coerceNumberProperty(v, this._DEFAULTS.max)),
+  });
 
   readonly minMaxBehavior = input<ArdNumberInputMinMaxBehavior>(this._DEFAULTS.minMaxBehavior);
 

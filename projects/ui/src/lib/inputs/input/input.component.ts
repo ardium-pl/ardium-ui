@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component, contentChild, forwardRef, Inject, ViewEncapsulation } from '@angular/core';
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
+import { contextToInputs } from '../../_internal/utils/context-to-inputs';
 import { ARD_FORM_FIELD_CONTROL } from '../../form-field/form-field-child.token';
 import { _SimpleInputComponentBase } from '../_simple-input-base';
 import { ARD_SIMPLE_INPUT_DEFAULTS, ArdInputDefaults } from './input.defaults';
@@ -43,4 +44,8 @@ export class ArdiumInputComponent extends _SimpleInputComponentBase {
 
   //! placeholder
   readonly placeholderTemplate = contentChild(ArdInputPlaceholderTemplateDirective);
+
+  readonly placeholderComponent = this._DEFAULTS.PlaceholderComponent;
+
+  readonly placeholderComponentInputs = contextToInputs(this.placeholderTemplateContext, this.placeholderComponent);
 }

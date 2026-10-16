@@ -32,10 +32,18 @@
   </ng-template>
 
   @for (index of starArray(); track index) {
-    <ng-template
-      [ngTemplateOutlet]="starButtonTemplate()?.template || defaultStarButtonTemplate"
-      [ngTemplateOutletContext]="getStarButtonTemplateContext()(index)"
-    />
+    @if (starButtonComponent && !starButtonTemplate()) {
+      <!-- render the component -->
+      <ng-template
+        [ngComponentOutlet]="starButtonComponent"
+        [ngComponentOutletInputs]="starButtonComponentInputs()(index)"
+      />
+    } @else {
+      <ng-template
+        [ngTemplateOutlet]="starButtonTemplate()?.template || defaultStarButtonTemplate"
+        [ngTemplateOutletContext]="getStarButtonTemplateContext()(index)"
+      />
+    }
     <input
       type="radio"
       class="ard-rating-input__radio"

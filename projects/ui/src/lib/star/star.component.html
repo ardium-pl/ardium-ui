@@ -2,21 +2,29 @@
   class="ard-star"
   [ngClass]="ngClasses()"
 >
-  <ng-template
-    #defaultIconTemplate
-    let-fillMode
-  >
-    @if (fillMode === 'filled') {
-      <ard-icon filled>star</ard-icon>
-    } @else if (fillMode === 'half') {
-      <ard-icon>star-half</ard-icon>
-    } @else {
-      <ard-icon>star</ard-icon>
-    }
-  </ng-template>
+  @if (iconComponent && !iconTemplate()) {
+    <!-- render the component -->
+    <ng-template
+      [ngComponentOutlet]="iconComponent"
+      [ngComponentOutletInputs]="iconComponentInputs()"
+    />
+  } @else {
+    <ng-template
+      #defaultIconTemplate
+      let-fillMode
+    >
+      @if (fillMode === 'filled') {
+        <ard-icon filled>star</ard-icon>
+      } @else if (fillMode === 'half') {
+        <ard-icon>star-half</ard-icon>
+      } @else {
+        <ard-icon>star</ard-icon>
+      }
+    </ng-template>
 
-  <ng-template
-    [ngTemplateOutlet]="iconTemplate()?.template || defaultIconTemplate"
-    [ngTemplateOutletContext]="iconTemplateContext()"
-  />
+    <ng-template
+      [ngTemplateOutlet]="iconTemplate()?.template || defaultIconTemplate"
+      [ngTemplateOutletContext]="iconTemplateContext()"
+    />
+  }
 </div>

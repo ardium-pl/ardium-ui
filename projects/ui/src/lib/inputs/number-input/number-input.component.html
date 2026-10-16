@@ -42,14 +42,22 @@
     }
     <div class="ard-input-container">
       @if (shouldDisplayPlaceholder()) {
-        <ng-template
-          #defaultPlaceholderTemplate
-          let-plchldr
-        >
-          <div class="ard-placeholder">{{ placeholder() }}</div>
-        </ng-template>
+        @if (placeholderComponent && !placeholderTemplate()) {
+          <!-- render the component -->
+          <ng-template
+            [ngComponentOutlet]="placeholderComponent"
+            [ngComponentOutletInputs]="placeholderComponentInputs()"
+          />
+        } @else {
+          <ng-template
+            #defaultPlaceholderTemplate
+            let-plchldr
+          >
+            <div class="ard-placeholder">{{ plchldr }}</div>
+          </ng-template>
 
-        <ng-template [ngTemplateOutlet]="placeholderTemplate()?.template || defaultPlaceholderTemplate" />
+          <ng-template [ngTemplateOutlet]="placeholderTemplate()?.template || defaultPlaceholderTemplate" />
+        }
       }
 
       <input

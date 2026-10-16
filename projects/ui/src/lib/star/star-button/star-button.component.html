@@ -17,19 +17,27 @@
   <div class="ard-hitbox"></div>
   <div class="ard-focus-overlay"></div>
 
-  <ng-template
-    #defaultStarTemplate
-    let-fillMode="fillMode"
-    let-color="color"
-  >
-    <ard-star
-      [filled]="fillMode"
-      [color]="color"
+  @if (starIconComponent && !starTemplate()) {
+    <!-- render the component -->
+    <ng-template
+      [ngComponentOutlet]="starIconComponent"
+      [ngComponentOutletInputs]="starIconComponentInputs()"
     />
-  </ng-template>
+  } @else {
+    <ng-template
+      #defaultStarTemplate
+      let-fillMode="fillMode"
+      let-color="color"
+    >
+      <ard-star
+        [filled]="fillMode"
+        [color]="color"
+      />
+    </ng-template>
 
-  <ng-template
-    [ngTemplateOutlet]="starTemplate()?.template || defaultStarTemplate"
-    [ngTemplateOutletContext]="starTemplateContext()"
-  />
+    <ng-template
+      [ngTemplateOutlet]="starTemplate()?.template || defaultStarTemplate"
+      [ngTemplateOutletContext]="starTemplateContext()"
+    />
+  }
 </button>

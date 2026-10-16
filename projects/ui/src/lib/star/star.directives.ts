@@ -1,4 +1,5 @@
 import { Directive, TemplateRef } from '@angular/core';
+import { TemplateComponent } from '../types/utility.types';
 import { ArdStarIconContext } from './star.types';
 
 @Directive({
@@ -8,3 +9,5 @@ import { ArdStarIconContext } from './star.types';
 export class ArdStarIconTemplateDirective {
   constructor(public template: TemplateRef<ArdStarIconContext>) {}
 }
+
+export interface ArdStarIcon extends TemplateComponent<ArdStarIconContext> {}

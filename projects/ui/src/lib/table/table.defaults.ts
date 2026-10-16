@@ -1,10 +1,18 @@
-import { InjectionToken, Provider } from '@angular/core';
+import { InjectionToken, Provider, Type } from '@angular/core';
 import { _focusableComponentDefaults, _FocusableComponentDefaults } from '../_internal/focusable-component';
 import { ProgressBarMode } from '../progress-bar';
 import { CurrentItemsFormatFn, PaginationAlign } from '../table-pagination';
 import { TableAlignType, TableAppearance, TablePaginationStrategy, TableVariant } from '../table/table.types';
 import { ComponentColor } from '../types/colors.types';
 import { Nullable } from '../types/utility.types';
+import {
+  ArdTableCaption,
+  ArdTableCell,
+  ArdTableCheckbox,
+  ArdTableHeaderCell,
+  ArdTableHeaderCheckbox,
+  ArdTableSubheaderCell,
+} from './table.directives';
 
 export interface ArdTableDefaults extends _FocusableComponentDefaults {
   rowDisabledFrom: string;
@@ -42,6 +50,12 @@ export interface ArdTableDefaults extends _FocusableComponentDefaults {
   itemsPerPage: number;
   page: number;
   treatDataSourceAsString: boolean;
+  CheckboxComponent?: Type<ArdTableCheckbox>;
+  HeaderCheckboxComponent?: Type<ArdTableHeaderCheckbox>;
+  CaptionComponent?: Type<ArdTableCaption>;
+  CellComponent?: Type<ArdTableCell>;
+  HeaderCellComponent?: Type<ArdTableHeaderCell>;
+  SubheaderCellComponent?: Type<ArdTableSubheaderCell>;
 }
 
 export const _tableDefaults: ArdTableDefaults = {
@@ -82,6 +96,12 @@ export const _tableDefaults: ArdTableDefaults = {
   itemsPerPage: 50,
   page: 1,
   treatDataSourceAsString: false,
+  CheckboxComponent: undefined,
+  HeaderCheckboxComponent: undefined,
+  CaptionComponent: undefined,
+  CellComponent: undefined,
+  HeaderCellComponent: undefined,
+  SubheaderCellComponent: undefined,
 };
 
 export const ARD_TABLE_DEFAULTS = new InjectionToken<ArdTableDefaults>('ard-table-defaults', {

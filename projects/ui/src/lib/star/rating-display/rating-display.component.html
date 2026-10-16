@@ -15,9 +15,17 @@
   </ng-template>
 
   @for (fillMode of starArray(); track $index) {
-    <ng-template
-      [ngTemplateOutlet]="starTemplate()?.template || defaultStarTemplate"
-      [ngTemplateOutletContext]="getStarTemplateContext()(fillMode, $index)"
-    />
+    @if (starComponent && !starTemplate()) {
+      <!-- render the component -->
+      <ng-template
+        [ngComponentOutlet]="starComponent"
+        [ngComponentOutletInputs]="starComponentInputs()"
+      />
+    } @else {
+      <ng-template
+        [ngTemplateOutlet]="starTemplate()?.template || defaultStarTemplate"
+        [ngTemplateOutletContext]="getStarTemplateContext()(fillMode, $index)"
+      />
+    }
   }
 </div>

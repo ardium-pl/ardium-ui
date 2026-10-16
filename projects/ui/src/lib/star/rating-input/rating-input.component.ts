@@ -1,22 +1,23 @@
 import {
-    ChangeDetectionStrategy,
-    Component,
-    computed,
-    contentChild,
-    effect,
-    forwardRef,
-    HostListener,
-    Inject,
-    input,
-    model,
-    output,
-    signal,
-    viewChildren,
-    ViewEncapsulation,
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  contentChild,
+  effect,
+  forwardRef,
+  HostListener,
+  Inject,
+  input,
+  model,
+  output,
+  signal,
+  viewChildren,
+  ViewEncapsulation,
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { coerceNumberProperty, NumberLike } from '@ardium-pl/devkit';
 import { _FormFieldComponentBase } from '../../_internal/form-field-component';
+import { contextToInputs } from '../../_internal/utils/context-to-inputs';
 import { ArdFormFieldControl } from '../../form-field';
 import { ArdiumStarButtonComponent } from '../star-button/star-button.component';
 import { StarColor } from '../star.types';
@@ -218,4 +219,8 @@ export class ArdiumRatingInputComponent extends _FormFieldComponentBase implemen
       this.onStarHighlight(index);
     },
   }));
+
+  readonly starButtonComponent = this._DEFAULTS.StarButtonComponent;
+
+  readonly starButtonComponentInputs = contextToInputs(this.getStarButtonTemplateContext, this.starButtonComponent);
 }

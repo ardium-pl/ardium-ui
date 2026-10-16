@@ -10,6 +10,7 @@ import {
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { _BooleanComponentBase } from '../../_internal/boolean-component';
+import { contextToInputs } from '../../_internal/utils/context-to-inputs';
 import { ClickStrategy } from '../../types/utility.types';
 import { StarColor } from '../star.types';
 import { StarFillMode } from './../star.types';
@@ -70,4 +71,8 @@ export class ArdiumStarButtonComponent extends _BooleanComponentBase implements 
     fillModeInternal: this.starFillInternal(),
     color: this.color(),
   }));
+
+  readonly starIconComponent = this._DEFAULTS.StarIconComponent;
+
+  readonly starIconComponentInputs = contextToInputs(this.starTemplateContext, this.starIconComponent);
 }

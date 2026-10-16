@@ -1,9 +1,9 @@
 import { InjectionToken, Provider, Type } from '@angular/core';
 import { _FormFieldComponentDefaults, _formFieldComponentDefaults } from '../../_internal/form-field-component';
-import { ArdFormFieldFramePrefixSuffix } from '../../form-field-frame';
 import { Nullable } from '../../types/utility.types';
 import { CaseTransformerType } from '../input-types';
 import { FormElementAppearance, FormElementVariant } from './../../types/theming.types';
+import { ArdHexInputPlaceholder, ArdHexInputPrefix, ArdHexInputSuffix } from './hex-input.directives';
 
 export interface ArdHexInputDefaults extends _FormFieldComponentDefaults {
   appearance: FormElementAppearance;
@@ -16,8 +16,9 @@ export interface ArdHexInputDefaults extends _FormFieldComponentDefaults {
   clearable: boolean;
   clearButtonTitle: string;
   inputAttrs: Record<string, any>;
-  PrefixComponent?: Type<ArdFormFieldFramePrefixSuffix>;
-  SuffixComponent?: Type<ArdFormFieldFramePrefixSuffix>;
+  PrefixComponent?: Type<ArdHexInputPrefix>;
+  SuffixComponent?: Type<ArdHexInputSuffix>;
+  PlaceholderComponent?: Type<ArdHexInputPlaceholder>;
 }
 
 const _hexInputDefaults: ArdHexInputDefaults = {
@@ -34,6 +35,7 @@ const _hexInputDefaults: ArdHexInputDefaults = {
   inputAttrs: {},
   PrefixComponent: undefined,
   SuffixComponent: undefined,
+  PlaceholderComponent: undefined,
 };
 
 export const ARD_HEX_INPUT_DEFAULTS = new InjectionToken<ArdHexInputDefaults>('ard-hex-input-defaults', {

@@ -1,30 +1,32 @@
 import {
-    AfterViewInit,
-    ChangeDetectionStrategy,
-    Component,
-    computed,
-    contentChild,
-    ElementRef,
-    forwardRef,
-    Inject,
-    input,
-    Input,
-    output,
-    viewChild,
-    ViewEncapsulation,
+  AfterViewInit,
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  contentChild,
+  ElementRef,
+  forwardRef,
+  Inject,
+  input,
+  Input,
+  output,
+  viewChild,
+  ViewEncapsulation,
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { BooleanLike, coerceBooleanProperty, coerceNumberProperty } from '@ardium-pl/devkit';
 import { _FormFieldComponentBase } from '../../_internal/form-field-component';
+import { contextToInputs } from '../../_internal/utils/context-to-inputs';
 import { ARD_FORM_FIELD_CONTROL } from '../../form-field/form-field-child.token';
+import { ArdPlaceholderContext } from '../../types/templates.types';
 import { FormElementAppearance, FormElementVariant } from '../../types/theming.types';
 import { Nullable } from '../../types/utility.types';
 import { CaseTransformerType } from '../input-types';
 import { ARD_HEX_INPUT_DEFAULTS, ArdHexInputDefaults } from './hex-input.defaults';
 import {
-    ArdHexInputPlaceholderTemplateDirective,
-    ArdHexInputPrefixTemplateDirective,
-    ArdHexInputSuffixTemplateDirective,
+  ArdHexInputPlaceholderTemplateDirective,
+  ArdHexInputPrefixTemplateDirective,
+  ArdHexInputSuffixTemplateDirective,
 } from './hex-input.directives';
 import { HexInputModel, HexInputModelHost } from './hex-input.model';
 
@@ -83,6 +85,15 @@ export class ArdiumHexInputComponent
   readonly placeholderTemplate = contentChild(ArdHexInputPlaceholderTemplateDirective);
 
   readonly shouldDisplayPlaceholder = computed((): boolean => Boolean(this.placeholder()) && !this.inputModel.stringValue());
+
+  readonly placeholderTemplateContext = computed<ArdPlaceholderContext>(() => ({
+    $implicit: this.placeholder(),
+    placeholder: this.placeholder(),
+  }));
+
+  readonly placeholderComponent = this._DEFAULTS.PlaceholderComponent;
+
+  readonly placeholderComponentInputs = contextToInputs(this.placeholderTemplateContext, this.placeholderComponent);
 
   //! appearance
   //all handled in ard-form-field-frame component
@@ -157,7 +168,7 @@ export class ArdiumHexInputComponent
   //! event handlers
   onInput(newVal: string, event: Event): void {
     if (this.disabled() || this.readonly()) return;
-    
+
     event.stopPropagation();
     const valueHasChanged = this.inputModel.writeValue(newVal);
     if (!valueHasChanged) return;
@@ -181,7 +192,7 @@ export class ArdiumHexInputComponent
 
   override onBlur(event: FocusEvent): void {
     super.onBlur(event);
-    
+
     if (this.disabled() || this.readonly()) return;
 
     this._emitChange();

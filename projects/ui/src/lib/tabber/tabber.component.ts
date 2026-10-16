@@ -1,21 +1,22 @@
 import {
-    AfterContentInit,
-    ChangeDetectionStrategy,
-    Component,
-    OnChanges,
-    SimpleChanges,
-    TemplateRef,
-    ViewEncapsulation,
-    computed,
-    contentChild,
-    contentChildren,
-    inject,
-    input,
-    model,
-    output,
-    signal,
+  AfterContentInit,
+  ChangeDetectionStrategy,
+  Component,
+  OnChanges,
+  SimpleChanges,
+  TemplateRef,
+  ViewEncapsulation,
+  computed,
+  contentChild,
+  contentChildren,
+  inject,
+  input,
+  model,
+  output,
+  signal,
 } from '@angular/core';
 import { BooleanLike, coerceBooleanProperty } from '@ardium-pl/devkit';
+import { contextToInputs } from '../_internal/utils/context-to-inputs';
 import { OneAxisAlignment } from '../types/alignment.types';
 import { ComponentColor } from '../types/colors.types';
 import { ArdiumTabComponent } from './tab/tab.component';
@@ -201,4 +202,15 @@ export class ArdiumTabberComponent implements AfterContentInit, OnChanges {
           : null,
     }))
   );
+
+  readonly labelTemplateContext = computed<(index: number) => TabberLabelContext>(() => (index: number) => {
+    const tab = this.tabsWithTemplates()[index];
+    return (
+      tab.templateContext ?? { $implicit: tab.tab.label() as string, tabId: tab.tab.tabId(), label: tab.tab.label() as string }
+    );
+  });
+
+  readonly labelComponent = this._DEFAULTS.LabelComponent;
+
+  readonly labelComponentInputs = contextToInputs(this.labelTemplateContext, this.labelComponent);
 }
