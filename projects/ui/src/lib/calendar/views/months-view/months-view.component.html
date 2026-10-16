@@ -1,73 +1,81 @@
 <div class="ard-months-view">
   @if (!readOnly()) {
     <div class="ard-calendar__top-toolbar">
-      <ng-template
-        #defaultMonthsViewHeaderTemplate
-        let-date="date"
-        let-nextPage="nextPage"
-        let-prevPage="prevPage"
-        let-canGoToNextPage="canGoToNextPage"
-        let-canGoToPreviousPage="canGoToPreviousPage"
-        let-hideNextPageButton="hideNextPageButton"
-        let-hidePreviousPageButton="hidePreviousPageButton"
-        let-openDaysView="openDaysView"
-        let-onFocus="onFocus"
-        let-onBlur="onBlur"
-      >
-        <div class="ard-calendar__calendar-header">
-          <div>
-            @if (!hidePreviousPageButton) {
-              <ard-icon-button
-                size="small"
-                appearance="transparent"
-                color="none"
-                (click)="prevPage()"
-                (focus)="onFocus($event)"
-                (blur)="onBlur($event)"
-                [tabIndex]="tabIndex()"
-                [disabled]="!canGoToPreviousPage"
-              >
-                <ard-icon>chevron_left</ard-icon>
-              </ard-icon-button>
-            }
+      @if (monthsViewHeaderComponent && !monthsViewHeaderTemplate()) {
+        <!-- render the component -->
+        <ng-template
+          [ngComponentOutlet]="monthsViewHeaderComponent"
+          [ngComponentOutletInputs]="monthsViewHeaderComponentInputs()"
+        />
+      } @else {
+        <ng-template
+          #defaultMonthsViewHeaderTemplate
+          let-date="date"
+          let-nextPage="nextPage"
+          let-prevPage="prevPage"
+          let-canGoToNextPage="canGoToNextPage"
+          let-canGoToPreviousPage="canGoToPreviousPage"
+          let-hideNextPageButton="hideNextPageButton"
+          let-hidePreviousPageButton="hidePreviousPageButton"
+          let-openDaysView="openDaysView"
+          let-onFocus="onFocus"
+          let-onBlur="onBlur"
+        >
+          <div class="ard-calendar__calendar-header">
+            <div>
+              @if (!hidePreviousPageButton) {
+                <ard-icon-button
+                  size="small"
+                  appearance="transparent"
+                  color="none"
+                  (click)="prevPage()"
+                  (focus)="onFocus($event)"
+                  (blur)="onBlur($event)"
+                  [tabIndex]="tabIndex()"
+                  [disabled]="!canGoToPreviousPage"
+                >
+                  <ard-icon>chevron_left</ard-icon>
+                </ard-icon-button>
+              }
+            </div>
+            <ard-button
+              class="ard-calendar__header-button"
+              appearance="transparent"
+              color="none"
+              variant="pill"
+              [color]="color()"
+              [tabIndex]="tabIndex()"
+              (click)="openDaysView()"
+              (focus)="onFocus($event)"
+              (blur)="onBlur($event)"
+            >
+              {{ date | date: monthsViewHeaderDateFormat() }}
+              <div class="ard-dropdown-arrow"></div>
+            </ard-button>
+            <div>
+              @if (!hideNextPageButton) {
+                <ard-icon-button
+                  size="small"
+                  appearance="transparent"
+                  color="none"
+                  (click)="nextPage()"
+                  (focus)="onFocus($event)"
+                  (blur)="onBlur($event)"
+                  [tabIndex]="tabIndex()"
+                  [disabled]="!canGoToNextPage"
+                >
+                  <ard-icon>chevron_right</ard-icon>
+                </ard-icon-button>
+              }
+            </div>
           </div>
-          <ard-button
-            class="ard-calendar__header-button"
-            appearance="transparent"
-            color="none"
-            variant="pill"
-            [color]="color()"
-            [tabIndex]="tabIndex()"
-            (click)="openDaysView()"
-            (focus)="onFocus($event)"
-            (blur)="onBlur($event)"
-          >
-            {{ date | date: monthsViewHeaderDateFormat() }}
-            <div class="ard-dropdown-arrow"></div>
-          </ard-button>
-          <div>
-            @if (!hideNextPageButton) {
-              <ard-icon-button
-                size="small"
-                appearance="transparent"
-                color="none"
-                (click)="nextPage()"
-                (focus)="onFocus($event)"
-                (blur)="onBlur($event)"
-                [tabIndex]="tabIndex()"
-                [disabled]="!canGoToNextPage"
-              >
-                <ard-icon>chevron_right</ard-icon>
-              </ard-icon-button>
-            }
-          </div>
-        </div>
-      </ng-template>
+        </ng-template>
 
-      <ng-template
-        [ngTemplateOutlet]="monthsViewHeaderTemplate() || defaultMonthsViewHeaderTemplate"
-        [ngTemplateOutletContext]="monthsViewHeaderContext()"
-      />
+        <ng-template
+          [ngTemplateOutlet]="monthsViewHeaderTemplate() || defaultMonthsViewHeaderTemplate"
+          [ngTemplateOutletContext]="monthsViewHeaderContext()"
+        />
+      }
     </div>
   }
   <div
@@ -103,16 +111,24 @@
           <div class="ard-range-overlay"></div>
           <div class="ard-focus-overlay"></div>
           <div class="ard-button-content">
-            <ng-template
-              #defaultMonthTemplate
-              let-month
-            >
-              {{ month | date: monthDateFormat() : '+0000' | uppercase }}
-            </ng-template>
-            <ng-template
-              [ngTemplateOutlet]="monthTemplate() || defaultMonthTemplate"
-              [ngTemplateOutletContext]="monthContext()(month.value)"
-            />
+            @if (monthComponent && !monthTemplate()) {
+              <!-- render the component -->
+              <ng-template
+                [ngComponentOutlet]="monthComponent"
+                [ngComponentOutletInputs]="monthComponentInputs()(month.value)"
+              />
+            } @else {
+              <ng-template
+                #defaultMonthTemplate
+                let-month
+              >
+                {{ month | date: monthDateFormat() : '+0000' | uppercase }}
+              </ng-template>
+              <ng-template
+                [ngTemplateOutlet]="monthTemplate() || defaultMonthTemplate"
+                [ngTemplateOutletContext]="monthContext()(month.value)"
+              />
+            }
           </div>
         </div>
       </div>

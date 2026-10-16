@@ -1,35 +1,35 @@
 import { Overlay, OverlayConfig, OverlayRef, ScrollStrategyOptions } from '@angular/cdk/overlay';
 import { TemplatePortal } from '@angular/cdk/portal';
 import {
-    AfterContentInit,
-    AfterViewInit,
-    ChangeDetectionStrategy,
-    ChangeDetectorRef,
-    Component,
-    ContentChildren,
-    ElementRef,
-    HostBinding,
-    HostListener,
-    Inject,
-    Input,
-    OnChanges,
-    OnDestroy,
-    OnInit,
-    QueryList,
-    Signal,
-    SimpleChanges,
-    TemplateRef,
-    ViewContainerRef,
-    ViewEncapsulation,
-    computed,
-    contentChild,
-    forwardRef,
-    inject,
-    input,
-    model,
-    output,
-    signal,
-    viewChild
+  AfterContentInit,
+  AfterViewInit,
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  ContentChildren,
+  ElementRef,
+  HostBinding,
+  HostListener,
+  Inject,
+  Input,
+  OnChanges,
+  OnDestroy,
+  OnInit,
+  QueryList,
+  Signal,
+  SimpleChanges,
+  TemplateRef,
+  ViewContainerRef,
+  ViewEncapsulation,
+  computed,
+  contentChild,
+  forwardRef,
+  inject,
+  input,
+  model,
+  output,
+  signal,
+  viewChild
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { BooleanLike, NumberLike, coerceArrayProperty, coerceBooleanProperty, coerceNumberProperty } from '@ardium-pl/devkit';
@@ -37,51 +37,51 @@ import { Observable, Subject, merge, startWith, takeUntil } from 'rxjs';
 import { isAnyString, isArray, isFunction } from 'simple-bool';
 import { _FormFieldComponentBase } from '../_internal/form-field-component';
 import { ItemStorage, ItemStorageHost } from '../_internal/item-storages/dropdown-item-storage';
-import { contextToInputs, contextToInputsMultiple } from '../_internal/utils/context-to-inputs';
+import { contextToInputs } from '../_internal/utils/context-to-inputs';
 import { ArdiumDropdownPanelComponent } from '../dropdown-panel/dropdown-panel.component';
 import { DropdownPanelAppearance, DropdownPanelVariant } from '../dropdown-panel/dropdown-panel.types';
 import { ARD_FORM_FIELD_CONTROL } from '../form-field/form-field-child.token';
 import { ArdiumOptionComponent } from '../option/option.component';
 import {
-    ArdOption,
-    ArdOptionGroup,
-    ArdPanelPosition,
-    CompareWithFn,
-    GroupByFn,
-    OptionContext,
-    SearchFn,
+  ArdOption,
+  ArdOptionGroup,
+  ArdPanelPosition,
+  CompareWithFn,
+  GroupByFn,
+  OptionContext,
+  SearchFn,
 } from '../types/item-storage.types';
 import { FormElementAppearance } from '../types/theming.types';
 import { Nullable } from '../types/utility.types';
 import { FormElementVariant } from './../types/theming.types';
 import { ARD_SELECT_DEFAULTS, ArdSelectDefaults } from './select.defaults';
 import {
-    ArdAddCustomTemplateDirective,
-    ArdDropdownFooterTemplateDirective,
-    ArdDropdownHeaderTemplateDirective,
-    ArdItemDisplayLimitTemplateDirective,
-    ArdItemLimitReachedTemplateDirective,
-    ArdLoadingPlaceholderTemplateDirective,
-    ArdLoadingSpinnerTemplateDirective,
-    ArdNoItemsFoundTemplateDirective,
-    ArdOptgroupTemplateDirective,
-    ArdOptionTemplateDirective,
-    ArdSelectDropdownArrowTemplateDirective,
-    ArdSelectPlaceholderTemplateDirective,
-    ArdSelectPrefixTemplateDirective,
-    ArdSelectSuffixTemplateDirective,
-    ArdValueTemplateDirective,
+  ArdAddCustomTemplateDirective,
+  ArdDropdownFooterTemplateDirective,
+  ArdDropdownHeaderTemplateDirective,
+  ArdItemDisplayLimitTemplateDirective,
+  ArdItemLimitReachedTemplateDirective,
+  ArdLoadingPlaceholderTemplateDirective,
+  ArdLoadingSpinnerTemplateDirective,
+  ArdNoItemsFoundTemplateDirective,
+  ArdOptgroupTemplateDirective,
+  ArdOptionTemplateDirective,
+  ArdSelectDropdownArrowTemplateDirective,
+  ArdSelectPlaceholderTemplateDirective,
+  ArdSelectPrefixTemplateDirective,
+  ArdSelectSuffixTemplateDirective,
+  ArdValueTemplateDirective,
 } from './select.directive';
 import {
-    AddCustomFn,
-    CustomOptionContext,
-    GroupContext,
-    ItemDisplayLimitContext,
-    ItemLimitContext,
-    PlaceholderContext,
-    SearchContext,
-    StatsContext,
-    ValueContext,
+  AddCustomFn,
+  CustomOptionContext,
+  GroupContext,
+  ItemDisplayLimitContext,
+  ItemLimitContext,
+  PlaceholderContext,
+  SearchContext,
+  StatsContext,
+  ValueContext,
 } from './select.types';
 import { transformDropdownPanelSize } from './select.utils';
 
@@ -501,9 +501,9 @@ export class ArdiumSelectComponent
   });
 
   //! default component input generators
-  readonly optionComponentInputsGenerator = contextToInputsMultiple(this.optionContextGenerator, this.optionComponent);
-  readonly optgroupComponentInputsGenerator = contextToInputsMultiple(this.groupContextGenerator, this.optgroupComponent);
-  readonly valueComponentInputsGenerator = contextToInputsMultiple(this.valueContextGenerator, this.valueComponent);
+  readonly optionComponentInputsGenerator = contextToInputs(this.optionContextGenerator, this.optionComponent);
+  readonly optgroupComponentInputsGenerator = contextToInputs(this.groupContextGenerator, this.optgroupComponent);
+  readonly valueComponentInputsGenerator = contextToInputs(this.valueContextGenerator, this.valueComponent);
 
   readonly placeholderComponentInputs = contextToInputs(this.getPlaceholderContext, this.placeholderComponent);
   readonly loadingPlaceholderComponentInputs = contextToInputs(this.getSearchContext, this.loadingPlaceholderComponent);

@@ -1,7 +1,19 @@
-import { InjectionToken, Provider } from '@angular/core';
+import { InjectionToken, Provider, Type } from '@angular/core';
 import { _FormFieldComponentDefaults, _formFieldComponentDefaults } from '../_internal/form-field-component';
 import { ComponentColor } from '../types/colors.types';
-import { ArdCalendarFilterFn, ArdCalendarView, ArdMultiCalendarLocation } from './calendar.types';
+import {
+  ArdCalendarDay,
+  ArdCalendarDaysViewHeader,
+  ArdCalendarFilterFn,
+  ArdCalendarFloatingMonth,
+  ArdCalendarMonth,
+  ArdCalendarMonthsViewHeader,
+  ArdCalendarView,
+  ArdCalendarWeekday,
+  ArdCalendarYear,
+  ArdCalendarYearsViewHeader,
+  ArdMultiCalendarLocation,
+} from './calendar.types';
 
 export interface ArdCalendarDefaults extends _FormFieldComponentDefaults {
   color: ComponentColor;
@@ -31,6 +43,14 @@ export interface ArdCalendarDefaults extends _FormFieldComponentDefaults {
   yearDateFormat: string;
   monthDateFormat: string;
   dayDateFormat: string;
+  DaysViewHeaderComponent?: Type<ArdCalendarDaysViewHeader>;
+  MonthsViewHeaderComponent?: Type<ArdCalendarMonthsViewHeader>;
+  YearsViewHeaderComponent?: Type<ArdCalendarYearsViewHeader>;
+  WeekdayComponent?: Type<ArdCalendarWeekday>;
+  FloatingMonthComponent?: Type<ArdCalendarFloatingMonth>;
+  YearComponent?: Type<ArdCalendarYear>;
+  MonthComponent?: Type<ArdCalendarMonth>;
+  DayComponent?: Type<ArdCalendarDay>;
 }
 
 const _calendarDefaults: ArdCalendarDefaults = {
@@ -62,6 +82,15 @@ const _calendarDefaults: ArdCalendarDefaults = {
   yearDateFormat: 'yyyy',
   monthDateFormat: 'MMM',
   dayDateFormat: 'd',
+  // template components
+  DaysViewHeaderComponent: undefined,
+  MonthsViewHeaderComponent: undefined,
+  YearsViewHeaderComponent: undefined,
+  WeekdayComponent: undefined,
+  FloatingMonthComponent: undefined,
+  YearComponent: undefined,
+  MonthComponent: undefined,
+  DayComponent: undefined,
 };
 
 export const ARD_CALENDAR_DEFAULTS = new InjectionToken<ArdCalendarDefaults>('ard-calendar-defaults', {

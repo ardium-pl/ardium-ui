@@ -5,13 +5,16 @@ import {
   computed,
   ElementRef,
   HostListener,
+  inject,
   input,
   output,
   TemplateRef,
   viewChild,
 } from '@angular/core';
 import { isNull } from 'simple-bool';
+import { contextToInputs } from '../../../_internal/utils/context-to-inputs';
 import { getDateComponents, getUTCDate } from '../../../_internal/utils/date.utils';
+import { ARD_CALENDAR_DEFAULTS } from '../../calendar.defaults';
 import {
   ArdMultiCalendarLocation,
   CalendarYearContext,
@@ -31,6 +34,8 @@ const TODAY = new Date();
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class YearsViewComponent implements AfterViewInit {
+  protected readonly _DEFAULTS = inject(ARD_CALENDAR_DEFAULTS);
+
   readonly tabIndex = input.required<number>();
   readonly readOnly = input.required<boolean>();
   readonly disabled = input.required<boolean>();
@@ -347,4 +352,11 @@ export class YearsViewComponent implements AfterViewInit {
       };
     };
   });
+
+  //! template components
+  readonly yearsViewHeaderComponent = this._DEFAULTS.YearsViewHeaderComponent;
+  readonly yearComponent = this._DEFAULTS.YearComponent;
+
+  readonly yearsViewHeaderComponentInputs = contextToInputs(this.yearsViewHeaderContext, this.yearsViewHeaderComponent);
+  readonly yearComponentInputs = contextToInputs(this.yearContext, this.yearComponent);
 }

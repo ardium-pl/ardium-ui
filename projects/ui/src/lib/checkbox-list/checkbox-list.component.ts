@@ -15,7 +15,7 @@ import {
 import { BooleanLike, coerceBooleanProperty, coerceNumberProperty, NumberLike } from '@ardium-pl/devkit';
 import { SimpleItemStorage, SimpleItemStorageHost } from '../_internal/item-storages/simple-item-storage';
 import { _NgModelComponentBase } from '../_internal/ngmodel-component';
-import { contextToInputsMultiple } from '../_internal/utils/context-to-inputs';
+import { contextToInputs } from '../_internal/utils/context-to-inputs';
 import { ComponentColor } from '../types/colors.types';
 import { ArdOptionSimple, CompareWithFn, OptionContext } from '../types/item-storage.types';
 import { Nullable } from '../types/utility.types';
@@ -169,5 +169,5 @@ export class ArdiumCheckboxListComponent extends _NgModelComponentBase implement
     disabled: item.disabled,
   }));
 
-  readonly labelComponentInputsGenerator = contextToInputsMultiple(this.labelContextGenerator, this.labelComponent);
+  readonly labelComponentInputsGenerator = contextToInputs(this.labelContextGenerator, this.labelComponent);
 }

@@ -1,74 +1,82 @@
 <div class="ard-years-view">
   @if (!readOnly()) {
     <div class="ard-calendar__top-toolbar">
-      <ng-template
-        #defaultYearsViewHeaderTemplate
-        let-dateRange="dateRange"
-        let-nextPage="nextPage"
-        let-prevPage="prevPage"
-        let-canGoToNextPage="canGoToNextPage"
-        let-canGoToPreviousPage="canGoToPreviousPage"
-        let-hideNextPageButton="hideNextPageButton"
-        let-hidePreviousPageButton="hidePreviousPageButton"
-        let-openDaysView="openDaysView"
-        let-onFocus="onFocus"
-        let-onBlur="onBlur"
-      >
-        <div class="ard-calendar__calendar-header">
-          <div>
-            @if (!hidePreviousPageButton) {
-              <ard-icon-button
-                size="small"
-                appearance="transparent"
-                color="none"
-                (click)="prevPage()"
-                (focus)="onFocus($event)"
-                (blur)="onBlur($event)"
-                [tabIndex]="tabIndex()"
-                [disabled]="!canGoToPreviousPage"
-              >
-                <ard-icon>chevron_left</ard-icon>
-              </ard-icon-button>
-            }
+      @if (yearsViewHeaderComponent && !yearsViewHeaderTemplate()) {
+        <!-- render the component -->
+        <ng-template
+          [ngComponentOutlet]="yearsViewHeaderComponent"
+          [ngComponentOutletInputs]="yearsViewHeaderComponentInputs()"
+        />
+      } @else {
+        <ng-template
+          #defaultYearsViewHeaderTemplate
+          let-dateRange="dateRange"
+          let-nextPage="nextPage"
+          let-prevPage="prevPage"
+          let-canGoToNextPage="canGoToNextPage"
+          let-canGoToPreviousPage="canGoToPreviousPage"
+          let-hideNextPageButton="hideNextPageButton"
+          let-hidePreviousPageButton="hidePreviousPageButton"
+          let-openDaysView="openDaysView"
+          let-onFocus="onFocus"
+          let-onBlur="onBlur"
+        >
+          <div class="ard-calendar__calendar-header">
+            <div>
+              @if (!hidePreviousPageButton) {
+                <ard-icon-button
+                  size="small"
+                  appearance="transparent"
+                  color="none"
+                  (click)="prevPage()"
+                  (focus)="onFocus($event)"
+                  (blur)="onBlur($event)"
+                  [tabIndex]="tabIndex()"
+                  [disabled]="!canGoToPreviousPage"
+                >
+                  <ard-icon>chevron_left</ard-icon>
+                </ard-icon-button>
+              }
+            </div>
+            <ard-button
+              class="ard-calendar__header-button"
+              appearance="transparent"
+              color="none"
+              variant="pill"
+              [tabIndex]="tabIndex()"
+              (click)="openDaysView()"
+              (focus)="onFocus($event)"
+              (blur)="onBlur($event)"
+            >
+              {{ dateRange.from | date: yearsViewHeaderDateFormat() }}
+              &mdash;
+              {{ dateRange.to | date: yearsViewHeaderDateFormat() }}
+              <div class="ard-dropdown-arrow"></div>
+            </ard-button>
+            <div>
+              @if (!hideNextPageButton) {
+                <ard-icon-button
+                  size="small"
+                  appearance="transparent"
+                  color="none"
+                  (click)="nextPage()"
+                  (focus)="onFocus($event)"
+                  (blur)="onBlur($event)"
+                  [tabIndex]="tabIndex()"
+                  [disabled]="!canGoToNextPage"
+                >
+                  <ard-icon>chevron_right</ard-icon>
+                </ard-icon-button>
+              }
+            </div>
           </div>
-          <ard-button
-            class="ard-calendar__header-button"
-            appearance="transparent"
-            color="none"
-            variant="pill"
-            [tabIndex]="tabIndex()"
-            (click)="openDaysView()"
-            (focus)="onFocus($event)"
-            (blur)="onBlur($event)"
-          >
-            {{ dateRange.from | date: yearsViewHeaderDateFormat() }}
-            &mdash;
-            {{ dateRange.to | date: yearsViewHeaderDateFormat() }}
-            <div class="ard-dropdown-arrow"></div>
-          </ard-button>
-          <div>
-            @if (!hideNextPageButton) {
-              <ard-icon-button
-                size="small"
-                appearance="transparent"
-                color="none"
-                (click)="nextPage()"
-                (focus)="onFocus($event)"
-                (blur)="onBlur($event)"
-                [tabIndex]="tabIndex()"
-                [disabled]="!canGoToNextPage"
-              >
-                <ard-icon>chevron_right</ard-icon>
-              </ard-icon-button>
-            }
-          </div>
-        </div>
-      </ng-template>
+        </ng-template>
 
-      <ng-template
-        [ngTemplateOutlet]="yearsViewHeaderTemplate() || defaultYearsViewHeaderTemplate"
-        [ngTemplateOutletContext]="yearsViewHeaderContext()"
-      />
+        <ng-template
+          [ngTemplateOutlet]="yearsViewHeaderTemplate() || defaultYearsViewHeaderTemplate"
+          [ngTemplateOutletContext]="yearsViewHeaderContext()"
+        />
+      }
     </div>
   }
   <div
@@ -104,16 +112,24 @@
           <div class="ard-range-overlay"></div>
           <div class="ard-focus-overlay"></div>
           <div class="ard-button-content">
-            <ng-template
-              #defaultYearTemplate
-              let-year
-            >
-              {{ year | date: yearDateFormat() }}
-            </ng-template>
-            <ng-template
-              [ngTemplateOutlet]="yearTemplate() || defaultYearTemplate"
-              [ngTemplateOutletContext]="yearContext()(year.value)"
-            />
+            @if (yearComponent && !yearTemplate()) {
+              <!-- render the component -->
+              <ng-template
+                [ngComponentOutlet]="yearComponent"
+                [ngComponentOutletInputs]="yearComponentInputs()(year.value)"
+              />
+            } @else {
+              <ng-template
+                #defaultYearTemplate
+                let-year
+              >
+                {{ year | date: yearDateFormat() }}
+              </ng-template>
+              <ng-template
+                [ngTemplateOutlet]="yearTemplate() || defaultYearTemplate"
+                [ngTemplateOutletContext]="yearContext()(year.value)"
+              />
+            }
           </div>
         </div>
       </div>

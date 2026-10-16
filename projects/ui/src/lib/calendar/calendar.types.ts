@@ -1,3 +1,4 @@
+import { TemplateComponent } from 'dist/ui';
 import { isDate, isNumber } from 'simple-bool';
 
 export const ArdCalendarView = {
@@ -133,3 +134,12 @@ export interface CalendarActionButtonsContext {
   apply: () => void;
   reset: () => void;
 }
+
+export interface ArdCalendarDaysViewHeader extends TemplateComponent<CalendarDaysViewHeaderContext> {}
+export interface ArdCalendarMonthsViewHeader extends TemplateComponent<CalendarMonthsViewHeaderContext> {}
+export interface ArdCalendarYearsViewHeader extends TemplateComponent<CalendarYearsViewHeaderContext> {}
+export interface ArdCalendarWeekday extends TemplateComponent<CalendarWeekdayContext> {}
+export interface ArdCalendarFloatingMonth extends TemplateComponent<CalendarFloatingMonthContext> {}
+export interface ArdCalendarYear extends TemplateComponent<CalendarYearContext> {}
+export interface ArdCalendarMonth extends TemplateComponent<CalendarMonthContext> {}
+export interface ArdCalendarDay extends TemplateComponent<CalendarDayContext> {}

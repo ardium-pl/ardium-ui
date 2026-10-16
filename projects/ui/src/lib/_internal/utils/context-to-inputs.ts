@@ -1,34 +1,37 @@
 import { computed, reflectComponentType, Signal, Type } from '@angular/core';
 
-export function contextToInputs<T>(context: Signal<Record<string, any>>, component: Type<T> | undefined): Signal<Partial<T>> {
-  let allowed: Set<string> | undefined;
-  return computed(() => {
-    if (!component) return {};
+type Context = Record<string, any>;
+type ContextFactory<V> = (value: V) => Context;
 
-    if (!allowed) {
-      const meta = reflectComponentType(component);
-      if (!meta) return {};
-
-      allowed = new Set(meta.inputs.map(i => i.templateName));
-    }
-    return Object.fromEntries(Object.entries(context()).filter(([key]) => allowed!.has(key))) as Partial<T>;
-  });
-}
-
-export function contextToInputsMultiple<T, V>(
-  context: Signal<(value: V) => Record<string, any>>,
+export function contextToInputs<T, V>(
+  context: Signal<ContextFactory<V>>,
   component: Type<T> | undefined
-): Signal<(value: V) => Partial<T>> {
-  let allowed: Set<string> | undefined;
+): Signal<(value: V) => Partial<T>>;
+
+export function contextToInputs<T>(
+  context: Signal<Context>,
+  component: Type<T> | undefined
+): Signal<Partial<T>>;
+
+export function contextToInputs<T, V>(
+  context: Signal<Context | ContextFactory<V>>,
+  component: Type<T> | undefined
+): Signal<Partial<T> | ((value: V) => Partial<T>)> {
+  const meta = component ? reflectComponentType(component) : null;
+  const allowed = new Set(meta?.inputs.map(i => i.templateName) ?? []);
+
+  const filter = (value: Context): Partial<T> =>
+    Object.fromEntries(
+      Object.entries(value).filter(([key]) => allowed.has(key))
+    ) as Partial<T>;
+
   return computed(() => {
-    if (!component) return () => ({});
+    const value = context();
 
-    if (!allowed) {
-      const meta = reflectComponentType(component);
-      if (!meta) return () => ({});
-
-      allowed = new Set(meta.inputs.map(i => i.templateName));
+    if (typeof value === 'function') {
+      return (arg: V) => filter(value(arg));
     }
-    return (value: V) => Object.fromEntries(Object.entries(context()(value)).filter(([key]) => allowed!.has(key))) as Partial<T>;
+
+    return filter(value);
   });
 }

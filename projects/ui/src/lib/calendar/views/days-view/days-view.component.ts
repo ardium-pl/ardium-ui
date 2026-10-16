@@ -5,12 +5,15 @@ import {
   computed,
   ElementRef,
   HostListener,
+  inject,
   input,
   output,
   TemplateRef,
   viewChild,
 } from '@angular/core';
+import { contextToInputs } from '../../../_internal/utils/context-to-inputs';
 import { createDate, getDateComponents, getUTCDate } from '../../../_internal/utils/date.utils';
+import { ARD_CALENDAR_DEFAULTS } from '../../calendar.defaults';
 import {
   ArdMultiCalendarLocation,
   CalendarDayContext,
@@ -31,6 +34,8 @@ const TODAY = new Date();
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DaysViewComponent implements AfterViewInit {
+  protected readonly _DEFAULTS = inject(ARD_CALENDAR_DEFAULTS);
+
   readonly tabIndex = input.required<number>();
   readonly readOnly = input.required<boolean>();
   readonly disabled = input.required<boolean>();
@@ -400,4 +405,15 @@ export class DaysViewComponent implements AfterViewInit {
       },
     };
   });
+
+  //! template components
+  readonly daysViewHeaderComponent = this._DEFAULTS.DaysViewHeaderComponent;
+  readonly weekdayComponent = this._DEFAULTS.WeekdayComponent;
+  readonly floatingMonthComponent = this._DEFAULTS.FloatingMonthComponent;
+  readonly dayComponent = this._DEFAULTS.DayComponent;
+
+  readonly daysViewHeaderComponentInputs = contextToInputs(this.daysViewHeaderContext, this.daysViewHeaderComponent);
+  readonly weekdayComponentInputs = contextToInputs(this.weekdayContext, this.weekdayComponent);
+  readonly floatingMonthComponentInputs = contextToInputs(this.floatingMonthContext, this.floatingMonthComponent)
+  readonly dayComponentInputs = contextToInputs(this.dayContext, this.dayComponent);
 }

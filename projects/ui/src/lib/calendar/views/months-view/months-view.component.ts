@@ -5,13 +5,16 @@ import {
   computed,
   ElementRef,
   HostListener,
+  inject,
   input,
   output,
   TemplateRef,
   viewChild,
 } from '@angular/core';
 import { isNull } from 'simple-bool';
+import { contextToInputs } from '../../../_internal/utils/context-to-inputs';
 import { getDateComponents, getUTCDate } from '../../../_internal/utils/date.utils';
+import { ARD_CALENDAR_DEFAULTS } from '../../calendar.defaults';
 import { ArdMultiCalendarLocation, CalendarMonthContext, CalendarMonthsViewHeaderContext } from '../../calendar.types';
 import { isYearOutOfRange } from '../years-view/years-view.helpers';
 import { ComponentColor } from './../../../types/colors.types';
@@ -27,6 +30,8 @@ const TODAY = new Date();
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MonthsViewComponent implements AfterViewInit {
+  protected readonly _DEFAULTS = inject(ARD_CALENDAR_DEFAULTS);
+
   readonly tabIndex = input.required<number>();
   readonly readOnly = input.required<boolean>();
   readonly disabled = input.required<boolean>();
@@ -335,4 +340,11 @@ export class MonthsViewComponent implements AfterViewInit {
       },
     };
   });
+
+  //! template components
+  readonly monthsViewHeaderComponent = this._DEFAULTS.MonthsViewHeaderComponent;
+  readonly monthComponent = this._DEFAULTS.MonthComponent;
+
+  readonly monthsViewHeaderComponentInputs = contextToInputs(this.monthsViewHeaderContext, this.monthsViewHeaderComponent);
+  readonly monthComponentInputs = contextToInputs(this.monthContext, this.monthComponent);
 }

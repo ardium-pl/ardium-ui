@@ -1,72 +1,80 @@
 <div class="ard-days-view">
   @if (!readOnly()) {
     <div class="ard-calendar__top-toolbar">
-      <ng-template
-        #defaultDaysViewHeaderTemplate
-        let-currDate
-        let-nextMonth="nextMonth"
-        let-prevMonth="prevMonth"
-        let-canGoToNextMonth="canGoToNextPage"
-        let-canGoToPreviousMonth="canGoToPreviousPage"
-        let-hideNextPageButton="hideNextPageButton"
-        let-hidePreviousPageButton="hidePreviousPageButton"
-        let-openYearsView="openYearsView"
-        let-onFocus="onFocus"
-        let-onBlur="onBlur"
-      >
-        <div class="ard-calendar__calendar-header">
-          <div>
-            @if (!hidePreviousPageButton) {
-              <ard-icon-button
-                size="small"
-                appearance="transparent"
-                color="none"
-                (click)="prevMonth()"
-                (focus)="onFocus($event)"
-                (blur)="onBlur($event)"
-                [tabIndex]="tabIndex()"
-                [disabled]="!canGoToPreviousMonth"
-              >
-                <ard-icon>chevron_left</ard-icon>
-              </ard-icon-button>
-            }
+      @if (daysViewHeaderComponent && !daysViewHeaderTemplate()) {
+        <!-- render the component -->
+        <ng-template
+          [ngComponentOutlet]="daysViewHeaderComponent"
+          [ngComponentOutletInputs]="daysViewHeaderComponentInputs()"
+        />
+      } @else {
+        <ng-template
+          #defaultDaysViewHeaderTemplate
+          let-currDate
+          let-nextMonth="nextMonth"
+          let-prevMonth="prevMonth"
+          let-canGoToNextMonth="canGoToNextPage"
+          let-canGoToPreviousMonth="canGoToPreviousPage"
+          let-hideNextPageButton="hideNextPageButton"
+          let-hidePreviousPageButton="hidePreviousPageButton"
+          let-openYearsView="openYearsView"
+          let-onFocus="onFocus"
+          let-onBlur="onBlur"
+        >
+          <div class="ard-calendar__calendar-header">
+            <div>
+              @if (!hidePreviousPageButton) {
+                <ard-icon-button
+                  size="small"
+                  appearance="transparent"
+                  color="none"
+                  (click)="prevMonth()"
+                  (focus)="onFocus($event)"
+                  (blur)="onBlur($event)"
+                  [tabIndex]="tabIndex()"
+                  [disabled]="!canGoToPreviousMonth"
+                >
+                  <ard-icon>chevron_left</ard-icon>
+                </ard-icon-button>
+              }
+            </div>
+            <ard-button
+              class="ard-calendar__header-button"
+              appearance="transparent"
+              color="none"
+              variant="pill"
+              [tabIndex]="tabIndex()"
+              (click)="openYearsView()"
+              (focus)="onFocus($event)"
+              (blur)="onBlur($event)"
+            >
+              {{ currDate | date: this.daysViewHeaderDateFormat() | uppercase }}
+              <div class="ard-dropdown-arrow"></div>
+            </ard-button>
+            <div>
+              @if (!hideNextPageButton) {
+                <ard-icon-button
+                  size="small"
+                  appearance="transparent"
+                  color="none"
+                  (click)="nextMonth()"
+                  (focus)="onFocus($event)"
+                  (blur)="onBlur($event)"
+                  [tabIndex]="tabIndex()"
+                  [disabled]="!canGoToNextMonth"
+                >
+                  <ard-icon>chevron_right</ard-icon>
+                </ard-icon-button>
+              }
+            </div>
           </div>
-          <ard-button
-            class="ard-calendar__header-button"
-            appearance="transparent"
-            color="none"
-            variant="pill"
-            [tabIndex]="tabIndex()"
-            (click)="openYearsView()"
-            (focus)="onFocus($event)"
-            (blur)="onBlur($event)"
-          >
-            {{ currDate | date: this.daysViewHeaderDateFormat() | uppercase }}
-            <div class="ard-dropdown-arrow"></div>
-          </ard-button>
-          <div>
-            @if (!hideNextPageButton) {
-              <ard-icon-button
-                size="small"
-                appearance="transparent"
-                color="none"
-                (click)="nextMonth()"
-                (focus)="onFocus($event)"
-                (blur)="onBlur($event)"
-                [tabIndex]="tabIndex()"
-                [disabled]="!canGoToNextMonth"
-              >
-                <ard-icon>chevron_right</ard-icon>
-              </ard-icon-button>
-            }
-          </div>
-        </div>
-      </ng-template>
+        </ng-template>
 
-      <ng-template
-        [ngTemplateOutlet]="daysViewHeaderTemplate() || defaultDaysViewHeaderTemplate"
-        [ngTemplateOutletContext]="daysViewHeaderContext()"
-      />
+        <ng-template
+          [ngTemplateOutlet]="daysViewHeaderTemplate() || defaultDaysViewHeaderTemplate"
+          [ngTemplateOutletContext]="daysViewHeaderContext()"
+        />
+      }
     </div>
   }
   <div class="ard-calendar__weekdays">
@@ -82,10 +90,18 @@
       </div>
     </ng-template>
     @for (weekdayIndex of weekdayArray(); track weekdayIndex) {
-      <ng-template
-        [ngTemplateOutlet]="weekdayTemplate() || defaultWeekdayTemplate"
-        [ngTemplateOutletContext]="weekdayContext()(weekdayIndex)"
-      />
+      @if (weekdayComponent && !weekdayTemplate()) {
+        <!-- render the component -->
+        <ng-template
+          [ngComponentOutlet]="weekdayComponent"
+          [ngComponentOutletInputs]="weekdayComponentInputs()(weekdayIndex)"
+        />
+      } @else {
+        <ng-template
+          [ngTemplateOutlet]="weekdayTemplate() || defaultWeekdayTemplate"
+          [ngTemplateOutletContext]="weekdayContext()(weekdayIndex)"
+        />
+      }
     }
   </div>
   <div
@@ -104,19 +120,27 @@
   >
     @if (!hideFloatingMonth()) {
       <div class="ard-calendar__floating-month">
-        <ng-template
-          #defaultFloatingMonthTemplate
-          let-date
-        >
-          <div [title]="date | date: floatingMonthTitleDateFormat() | titlecase">
-            {{ date | date: floatingMonthDateFormat() | uppercase }}
-          </div>
-        </ng-template>
+        @if (floatingMonthComponent && !floatingMonthTemplate()) {
+          <!-- render the component -->
+          <ng-template
+            [ngComponentOutlet]="floatingMonthComponent"
+            [ngComponentOutletInputs]="floatingMonthComponentInputs()"
+          />
+        } @else {
+          <ng-template
+            #defaultFloatingMonthTemplate
+            let-date
+          >
+            <div [title]="date | date: floatingMonthTitleDateFormat() | titlecase">
+              {{ date | date: floatingMonthDateFormat() | uppercase }}
+            </div>
+          </ng-template>
 
-        <ng-template
-          [ngTemplateOutlet]="floatingMonthTemplate() || defaultFloatingMonthTemplate"
-          [ngTemplateOutletContext]="floatingMonthContext()"
-        />
+          <ng-template
+            [ngTemplateOutlet]="floatingMonthTemplate() || defaultFloatingMonthTemplate"
+            [ngTemplateOutletContext]="floatingMonthContext()"
+          />
+        }
       </div>
     }
     @for (week of activeCalendarData().array; track $index) {
@@ -143,16 +167,24 @@
               <div class="ard-range-overlay"></div>
               <div class="ard-focus-overlay"></div>
               <div class="ard-button-content">
-                <ng-template
-                  #defaultDayTemplate
-                  let-date="date"
-                >
-                  {{ date | date: dayDateFormat() }}
-                </ng-template>
-                <ng-template
-                  [ngTemplateOutlet]="dayTemplate() || defaultDayTemplate"
-                  [ngTemplateOutletContext]="dayContext()(day.value)"
-                />
+                @if (dayComponent && !dayTemplate()) {
+                  <!-- render the component -->
+                  <ng-template
+                    [ngComponentOutlet]="dayComponent"
+                    [ngComponentOutletInputs]="dayComponentInputs()(day.value)"
+                  />
+                } @else {
+                  <ng-template
+                    #defaultDayTemplate
+                    let-date="date"
+                  >
+                    {{ date | date: dayDateFormat() }}
+                  </ng-template>
+                  <ng-template
+                    [ngTemplateOutlet]="dayTemplate() || defaultDayTemplate"
+                    [ngTemplateOutletContext]="dayContext()(day.value)"
+                  />
+                }
               </div>
             </div>
           </div>

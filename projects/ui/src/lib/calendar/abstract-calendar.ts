@@ -1,26 +1,26 @@
 import {
-    computed,
-    contentChild,
-    Directive,
-    HostListener,
-    input,
-    linkedSignal,
-    model,
-    ModelSignal,
-    OnChanges,
-    output,
-    Signal,
-    signal,
-    SimpleChanges,
-    viewChild
+  computed,
+  contentChild,
+  Directive,
+  HostListener,
+  input,
+  linkedSignal,
+  model,
+  ModelSignal,
+  OnChanges,
+  output,
+  Signal,
+  signal,
+  SimpleChanges,
+  viewChild
 } from '@angular/core';
 import {
-    BooleanLike,
-    coerceBooleanProperty,
-    coerceDateOnlyProperty,
-    coerceNumberProperty,
-    getUTCDate,
-    NumberLike,
+  BooleanLike,
+  coerceBooleanProperty,
+  coerceDateOnlyProperty,
+  coerceNumberProperty,
+  getUTCDate,
+  NumberLike,
 } from '@ardium-pl/devkit';
 import { roundFromZero, roundToMultiple } from 'more-rounding';
 import { isDefined, isNull } from 'simple-bool';
@@ -29,14 +29,14 @@ import { createDate } from '../_internal/utils/date.utils';
 import { ComponentColor } from '../types/colors.types';
 import { ArdCalendarDefaults } from './calendar.defaults';
 import {
-    ArdCalendarDaysViewHeaderTemplateDirective,
-    ArdCalendarDayTemplateDirective,
-    ArdCalendarFloatingMonthTemplateDirective,
-    ArdCalendarMonthsViewHeaderTemplateDirective,
-    ArdCalendarMonthTemplateDirective,
-    ArdCalendarWeekdayTemplateDirective,
-    ArdCalendarYearsViewHeaderTemplateDirective,
-    ArdCalendarYearTemplateDirective,
+  ArdCalendarDaysViewHeaderTemplateDirective,
+  ArdCalendarDayTemplateDirective,
+  ArdCalendarFloatingMonthTemplateDirective,
+  ArdCalendarMonthsViewHeaderTemplateDirective,
+  ArdCalendarMonthTemplateDirective,
+  ArdCalendarWeekdayTemplateDirective,
+  ArdCalendarYearsViewHeaderTemplateDirective,
+  ArdCalendarYearTemplateDirective,
 } from './calendar.directives';
 import { _CalendarTemplateRepositoryDirective } from './calendar.internal-directives';
 import { ArdCalendarFilterFn, ArdCalendarView, ArdMultiCalendarLocation } from './calendar.types';
