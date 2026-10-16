@@ -1,5 +1,6 @@
 import { isDefined } from 'simple-bool';
 import { getUTCDate } from '../../../_internal/utils/date.utils';
+import { Nullable } from '../../../types/utility.types';
 import { CalendarArrayItem } from '../../calendar.internal-types';
 
 export type CalendarArray = (CalendarArrayItem | null)[][];
@@ -24,8 +25,8 @@ export function getCalendarDayData(
   year: number,
   monthIndex: number,
   firstWeekday = 1,
-  min: Date | null,
-  max: Date | null,
+  min: Nullable<Date>,
+  max: Nullable<Date>,
   fillUpTo6Weeks: boolean,
   reserverFirstRow: boolean
 ): CalendarData {
@@ -103,7 +104,7 @@ export function getCalendarWeekdayArray(firstWeekday = 1): number[] {
   return [0, 1, 2, 3, 4, 5, 6].map(v => (v + firstWeekday) % 7);
 }
 
-export function isDayOutOfRange(date: Date, min: Date | null, max: Date | null): number {
+export function isDayOutOfRange(date: Date, min: Nullable<Date>, max: Nullable<Date>): number {
   if (isDefined(min) && date < min) return -1;
   if (isDefined(max) && date > max) return 1;
   return 0;

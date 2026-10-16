@@ -66,7 +66,7 @@ export abstract class _SelectableListComponentBase
   //! items setter/getter
   @Input()
   get items(): any[] {
-    return this.itemStorage.items();
+    return this.itemStorage.options();
   }
   set items(value: any) {
     if (!Array.isArray(value)) value = coerceArrayProperty(value);
@@ -101,13 +101,14 @@ export abstract class _SelectableListComponentBase
   readonly invertDisabled = input<boolean, BooleanLike>(this._DEFAULTS.invertDisabled, {
     transform: v => coerceBooleanProperty(v),
   });
-  readonly maxSelectedItems = input<Nullable<number>, any>(this._DEFAULTS.maxSelectedItems, {
+  readonly maxLength = input<Nullable<number>, any>(this._DEFAULTS.maxSelectedItems, {
     transform: v => coerceNumberProperty(v, undefined),
   });
 
   //! control value accessor
   writeValue(ngModel: any[]): void {
-    this.itemStorage.writeValue(ngModel);
+    // this.itemStorage.writeValue(ngModel);
+    // TODO
     this._cd.markForCheck();
   }
 
@@ -119,7 +120,7 @@ export abstract class _SelectableListComponentBase
   }
 
   protected _emitChange(): void {
-    const value = this.singleselectable() ? this.itemStorage.value()[0] : this.itemStorage.value();
+    const value = this.itemStorage.value();
     this._onChangeRegistered?.(value);
     this.valueChange.emit(value);
   }

@@ -2,14 +2,12 @@ import {
   ChangeDetectionStrategy,
   Component,
   effect,
-  forwardRef,
   Inject,
   model,
   output,
   untracked,
-  ViewEncapsulation,
+  ViewEncapsulation
 } from '@angular/core';
-import { NG_VALUE_ACCESSOR } from '@angular/forms';
 import { isDate, isDefined, isObject } from 'simple-bool';
 import { ARD_FORM_FIELD_CONTROL } from '../form-field/form-field-child.token';
 import { _AbstractCalendar } from './abstract-calendar';
@@ -24,11 +22,6 @@ import { DateRange, PartialDateRange } from './calendar.types';
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [
-    {
-      provide: NG_VALUE_ACCESSOR,
-      useExisting: forwardRef(() => ArdiumRangeCalendarComponent),
-      multi: true,
-    },
     {
       provide: ARD_FORM_FIELD_CONTROL,
       useExisting: ArdiumRangeCalendarComponent,

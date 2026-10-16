@@ -4,7 +4,7 @@ import { DefaultCheckboxIcon } from '../checkbox/checkbox-default-component.comp
 
 @Component({
   selector: 'app-checkbox-list-default-label',
-  template: `:{{ label() }}:`,
+  template: `= {{ label() }} =`,
   standalone: true,
 })
 export class CheckboxListDefaultLabelComponent implements ArdCheckboxListLabelComponent {
@@ -13,7 +13,7 @@ export class CheckboxListDefaultLabelComponent implements ArdCheckboxListLabelCo
 
 @Component({
   selector: 'app-checkbox-list-default-label-component',
-  template: `<ard-checkbox-list [items]="items" />`,
+  template: `<ard-checkbox-list [options]="items" />`,
   standalone: true,
   imports: [ArdiumCheckboxListModule],
   providers: [

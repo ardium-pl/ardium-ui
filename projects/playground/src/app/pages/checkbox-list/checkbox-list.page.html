@@ -2,29 +2,29 @@
   <span class="title">Basic checkbox list</span>
   left clumped
   <ard-checkbox-list
-    [items]="fruitItems"
+    [options]="fruitItems"
     align="left-clumped"
   />
   left split
   <ard-checkbox-list
-    [items]="fruitItems"
+    [options]="fruitItems"
     align="left-split"
   />
   right split
   <ard-checkbox-list
-    [items]="fruitItems"
+    [options]="fruitItems"
     align="right-split"
   />
   right clumped
   <ard-checkbox-list
-    [items]="fruitItems"
+    [options]="fruitItems"
     align="right-clumped"
   />
 </div>
 <div class="master">
   <span class="title">Checkbox list events</span>
   <ard-checkbox-list
-    [items]="fruitItems"
+    [options]="fruitItems"
     (focus)="log('focus', $event)"
     (blur)="log('blur', $event)"
     (valueChange)="log('valueChange', $event)"
@@ -34,13 +34,13 @@
 <div class="master">
   <span class="title">Readonly checkbox list</span>
   <ard-checkbox-list
-    [items]="fruitItems"
+    [options]="fruitItems"
     readonly
   />
 </div>
 <div class="master">
   <span class="title">Checkbox list with custom checkbox template</span>
-  <ard-checkbox-list [items]="fruitItems">
+  <ard-checkbox-list [options]="fruitItems">
     <ng-template
       ard-checkbox-tmp
       let-selected
@@ -52,7 +52,7 @@
 <div class="master">
   <span class="title">Checkbox list with custom label template</span>
   <ard-checkbox-list
-    [items]="productItems"
+    [options]="productItems"
     [(value)]="selectedProducts"
     valueFrom="id"
     labelFrom="name"
@@ -79,10 +79,20 @@
 <div class="master">
   <span class="title">Checkbox list with form control</span>
   <ard-checkbox-list
-    [items]="fruitItems"
+    [options]="fruitItems"
     [formControl]="control"
   />
   <p><strong>Value:</strong> {{ control.value }}</p>
   <p><strong>Touched:</strong> {{ control.touched }}</p>
   <p><strong>Dirty:</strong> {{ control.dirty }}</p>
+</div>
+<div class="master">
+  <span class="title">Checkbox list with form control</span>
+  <ard-checkbox-list
+    [options]="fruitItems"
+    [formField]="signalForm.value1"
+  />
+  <p><strong>Value:</strong> {{ signalForm.value1().value() }}</p>
+  <p><strong>Touched:</strong> {{ signalForm.value1().touched() }}</p>
+  <p><strong>Dirty:</strong> {{ signalForm.value1().dirty() }}</p>
 </div>

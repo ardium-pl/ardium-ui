@@ -6,9 +6,10 @@ import {
   Inject,
   input,
   model,
-  ViewEncapsulation
+  OnChanges,
+  SimpleChanges,
+  ViewEncapsulation,
 } from '@angular/core';
-import { ControlValueAccessor } from '@angular/forms';
 import { FormValueControl } from '@angular/forms/signals';
 import { contextToInputs } from '../_internal/utils/context-to-inputs';
 import { SimpleComponentColor } from '../types/colors.types';
@@ -28,7 +29,7 @@ import { CheckboxLabelTemplateContext, CheckboxState, CheckboxTemplateContext } 
 })
 export class ArdiumCheckboxComponent
   extends _BooleanComponentBase
-  implements ControlValueAccessor, Omit<FormValueControl<boolean>, 'disabled' | 'readonly'>
+  implements OnChanges, Omit<FormValueControl<boolean>, 'disabled' | 'readonly'>
 {
   protected override readonly _DEFAULTS!: ArdCheckboxDefaults;
   constructor(@Inject(ARD_CHECKBOX_DEFAULTS) defaults: ArdCheckboxDefaults) {
@@ -77,6 +78,12 @@ export class ArdiumCheckboxComponent
 
     this._emitChange();
     this._emitTouched();
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['value']) {
+      this.internalState.set(this.value() ? CheckboxState.Selected : CheckboxState.Unselected);
+    }
   }
 
   //! templates

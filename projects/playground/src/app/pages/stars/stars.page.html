@@ -21,14 +21,14 @@
     <div class="grid red">
       @for (state of [false, true]; track state) { @for (disabled of [false, true]; track disabled) {
       <ard-star-button
-        [selected]="state"
+        [value]="state"
         [color]="color"
         [disabled]="disabled"
         (focus)="log('focus', $event)"
         (blur)="log('blur', $event)"
         (select)="log('select', $event)"
         (unselect)="log('unselect', $event)"
-        (selectedChange)="log('selectedChange', $event)"
+        (valueChange)="log('valueChange', $event)"
       ></ard-star-button>
       } }
     </div>
@@ -200,7 +200,7 @@
       >
         <ard-star-button
           clickStrategy="noop"
-          [selected]="index === valueIndex || index === highlightedIndex"
+          [value]="index === valueIndex || index === highlightedIndex"
           (click)="onClick()"
           (focus)="onFocus($event)"
           (blur)="onBlur($event)"

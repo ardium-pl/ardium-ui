@@ -1,4 +1,4 @@
-import { Signal, computed } from '@angular/core';
+import { Signal, WritableSignal, computed, effect, signal } from '@angular/core';
 import { arraySignal } from '@ardium-pl/devkit';
 import { resolvePath } from 'resolve-object-path';
 import { evaluate, isArray, isDefined, isObject, isPrimitive } from 'simple-bool';
@@ -11,6 +11,7 @@ export interface ItemStorageHostDefaults {
   disabledFrom: string;
 }
 export interface SimpleItemStorageHost {
+  readonly value: WritableSignal<unknown[] | unknown>;
   readonly valueFrom: Signal<Nullable<string>>;
   readonly labelFrom: Signal<Nullable<string>>;
   readonly disabledFrom: Signal<Nullable<string>>;
@@ -19,32 +20,76 @@ export interface SimpleItemStorageHost {
   readonly compareWith: Signal<Nullable<CompareWithFn>>;
   readonly multiselectable: Signal<boolean>;
   readonly isValueRequired: Signal<boolean>;
-  readonly maxSelectedItems: Signal<Nullable<number>>;
+  readonly maxLength: Signal<Nullable<number>>;
   readonly _componentId: string;
   readonly _componentName: string;
 }
 
 export class SimpleItemStorage {
-  private readonly _items = arraySignal<ArdOptionSimple>([]);
+  private readonly _options = arraySignal<ArdOptionSimple>([]);
 
-  constructor(private readonly _ardParentComp: SimpleItemStorageHost) {}
+  constructor(private readonly _ardParentComp: SimpleItemStorageHost) {
+    // validate all items exist in the options list
+    // TODO move to ngOnChanges of parent component
+    effect(() => {
+      if (!this._areItemsInitialized()) return;
+
+      const validValues: any[] = [];
+      for (const item of this._valueAsArray()) {
+        if (!this._options().some(i => this.itemHasValueOf(i, item))) {
+          const valueAsString = typeof item === 'string' ? `"${item}"` : item?.toString?.() || String(item);
+          console.warn(
+            `ARD-WA${this._ardParentComp._componentId}3: Couldn't find an item with value ${valueAsString}. Value will be ignored.`
+          );
+        } else {
+          validValues.push(item);
+        }
+      }
+      if (validValues.length !== this._valueAsArray().length) {
+        this._setValue(validValues);
+      }
+    });
+  }
+
+  private readonly _valueAsArray = computed<any[]>(() => {
+    const value = this._ardParentComp.value();
+    return isArray(value) ? value : [value];
+  });
+
+  private _setValue(newValue: any[]): void {
+    if (this._ardParentComp.multiselectable()) {
+      this._ardParentComp.value.set(newValue);
+    } else {
+      this._ardParentComp.value.set(newValue[0]);
+    }
+  }
+  private _addItemsToValue(items: any[]): void {
+    const newValue = [...this._valueAsArray(), ...items];
+    this._setValue(newValue);
+  }
+
+  private readonly _highlightedItems = arraySignal<ArdOptionSimple>([]);
 
   /**
    * Gets all items.
    */
-  readonly items = computed<ArdOptionSimple[]>(() => [...this._items()]);
+  readonly options = computed<ArdOptionSimple[]>(() =>
+    this._options().map(item => ({
+      ...item,
+      selected: this._valueAsArray().some(v => this.itemHasValueOf(item, v)),
+      highlighted: this._highlightedItems().some(v => this.itemHasValueOf(item, v)),
+    }))
+  );
   /**
    * Gets all currently selected items.
    */
-  readonly selectedItems = computed<ArdOptionSimple[]>(() => this.items().filter(item => item.selected));
+  readonly selectedItems = computed<ArdOptionSimple[]>(() => this.options().filter(item => item.selected));
   /**
    * Gets all currently highlighted items.
    */
-  readonly highlightedItems = computed<ArdOptionSimple[]>(() => this.items().filter(item => item.highlighted));
-  /**
-   * Gets the values of the currently selected items.
-   */
-  readonly value = computed(() => this._itemsToValue(this.selectedItems()));
+  readonly highlightedItems = computed<ArdOptionSimple[]>(() => this.options().filter(item => item.highlighted));
+
+  readonly value = this._ardParentComp.value; // TODO remove
   /**
    * Maps an array of items into their values.
    * @param items The items to convert to value.
@@ -52,21 +97,6 @@ export class SimpleItemStorage {
    */
   private _itemsToValue(items: ArdOptionSimple[]): any[] {
     return items.map(item => item.value);
-  }
-
-  private _updateItems(updateFn: (item: ArdOptionSimple) => ArdOptionSimple): void {
-    this._items.map(updateFn);
-  }
-  private _updateItemsFromArray(updateFn: (item: ArdOptionSimple) => ArdOptionSimple, itemsToUpdate: ArdOptionSimple[]): void {
-    this._items.update(items => {
-      for (const itemToUpdate of itemsToUpdate) {
-        const item = items[itemToUpdate.index];
-        if (item) {
-          items[itemToUpdate.index] = updateFn(item);
-        }
-      }
-      return items;
-    });
   }
 
   /**
@@ -78,44 +108,40 @@ export class SimpleItemStorage {
    * @returns An array of all highlightable items.
    */
   private readonly _highlightableItems = computed(() =>
-    this.items().filter(item => !item.disabled && (this.isItemLimitReached() ? item.selected : true))
+    this.options().filter(item => !item.disabled && (this.isItemLimitReached() ? item.selected : true))
   );
 
   readonly itemsLeftUntilLimit = computed(() =>
-    this._ardParentComp.multiselectable() && isDefined(this._ardParentComp.maxSelectedItems())
-      ? this._ardParentComp.maxSelectedItems()! - this.selectedItems().length
+    this._ardParentComp.multiselectable() && isDefined(this._ardParentComp.maxLength())
+      ? this._ardParentComp.maxLength()! - this.selectedItems().length
       : 1
   );
   /**
    * Returns true if the parent component defines the limit of concurrently selectable items and the amount of currently selected items matches that limit. Otherwise returns false.
    *
-   * **TLDR**: true if `maxSelectedItems` is defined and the number of selected items matches that value.
+   * **TLDR**: true if `maxLength` is defined and the number of selected items matches that value.
    */
   readonly isItemLimitReached = computed(() => this.itemsLeftUntilLimit() <= 0);
 
-  private _areItemsInitialized = false;
+  private readonly _areItemsInitialized = signal<boolean>(false);
   /**
    * Sets the component's items. Takes into account the values defined by the parent component for `valueFrom`, `labelFrom`, and `disabledFrom`.
    * @param items An array of items to be set as the component's items.
    * @returns true if at least one of the items is of primitive type, otherwise false.
    */
   setItems(items: unknown[]): void {
-    this._areItemsInitialized = true;
+    this._areItemsInitialized.set(true);
     let areItemsPrimitive = false;
     if (items.some(isPrimitive)) {
       items = items.map(this._primitiveItemsMapFn);
       areItemsPrimitive = true;
     }
 
-    this._items.set(
+    this._options.set(
       items.map((item, index) => {
         return this._setItemsMapFn(item, index, areItemsPrimitive);
       })
     );
-    if (this._valueBeforeItemsSet !== null) {
-      this.writeValue(this._valueBeforeItemsSet);
-      this._valueBeforeItemsSet = null;
-    }
   }
   private _primitiveItemsMapFn<T>(item: T): { value: T } {
     return { value: item };
@@ -161,46 +187,28 @@ export class SimpleItemStorage {
     };
   }
 
-
-  private _valueBeforeItemsSet: any = null;
   /**
-   * Writes a new value to the item storage. Selects the correct items based on the provided values, warning the user if the value is not found.
-   * @param ngModel The value of the ngModel to set.
+   * Validates that all values of the value to be written are able to be accurately compared against the storage items.
+   *
+   * An item from the ngModel array is considered valid if it is a primitive value, or if all of the below points are met:
+   * 1. The parent component defines the `compareWith` property.
+   * 2. The ngModel value item is an object (or array).
+   * 3. The parent component has a defined `valueFrom` property.
+   * @param ngModel The value of ngModel to validate.
+   * @returns true if all items are valid, otherwise false.
    */
-  writeValue(ngModel: any): void {
-    if (!this._areItemsInitialized) {
-      this._valueBeforeItemsSet = ngModel;
-      return;
-    }
-    this._forceUnselectAll();
-
-    if (!this._validateWriteValue(ngModel)) return;
-
-    const selectItemByValue = (value: any) => {
-      if (value === null || value === undefined) {
-        this.unselectAll();
-        return;
-      }
-      const item = this.findItemByValue(value);
-
-      if (item) {
-        this.selectItem(item);
-        return;
-      }
-      console.warn(
-        `ARD-WA${this._ardParentComp._componentId}3: Couldn't find an item with value ${value?.toString?.() || String(value)}.`
-      );
-    };
-
+  // TODO use in ngOnChanges of parent component to validate value on every change
+  validateWrittenValue(ngModel: unknown): boolean {
     if (this._ardParentComp.multiselectable()) {
-      for (const modelValue of ngModel) {
-        selectItemByValue(modelValue);
+      if (!isArray(ngModel)) {
+        throw new Error(
+          `ARD-FT${this._ardParentComp._componentId}0m: a multiselectable <ard-${this._ardParentComp._componentName}> expects its value to be an array, got "${ngModel}".`
+        );
       }
-    } else {
-      selectItemByValue(ngModel);
+      return ngModel.every(v => this._validateSingleElementType(v));
     }
+    return this._validateSingleElementType(ngModel);
   }
-
   private _validateSingleElementType(item: unknown): boolean {
     if (!isDefined(this._ardParentComp.compareWith()) && isObject(item) && this._ardParentComp.valueFrom()) {
       if (!this._ardParentComp.multiselectable() && Array.isArray(item)) {
@@ -218,43 +226,22 @@ export class SimpleItemStorage {
       }
 
       console.error(
-        `ARD-FT${this._ardParentComp._componentId}2: Setting object ${jsonItemString} as your value with [valueFrom] is not allowed unless [compareWith] is used.`
+        `ARD-FT${this._ardParentComp._componentId}2: Setting object ${jsonItemString} as your value is not allowed unless [compareWith] is used.`
       );
       return false;
     }
     return true;
   }
-  /**
-   * Validates that all values of the value to be written are able to be accurately compared against the storage items.
-   *
-   * An item from the ngModel array is considered valid if it is a primitive value, or if all of the below points are met:
-   * 1. The parent component defines the `compareWith` property.
-   * 2. The ngModel value item is an object (or array).
-   * 3. The parent component has a defined `valueFrom` property.
-   * @param ngModel The value of ngModel to validate.
-   * @returns true if all items are valid, otherwise false.
-   */
-  private _validateWriteValue(ngModel: unknown): boolean {
-    if (this._ardParentComp.multiselectable()) {
-      if (!isArray(ngModel)) {
-        throw new Error(
-          `ARD-FT${this._ardParentComp._componentId}0m: a multiselectable <ard-${this._ardParentComp._componentName}> expects its value to be an array, got "${ngModel}".`
-        );
-      }
-      return ngModel.every(v => this._validateSingleElementType(v));
-    }
-    return this._validateSingleElementType(ngModel);
-  }
 
-  findItemByValue(valueToFind: any): ArdOptionSimple | undefined {
+  itemHasValueOf(option: ArdOptionSimple, valueToCompare: any): boolean {
     let findBy: (item: ArdOptionSimple) => boolean;
     const cmpFn = this._ardParentComp.compareWith();
     if (isDefined(cmpFn)) {
-      findBy = item => cmpFn(valueToFind, item.value);
+      findBy = item => cmpFn(valueToCompare, item.value);
     } else {
-      findBy = item => item.value === valueToFind;
+      findBy = item => item.value === valueToCompare;
     }
-    return this.items().find(item => findBy(item));
+    return findBy(option);
   }
 
   /**
@@ -264,18 +251,17 @@ export class SimpleItemStorage {
    * @returns An array of items cleared, mapped to only their values.
    */
   unselectAll(): any[] {
-    return this.unselectItem(...this.selectedItems());
-  }
-  /**
-   * Unselects all selected items, no matter what the component settings are.
-   * @returns An array of items cleared, mapped to only their values.
-   */
-  private _forceUnselectAll(): any[] {
-    const ret = this.value();
+    const value = this._valueAsArray();
+    const shouldKeepFirstSelected = this._ardParentComp.isValueRequired();
 
-    this._updateItems(item => ({ ...item, selected: false }));
+    if (shouldKeepFirstSelected) {
+      if (value.length <= 1) return [];
 
-    return ret;
+      const newValue = value.slice(1);
+      this._ardParentComp.value.set(newValue);
+      return newValue;
+    }
+    return value;
   }
   /**
    * Selects one or multiple items.
@@ -294,34 +280,26 @@ export class SimpleItemStorage {
 
     const itemsLeftUntilLimit = this.itemsLeftUntilLimit();
     let itemsSelectedCount = 0;
-    const newItemsArray = [...this.items()];
+    const itemsToAdd = new Set<any>();
+    const itemsSelected: any[] = [];
+
     for (const item of items) {
-      itemsSelectedCount++;
       if (item.selected) continue;
+      itemsSelectedCount++;
       if (itemsSelectedCount > itemsLeftUntilLimit) {
         break;
       }
-      newItemsArray[item.index] = { ...item, selected: true };
+      itemsSelected.push(item);
+      itemsToAdd.add(item.value);
     }
-
-    const itemsUnselected = this._ardParentComp.multiselectable()
-      ? []
-      : this.selectedItems().filter(item => !items.find(v => v.value === item.value));
-    
-    for (const item of itemsUnselected) {
-      newItemsArray[item.index] = { ...item, selected: false };
-    }
-    
-    const itemsSelected = items.slice(0, itemsSelectedCount);
     const itemsFailedToSelect = items.slice(itemsSelectedCount);
 
-    const isAnyNewItemToBeSelected = !!itemsSelected.find(item => !this.selectedItems().find(v => v.value === item.value));
+    const itemsUnselected = this._ardParentComp.multiselectable() ? [] : this._valueAsArray();
 
-    if (isAnyNewItemToBeSelected) {
-      this._items.set(newItemsArray);
+    if (itemsSelected.length > 0) {
+      this._addItemsToValue([...itemsToAdd]);
     }
-
-    return [this._itemsToValue(itemsSelected), this._itemsToValue(itemsUnselected), this._itemsToValue(itemsFailedToSelect)];
+    return [itemsSelected, itemsUnselected, this._itemsToValue(itemsFailedToSelect)];
   }
   /**
    *
@@ -329,31 +307,32 @@ export class SimpleItemStorage {
    * @returns An array of items unselected, mapped to only their values.
    */
   unselectItem(...items: ArdOptionSimple[]): any[] {
-    let shouldKeepFirstSelected = this._ardParentComp.isValueRequired();
+    const shouldKeepFirstSelected = this._ardParentComp.isValueRequired();
 
-    const unselectedItems: ArdOptionSimple[] = [];
-    this._updateItemsFromArray(item => {
-      if (item.selected && shouldKeepFirstSelected) {
-        shouldKeepFirstSelected = false;
-        return item;
-      }
-      if (item.selected) {
+    const unselectedItems: any[] = [];
+
+    let wasFirstItemKept = false;
+    const newValue = this._valueAsArray().filter(item => {
+      if (items.some(i => this.itemHasValueOf(i, item))) {
+        if (shouldKeepFirstSelected && !wasFirstItemKept) {
+          wasFirstItemKept = true;
+          return true;
+        }
         unselectedItems.push(item);
+        return false;
       }
-      return {
-        ...item,
-        selected: false,
-      };
-    }, items);
+      return true;
+    });
+    this._setValue(newValue);
 
-    return this._itemsToValue(unselectedItems);
+    return unselectedItems;
   }
 
   /**
    * Unhighlights all currently highlighted items.
    */
   unhighlightAll(): void {
-    this._updateItems(item => ({ ...item, highlighted: false }));
+    this._highlightedItems.set([]);
   }
   /**
    * Highlights the given item, while unhighlighting all other items. Does nothing when the item is disabled.
@@ -362,8 +341,10 @@ export class SimpleItemStorage {
    */
   highlightSingleItem(item: ArdOptionSimple): ArdOptionSimple | null {
     if (!item || item.disabled) return null;
-    this.unhighlightAll();
-    return this.highlightItem(item);
+
+    this._highlightedItems.set([item]);
+
+    return item;
   }
   /**
    * Highlights all given items.
@@ -371,7 +352,10 @@ export class SimpleItemStorage {
    * @returns The last highlighted item.
    */
   highlightItem(...items: ArdOptionSimple[]): ArdOptionSimple {
-    this._updateItemsFromArray(item => ({ ...item, highlighted: true }), items);
+    for (const item of items) {
+      if (item.disabled) continue;
+      this._highlightedItems.push(item);
+    }
     return items.last();
   }
   /**
@@ -379,35 +363,37 @@ export class SimpleItemStorage {
    * @param items A rest operator array of items to be unhighlighted.
    */
   unhighlightItem(...items: ArdOptionSimple[]): void {
-    this._updateItemsFromArray(item => ({ ...item, highlighted: false }), items);
+    for (const item of items) {
+      this._highlightedItems.filter(v => this.itemHasValueOf(item, v.value));
+    }
   }
   /**
    * Highlights the first item out of all items.
    * @returns The highlighted item.
    */
   highlightFirstItem(): ArdOptionSimple | null {
-    this.unhighlightAll();
-
     const itemToHighlight = this._highlightableItems().first();
-    return this.highlightItem(itemToHighlight);
+    if (!itemToHighlight) return null;
+
+    this._highlightedItems.set([itemToHighlight]);
+    return itemToHighlight;
   }
   /**
    * Highlights the last item out of all items.
    * @returns The highlighted item.
    */
   highlightLastItem(): ArdOptionSimple | null {
-    this.unhighlightAll();
-
     const itemToHighlight = this._highlightableItems().last();
-    return this.highlightItem(itemToHighlight);
+    if (!itemToHighlight) return null;
+
+    this._highlightedItems.set([itemToHighlight]);
+    return itemToHighlight;
   }
   /**
    * Highlights all non-disabled items.
    */
   highlightAllItems(): void {
-    const itemsToHighlight = this._highlightableItems();
-
-    this.highlightItem(...itemsToHighlight);
+    this._highlightedItems.set([...this._highlightableItems()]);
   }
   /**
    * Highlights the next non-disabled item defined by the offset amount.
@@ -422,23 +408,25 @@ export class SimpleItemStorage {
       return this.highlightFirstItem();
     }
     const currentItem = this.highlightedItems().last();
-    const itemsWithoutDisabled = this._items().filter(item => !item.disabled && (!this.isItemLimitReached() || item.selected));
-    const currentIndexInItems = itemsWithoutDisabled.findIndex(item => item.index === currentItem.index);
+    const highlightableItems = this._highlightableItems();
+    const currentIndexInItems = highlightableItems.findIndex(item => item.index === currentItem.index);
 
     let nextItemIndex = currentIndexInItems + offset;
-    if (nextItemIndex >= itemsWithoutDisabled.length) {
-      nextItemIndex -= itemsWithoutDisabled.length;
+    if (nextItemIndex >= highlightableItems.length) {
+      nextItemIndex -= highlightableItems.length;
     }
     if (nextItemIndex < 0) {
-      nextItemIndex += itemsWithoutDisabled.length;
+      nextItemIndex += highlightableItems.length;
     }
-    const itemToHighlight = itemsWithoutDisabled[nextItemIndex];
+    const itemToHighlight = highlightableItems[nextItemIndex];
 
     if (hasShift && this._ardParentComp.multiselectable()) {
       if (itemToHighlight.highlighted) {
         this.unhighlightItem(currentItem);
+      } else {
+        return this.highlightItem(itemToHighlight);
       }
-      return this.highlightItem(itemToHighlight);
+      return itemToHighlight;
     }
     return this.highlightSingleItem(itemToHighlight);
   }

@@ -26,6 +26,16 @@ export const ARD_BREAKPOINTS = new InjectionToken<Map<string, string>>('ard-brea
   factory: () => mapBreakpointsToMediaQueries(_defaultBreakpoints),
 });
 
+/**
+ * Provides a list of breakpoints for the layout components. Default breakpoints are:
+ * - `xs`: 0rem (0px)
+ * - `sm`: 36rem (576px)
+ * - `md`: 48rem (768px)
+ * - `lg`: 64rem (1024px)
+ * - `xl`: 80rem (1280px)
+ * - `2xl`: 96rem (1536px)
+ * @param config The breakpoints configuration object. It will be merged with the default breakpoints.
+ */
 export function provideBreakpoints(config?: Partial<ArdBreakpoints>): Provider[] {
   return [
     {
@@ -46,7 +56,7 @@ function mapBreakpointsToMediaQueries(breakpoints: ArdBreakpoints): Map<string, 
       if (value === undefined) {
         return null;
       }
-      const [, amountStr, unit] = value.match(/(\d+)(\w+)/) || [];
+      const [, amountStr, unit] = value.match(/^(\d+(?:\.\d+)?)([a-z]+)$/i) || [];
       const amount = Number(amountStr);
       // validate format
       if (isNaN(amount) || !unit) {

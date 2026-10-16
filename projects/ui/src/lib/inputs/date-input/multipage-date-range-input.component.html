@@ -93,8 +93,8 @@
           [highlightedDay]="calendarData.highlightedDay"
           [(activeView)]="activeView"
           [firstWeekday]="firstWeekday()"
-          [min]="min()"
-          [max]="max()"
+          [min]="_min()"
+          [max]="_max()"
           [UTC]="_UTCAfterInit()"
           [autoFocus]="$index === 0"
           hideFloatingMonth

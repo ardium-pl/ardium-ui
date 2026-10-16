@@ -11,7 +11,7 @@ export interface ArdCheckboxListDefaults extends _NgModelComponentDefaults {
   disabledFrom: string;
   compareWith: Nullable<CompareWithFn>;
   invertDisabled: boolean;
-  maxSelectedItems: number;
+  maxLength: number;
   color: ComponentColor;
   align: CheckboxListAlignType;
   compact: boolean;
@@ -25,7 +25,7 @@ const _checkboxListDefaults: ArdCheckboxListDefaults = {
   disabledFrom: 'disabled',
   compareWith: null,
   invertDisabled: false,
-  maxSelectedItems: Infinity,
+  maxLength: Infinity,
   color: ComponentColor.Primary,
   align: CheckboxListAlignType.LeftClumped,
   compact: false,

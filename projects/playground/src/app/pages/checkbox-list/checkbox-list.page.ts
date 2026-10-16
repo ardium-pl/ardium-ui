@@ -1,5 +1,6 @@
 import { Component, inject, OnDestroy, signal } from '@angular/core';
 import { FormControl } from '@angular/forms';
+import { form } from '@angular/forms/signals';
 import { Logger } from '../../services/logger.service';
 
 @Component({
@@ -18,7 +19,7 @@ export class CheckboxListPage implements OnDestroy {
     { id: 4, name: 'Smartwatch', isInStock: true },
     { id: 5, name: 'Headphones', isInStock: false },
     { id: 6, name: 'Camera', isInStock: true },
-  ]
+  ];
 
   readonly selectedProducts = signal<number[]>([]);
 
@@ -33,4 +34,9 @@ export class CheckboxListPage implements OnDestroy {
   ngOnDestroy(): void {
     this._controlSub.unsubscribe();
   }
+
+  readonly formModel = signal({
+    value1: ['Apple', 'Starfruit'],
+  });
+  readonly signalForm = form(this.formModel);
 }

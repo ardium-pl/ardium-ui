@@ -1,4 +1,4 @@
-import { computed, Directive, HostBinding, input, Input, model, output } from '@angular/core';
+import { computed, Directive, HostBinding, input, model, output } from '@angular/core';
 import { ControlValueAccessor } from '@angular/forms';
 import { FormValueControl } from '@angular/forms/signals';
 import { BooleanLike, coerceBooleanProperty } from '@ardium-pl/devkit';
@@ -53,10 +53,7 @@ export abstract class _BooleanComponentBase
    * The selection state of the component.
    */
   readonly value = model<boolean>(false);
-  @Input('selected')
-  set _selected(v: any) {
-    this.value.set(coerceBooleanProperty(v));
-  }
+
   @HostBinding('attr.selected')
   @HostBinding('class.ard-selected')
   get _selectedHostAttribute(): boolean {

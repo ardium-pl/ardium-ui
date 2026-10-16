@@ -22,7 +22,7 @@
       [readonly]="readonly()"
       [disabled]="disabled()"
       clickStrategy="noop"
-      [selected]="highlightedIndex === -1 ? index <= valueIndex : index <= highlightedIndex"
+      [value]="highlightedIndex === -1 ? index <= valueIndex : index <= highlightedIndex"
       (click)="onClick()"
       (focus)="onFocus($event)"
       (blur)="onBlur($event)"

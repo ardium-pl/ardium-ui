@@ -3,12 +3,10 @@ import {
   Component,
   computed,
   effect,
-  forwardRef,
   Inject,
   model,
-  ViewEncapsulation,
+  ViewEncapsulation
 } from '@angular/core';
-import { NG_VALUE_ACCESSOR } from '@angular/forms';
 import { isDefined } from 'simple-bool';
 import { ARD_FORM_FIELD_CONTROL } from '../form-field/form-field-child.token';
 import { _AbstractCalendar } from './abstract-calendar';
@@ -22,11 +20,6 @@ import { ARD_CALENDAR_DEFAULTS, ArdCalendarDefaults } from './calendar.defaults'
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [
-    {
-      provide: NG_VALUE_ACCESSOR,
-      useExisting: forwardRef(() => ArdiumCalendarComponent),
-      multi: true,
-    },
     {
       provide: ARD_FORM_FIELD_CONTROL,
       useExisting: ArdiumCalendarComponent,

@@ -12,8 +12,9 @@ import {
   Signal,
   signal,
   SimpleChanges,
-  viewChild
+  viewChild,
 } from '@angular/core';
+import { FormValueControl } from '@angular/forms/signals';
 import {
   BooleanLike,
   coerceBooleanProperty,
@@ -47,8 +48,11 @@ import { isMonthOutOfRange } from './views/months-view/months-view.helpers';
 import { YearsViewComponent } from './views/years-view/years-view.component';
 import { isYearOutOfRange } from './views/years-view/years-view.helpers';
 
-@Directive({})
-export abstract class _AbstractCalendar<T, PT = T> extends _FormFieldComponentBase implements OnChanges {
+@Directive()
+export abstract class _AbstractCalendar<T, PT = T>
+  extends _FormFieldComponentBase
+  implements OnChanges, Omit<FormValueControl<PT | null>, 'disabled' | 'readonly' | 'required'>
+{
   abstract readonly componentId: string;
   abstract readonly componentName: string;
 
@@ -181,11 +185,13 @@ export abstract class _AbstractCalendar<T, PT = T> extends _FormFieldComponentBa
   readonly yearSelect = output<number>();
   readonly monthSelect = output<number>();
 
-  readonly min = input<Date | null, any>(this._DEFAULTS.min, {
-    transform: v => (v === null ? null : coerceDateOnlyProperty(v, this._DEFAULTS.min, true)),
+  readonly _min = input<Date | undefined, any>(this._DEFAULTS.min, {
+    transform: v => (v === undefined ? undefined : coerceDateOnlyProperty(v, this._DEFAULTS.min, true)),
+    alias: 'min',
   });
-  readonly max = input<Date | null, any>(this._DEFAULTS.max, {
-    transform: v => (v === null ? null : coerceDateOnlyProperty(v, this._DEFAULTS.max, true)),
+  readonly _max = input<Date | undefined, any>(this._DEFAULTS.max, {
+    transform: v => (v === undefined ? undefined : coerceDateOnlyProperty(v, this._DEFAULTS.max, true)),
+    alias: 'max',
   });
 
   readonly UTC = input<boolean, BooleanLike>(this._DEFAULTS.UTC, { transform: v => coerceBooleanProperty(v) });
@@ -229,7 +235,7 @@ export abstract class _AbstractCalendar<T, PT = T> extends _FormFieldComponentBa
   //! selecting days
   isDayOutOfRange(day: number, month: number = this.activeMonth(), year: number = this.activeYear()): number {
     const dayDate = getUTCDate(year, month, day);
-    return isDayOutOfRange(dayDate, this.min(), this.max());
+    return isDayOutOfRange(dayDate, this._min(), this._max());
   }
   readonly isDayFilteredOut = computed(() => {
     return (day: number, month: number = this.activeMonth(), year: number = this.activeYear()): boolean => {
@@ -316,7 +322,7 @@ export abstract class _AbstractCalendar<T, PT = T> extends _FormFieldComponentBa
   }
 
   private _highlightMinDay(): void {
-    const min = this.min();
+    const min = this._min();
     if (!isDefined(min)) return;
 
     this.activeYear.set(min.getFullYear());
@@ -326,7 +332,7 @@ export abstract class _AbstractCalendar<T, PT = T> extends _FormFieldComponentBa
     this._emitActivePageChange();
   }
   private _highlightMaxDay(): void {
-    const max = this.max();
+    const max = this._max();
     if (!isDefined(max)) return;
 
     this.activeYear.set(max.getFullYear());
@@ -382,7 +388,7 @@ export abstract class _AbstractCalendar<T, PT = T> extends _FormFieldComponentBa
     );
   }
   isMonthOutOfRange(month: number, year: number = this.activeYear()): number {
-    return isMonthOutOfRange(month, year, this.min(), this.max());
+    return isMonthOutOfRange(month, year, this._min(), this._max());
   }
   changeMonth(newMonth: number | null): boolean {
     if (isNull(newMonth)) {
@@ -451,7 +457,7 @@ export abstract class _AbstractCalendar<T, PT = T> extends _FormFieldComponentBa
   }
 
   private _highlightMinMonth(): void {
-    const min = this.min();
+    const min = this._min();
     if (!isDefined(min)) return;
 
     this.activeYear.set(min.getFullYear());
@@ -459,7 +465,7 @@ export abstract class _AbstractCalendar<T, PT = T> extends _FormFieldComponentBa
     this._highlightedMonth.set(min.getMonth());
   }
   private _highlightMaxMonth(): void {
-    const max = this.max();
+    const max = this._max();
     if (!isDefined(max)) return;
 
     this.activeYear.set(max.getFullYear());
@@ -494,7 +500,7 @@ export abstract class _AbstractCalendar<T, PT = T> extends _FormFieldComponentBa
     return this.selectionStart() !== null && year === this.selectionStart()?.getFullYear();
   }
   isYearOutOfRange(year: number): number {
-    return isYearOutOfRange(year, this.min(), this.max());
+    return isYearOutOfRange(year, this._min(), this._max());
   }
   changeYear(year: number | null): boolean {
     if (isNull(year)) {
@@ -577,13 +583,13 @@ export abstract class _AbstractCalendar<T, PT = T> extends _FormFieldComponentBa
   }
 
   private _highlightMinYear(): void {
-    const min = this.min();
+    const min = this._min();
     if (!isDefined(min)) return;
 
     this.__highlightedYear.set(min.getFullYear());
   }
   private _highlightMaxYear(): void {
-    const max = this.max();
+    const max = this._max();
     if (!isDefined(max)) return;
 
     this.__highlightedYear.set(max.getFullYear());

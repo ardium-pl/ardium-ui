@@ -42,13 +42,29 @@
     />
   </div>
   <div class="master">
-    <span class="title">Calendar with form control</span>
+    <span class="title">Calendar with reactive forms</span>
     <ard-calendar
       [formControl]="dateControl"
       staticHeight
     />
     <p>
+      Value: {{ dateControl.value?.toISOString() || 'null' }}
+    </p>
+    <p>
       Touched: {{ dateControl.touched }}
+    </p>
+  </div>
+  <div class="master">
+    <span class="title">Calendar with signal forms</span>
+    <ard-calendar
+      [formField]="signalForm.value1"
+      staticHeight
+    />
+    <p>
+      Value: {{ signalForm.value1().value()?.toISOString() || 'null' }}
+    </p>
+    <p>
+      Touched: {{ signalForm.value1().touched() }}
     </p>
   </div>
   <div class="master">

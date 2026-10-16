@@ -177,11 +177,13 @@ export abstract class _AbstractDateInput<T, PT = T> extends _FormFieldComponentB
     },
   });
 
-  readonly min = input<Date | null, any>(this._DEFAULTS.min, {
+  readonly _min = input<Date | null, any>(this._DEFAULTS.min, {
     transform: v => (v === null ? null : coerceDateOnlyProperty(v, this._DEFAULTS.min, true)),
+    alias: 'min',
   });
-  readonly max = input<Date | null, any>(this._DEFAULTS.max, {
+  readonly _max = input<Date | null, any>(this._DEFAULTS.max, {
     transform: v => (v === null ? null : coerceDateOnlyProperty(v, this._DEFAULTS.max, true)),
+    alias: 'max',
   });
 
   readonly UTC = input<boolean, BooleanLike>(this._DEFAULTS.UTC, { transform: v => coerceBooleanProperty(v) });

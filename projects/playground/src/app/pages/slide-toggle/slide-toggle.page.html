@@ -9,7 +9,7 @@
     (blur)="log('blur', $event)"
     (select)="log('select', $event)"
     (unselect)="log('unselect', $event)"
-    (selectedChange)="log('selectedChange', $event)"
+    (valueChange)="log('valueChange', $event)"
   ></ard-slide-toggle>
 </div>
 <div class="master flex">
@@ -20,7 +20,7 @@
     (blur)="log('blur', $event)"
     (select)="log('select', $event)"
     (unselect)="log('unselect', $event)"
-    (selectedChange)="log('selectedChange', $event)"
+    (valueChange)="log('valueChange', $event)"
   ></ard-slide-toggle>
 </div>
 <div class="master">
@@ -50,7 +50,7 @@
         <div class="grid">
           @for (state of [false, true]; track state) { @for (disabled of [false, true]; track disabled) {
           <ard-slide-toggle
-            [selected]="state"
+            [value]="state"
             [color]="color"
             [disabled]="disabled"
             [appearance]="appearance"

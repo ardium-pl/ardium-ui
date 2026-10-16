@@ -1,18 +1,18 @@
 import {
-    AfterViewInit,
-    ChangeDetectionStrategy,
-    Component,
-    computed,
-    contentChild,
-    effect,
-    ElementRef,
-    forwardRef,
-    Inject,
-    input,
-    model,
-    signal,
-    viewChild,
-    ViewEncapsulation,
+  AfterViewInit,
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  contentChild,
+  effect,
+  ElementRef,
+  forwardRef,
+  Inject,
+  input,
+  model,
+  signal,
+  viewChild,
+  ViewEncapsulation,
 } from '@angular/core';
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
 import { BooleanLike, coerceBooleanProperty } from '@ardium-pl/devkit';
@@ -22,16 +22,16 @@ import { ARD_FORM_FIELD_CONTROL } from '../../form-field/form-field-child.token'
 import { _AbstractDateInput } from './abstract-date-input';
 import { ARD_DATE_INPUT_DEFAULTS, ArdDateInputDefaults } from './date-input.defaults';
 import {
-    ArdDateInputDaysViewHeaderTemplateDirective,
-    ArdDateInputDayTemplateDirective,
-    ArdDateInputFloatingMonthTemplateDirective,
-    ArdDateInputMonthsViewHeaderTemplateDirective,
-    ArdDateInputMonthTemplateDirective,
-    ArdDateInputPrefixTemplateDirective,
-    ArdDateInputSuffixTemplateDirective,
-    ArdDateInputWeekdayTemplateDirective,
-    ArdDateInputYearsViewHeaderTemplateDirective,
-    ArdDateInputYearTemplateDirective,
+  ArdDateInputDaysViewHeaderTemplateDirective,
+  ArdDateInputDayTemplateDirective,
+  ArdDateInputFloatingMonthTemplateDirective,
+  ArdDateInputMonthsViewHeaderTemplateDirective,
+  ArdDateInputMonthTemplateDirective,
+  ArdDateInputPrefixTemplateDirective,
+  ArdDateInputSuffixTemplateDirective,
+  ArdDateInputWeekdayTemplateDirective,
+  ArdDateInputYearsViewHeaderTemplateDirective,
+  ArdDateInputYearTemplateDirective,
 } from './date-input.directives';
 import { ArdDateInputDeserializeFn, ArdDateInputMinMaxStrategy, ArdDateInputSerializeFn } from './date-input.types';
 
@@ -135,8 +135,8 @@ export class ArdiumDateInputComponent extends _AbstractDateInput<Date> implement
     let date = this.deserializeFn()(value, this.value());
 
     if (this.minMaxStrategy() === ArdDateInputMinMaxStrategy.Adjust && date) {
-      const min = this.min();
-      const max = this.max();
+      const min = this._min();
+      const max = this._max();
 
       // min and max are always in UTC when they are set, so we need to convert the date to UTC for comparison
       date = getUTCDate(date.getFullYear(), date.getMonth(), date.getDate());

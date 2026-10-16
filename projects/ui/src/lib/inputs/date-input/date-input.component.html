@@ -118,8 +118,8 @@
       [(activeYear)]="activeYear"
       [(activeView)]="activeView"
       [firstWeekday]="firstWeekday()"
-      [min]="min()"
-      [max]="max()"
+      [min]="_min()"
+      [max]="_max()"
       [UTC]="_UTCAfterInit()"
       [hideFloatingMonth]="hideFloatingMonth()"
       autoFocus

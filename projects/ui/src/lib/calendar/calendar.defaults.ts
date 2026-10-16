@@ -28,8 +28,8 @@ export interface ArdCalendarDefaults extends _FormFieldComponentDefaults {
   hideFloatingMonth: boolean;
   autoFocus: boolean;
   multiCalendarLocation: ArdMultiCalendarLocation;
-  min: Date | null;
-  max: Date | null;
+  min: Date | undefined;
+  max: Date | undefined;
   filter: ArdCalendarFilterFn | null;
   UTC: boolean;
   // template customizations
@@ -67,8 +67,8 @@ const _calendarDefaults: ArdCalendarDefaults = {
   hideFloatingMonth: false,
   autoFocus: false,
   multiCalendarLocation: ArdMultiCalendarLocation.Only,
-  min: null,
-  max: null,
+  min: undefined,
+  max: undefined,
   filter: null,
   UTC: false,
   // template customizations
