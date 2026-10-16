@@ -64,8 +64,8 @@ export class MonthsViewComponent implements AfterViewInit {
 
   readonly UTC = input.required<boolean>();
 
-  readonly min = input.required<Date | undefined>();
-  readonly max = input.required<Date | undefined>();
+  readonly min = input.required<Date | null>();
+  readonly max = input.required<Date | null>();
 
   readonly multiCalendarLocation = input.required<ArdMultiCalendarLocation>();
 

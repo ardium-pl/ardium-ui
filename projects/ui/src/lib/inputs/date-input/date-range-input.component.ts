@@ -3,14 +3,13 @@ import {
   Component,
   computed,
   contentChild,
-  forwardRef,
   Inject,
   input,
   output,
-  ViewEncapsulation,
+  SimpleChanges,
+  ViewEncapsulation
 } from '@angular/core';
-import { NG_VALUE_ACCESSOR } from '@angular/forms';
-import { isDate, isDefined, isNull, isObject } from 'simple-bool';
+import { isDate, isNull, isObject } from 'simple-bool';
 import { DateRange, isDateRange, PartialDateRange } from '../../calendar';
 import { ARD_FORM_FIELD_CONTROL } from '../../form-field/form-field-child.token';
 import { _AbstractDateInput } from './abstract-date-input';
@@ -38,11 +37,6 @@ import {
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [
     {
-      provide: NG_VALUE_ACCESSOR,
-      useExisting: forwardRef(() => ArdiumDateRangeInputComponent),
-      multi: true,
-    },
-    {
       provide: ARD_FORM_FIELD_CONTROL,
       useExisting: ArdiumDateRangeInputComponent,
     },
@@ -68,23 +62,29 @@ export class ArdiumDateRangeInputComponent extends _AbstractDateInput<DateRange,
   readonly serializeFn = input<ArdDateInputSerializeFn<PartialDateRange>>(this._DEFAULTS.rangeSerializeFn);
 
   override writeValue(v: any): void {
-    if (isObject(v) && 'from' in v && 'to' in v && isDate(v['from']) && isDate(v['to'])) {
-      this.value.set({ from: v['from'], to: v['to'] });
-    } else if (!isDefined(v)) {
-      this.value.set(null);
-    } else {
-      console.error(
-        new Error(
-          `ARD-NF0093: <ard-date-range-input> [writeValue] expected a { from: Date, to: Date } object or null, got "${v}".`
-        )
-      );
+    // not used anymore
+  }
+  override ngOnChanges(changes: SimpleChanges): void {
+    super.ngOnChanges(changes);
+    if (changes['value']) {
+      const value = changes['value'].currentValue;
+      if (
+        value !== null &&
+        (!isObject(value) || !('from' in value) || !('to' in value) || !isDate(value['from']) || !isDate(value['to']))
+      ) {
+        console.error(
+          new Error(
+            `ARD-NF0093: <ard-date-range-input> [writeValue] expected a { from: Date, to: Date } object or null, got "${value}".`
+          )
+        );
+      }
     }
   }
   protected _isFullValue(value: PartialDateRange | null): value is DateRange {
     return !!value?.from && !!value?.to;
   }
   protected getValueForEmit(): DateRange | null {
-    const value = this.value();
+    const value = this.partialValue();
     if (this._isFullValue(value)) {
       return new DateRange(value.from, value.to);
     }
@@ -92,10 +92,10 @@ export class ArdiumDateRangeInputComponent extends _AbstractDateInput<DateRange,
   }
 
   readonly shouldDisplayPlaceholder = computed(() => {
-    return isNull(this.value());
+    return isNull(this.partialValue());
   });
   readonly shouldDisplayValue = computed(() => {
-    return isDateRange(this.value());
+    return isDateRange(this.partialValue());
   });
   readonly shouldDisplayDateInput = computed(() => false);
 

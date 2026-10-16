@@ -151,26 +151,26 @@ export abstract class _AbstractCalendar<T, PT = T>
     transform: v => coerceBooleanProperty(v),
   });
 
-  readonly daysViewComponent = viewChild.required(DaysViewComponent);
-  readonly monthsViewComponent = viewChild.required(MonthsViewComponent);
-  readonly yearsViewComponent = viewChild.required(YearsViewComponent);
+  readonly daysViewComponent = viewChild(DaysViewComponent);
+  readonly monthsViewComponent = viewChild(MonthsViewComponent);
+  readonly yearsViewComponent = viewChild(YearsViewComponent);
 
   openDaysView(): void {
     this.activeView.set(ArdCalendarView.Days);
     setTimeout(() => {
-      this.daysViewComponent().focus();
+      this.daysViewComponent()?.focus();
     }, 0);
   }
   openMonthsView(): void {
     this.activeView.set(ArdCalendarView.Months);
     setTimeout(() => {
-      this.monthsViewComponent().focus();
+      this.monthsViewComponent()?.focus();
     }, 0);
   }
   openYearsView(): void {
     this.activeView.set(ArdCalendarView.Years);
     setTimeout(() => {
-      this.yearsViewComponent().focus();
+      this.yearsViewComponent()?.focus();
     }, 0);
   }
 
@@ -185,12 +185,12 @@ export abstract class _AbstractCalendar<T, PT = T>
   readonly yearSelect = output<number>();
   readonly monthSelect = output<number>();
 
-  readonly _min = input<Date | undefined, any>(this._DEFAULTS.min, {
-    transform: v => (v === undefined ? undefined : coerceDateOnlyProperty(v, this._DEFAULTS.min, true)),
+  readonly _min = input<Date | null, any>(this._DEFAULTS.min, {
+    transform: v => (v === null ? null : coerceDateOnlyProperty(v, this._DEFAULTS.min, true)),
     alias: 'min',
   });
-  readonly _max = input<Date | undefined, any>(this._DEFAULTS.max, {
-    transform: v => (v === undefined ? undefined : coerceDateOnlyProperty(v, this._DEFAULTS.max, true)),
+  readonly _max = input<Date | null, any>(this._DEFAULTS.max, {
+    transform: v => (v === null ? null : coerceDateOnlyProperty(v, this._DEFAULTS.max, true)),
     alias: 'max',
   });
 

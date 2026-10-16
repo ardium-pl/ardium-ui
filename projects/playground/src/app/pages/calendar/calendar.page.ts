@@ -28,7 +28,6 @@ export class CalendarPage {
   maxDate3 = new Date(`${new Date().getFullYear()}-${(new Date().getMonth() + 1).toString().padStart(2, '0')}-26T02:00:00.000`);
 
   filterFn = (date: Date) => date.getDay() === 0 || date.getDay() === 6;
-  
 
   readonly formModel = signal({
     value1: null as Date | null,

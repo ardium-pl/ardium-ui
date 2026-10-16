@@ -73,6 +73,16 @@
 </div>
 <div class="flex horiz main-container">
   <div class="master">
+    <span class="title">Date input with signal forms</span>
+    <p>
+      Touched: {{ signalForm.value1().touched() }} <br />
+      Value: {{ signalForm.value1().value()?.toISOString() }} <br />
+    </p>
+    <ard-date-input [formField]="signalForm.value1" />
+  </div>
+</div>
+<div class="flex horiz main-container">
+  <div class="master">
     <span class="title">Date input with reactive forms and placeholder</span>
     <ard-date-input
       [formControl]="formControl"

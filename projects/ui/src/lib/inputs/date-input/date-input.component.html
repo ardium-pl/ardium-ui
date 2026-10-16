@@ -15,7 +15,7 @@
     class="ard-date-input"
     #dropdownHost
     (click)="onGeneralClick($event)"
-    [class.ard-has-value]="!!value()"
+    [class.ard-has-value]="!!partialValue()"
     [ngClass]="ngClasses()"
     [class.ard-date-input__date-input-focused]="isDateInputFocused()"
   >
@@ -128,7 +128,7 @@
       [color]="color()"
       [disabled]="disabled() || calendarDisabled()"
       [tabIndex]="tabIndex()"
-      [value]="value()"
+      [value]="partialValue()"
       [daysViewHeaderDateFormat]="calendarDaysViewHeaderDateFormat()"
       [yearsViewHeaderDateFormat]="calendarYearsViewHeaderDateFormat()"
       [monthsViewHeaderDateFormat]="calendarMonthsViewHeaderDateFormat()"

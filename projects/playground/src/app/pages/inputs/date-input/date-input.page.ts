@@ -1,5 +1,6 @@
 import { Component, computed, inject, signal } from '@angular/core';
 import { FormControl } from '@angular/forms';
+import { form } from '@angular/forms/signals';
 import { ArdiumDateInputComponent } from '../../../../../../ui/src/public-api';
 import { Logger } from '../../../services/logger.service';
 
@@ -41,4 +42,9 @@ export class DateInputPage {
     const month = (date.getMonth() + 1).toString().padStart(2, '0');
     return `${year}-${month}`;
   };
+
+  readonly formModel = signal({
+    value1: new Date('2020-01-01') as Date | null,
+  });
+  readonly signalForm = form(this.formModel);
 }

@@ -19,7 +19,6 @@ import {
   viewChild,
   ViewContainerRef,
 } from '@angular/core';
-import { ControlValueAccessor } from '@angular/forms';
 import { BooleanLike, coerceBooleanProperty, coerceDateOnlyProperty, coerceNumberProperty, NumberLike } from '@ardium-pl/devkit';
 import { _FormFieldComponentBase } from '../../_internal/form-field-component';
 import { contextToInputs } from '../../_internal/utils/context-to-inputs';
@@ -48,7 +47,7 @@ import {
 import { ArdDateInputAcceptButtonsContext, ArdDateInputSerializeFn, ArdDateInputValueContext } from './date-input.types';
 
 @Directive()
-export abstract class _AbstractDateInput<T, PT = T> extends _FormFieldComponentBase implements OnDestroy, ControlValueAccessor {
+export abstract class _AbstractDateInput<T, PT = T> extends _FormFieldComponentBase implements OnDestroy {
   abstract readonly componentId: string;
   abstract readonly componentName: string;
 
@@ -60,7 +59,7 @@ export abstract class _AbstractDateInput<T, PT = T> extends _FormFieldComponentB
 
     // emit value whenever it changes
     effect(() => {
-      if (!this._isFullValue(this.value())) return;
+      if (!this._isFullValue(this.partialValue())) return;
       this._emitChange();
     });
   }
@@ -83,13 +82,14 @@ export abstract class _AbstractDateInput<T, PT = T> extends _FormFieldComponentB
   abstract readonly serializeFn: InputSignal<ArdDateInputSerializeFn<PT>>;
 
   //! control value accessor
-  readonly value = model<PT | null>(null);
+  readonly partialValue = signal<PT | null>(null);
+  readonly value = model<T | null>(null);
 
   abstract override writeValue(value: T | null): void;
 
   //! change & touch event emitters
   protected _emitChange(): void {
-    this._onChangeRegistered?.(this.getValueForEmit());
+    this.value.set(this.getValueForEmit());
   }
 
   protected abstract getValueForEmit(): T | null;
@@ -206,6 +206,11 @@ export abstract class _AbstractDateInput<T, PT = T> extends _FormFieldComponentB
         );
       }
     }
+    if (changes['value']) {
+      const value = changes['value'].currentValue;
+      console.log('value change', value);
+      this.partialValue.set(value as PT | null);
+    }
   }
 
   //! calendar outputs
@@ -227,7 +232,7 @@ export abstract class _AbstractDateInput<T, PT = T> extends _FormFieldComponentB
     this._acceptSelectedDate(value);
   }
   private _acceptSelectedDate(date: PT | null): void {
-    this.value.set(date);
+    this.partialValue.set(date);
     if (this._isFullValue(date)) {
       this.close();
     }
@@ -389,8 +394,8 @@ export abstract class _AbstractDateInput<T, PT = T> extends _FormFieldComponentB
 
   //! context providers
   readonly valueContext = computed<ArdDateInputValueContext<PT>>(() => ({
-    $implicit: this.serializeFn()(this.value()),
-    rawValue: this.value(),
+    $implicit: this.serializeFn()(this.partialValue()),
+    rawValue: this.partialValue(),
   }));
 
   readonly acceptButtonsContext = computed<ArdDateInputAcceptButtonsContext>(() => ({

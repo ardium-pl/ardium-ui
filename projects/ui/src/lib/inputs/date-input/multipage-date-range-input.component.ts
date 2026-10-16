@@ -3,16 +3,15 @@ import {
   Component,
   computed,
   contentChild,
-  forwardRef,
   inject,
   Inject,
   input,
   signal,
+  SimpleChanges,
   ViewEncapsulation,
 } from '@angular/core';
-import { NG_VALUE_ACCESSOR } from '@angular/forms';
 import { coerceNumberProperty, NumberLike } from '@ardium-pl/devkit';
-import { isDate, isDefined, isNull, isObject } from 'simple-bool';
+import { isDate, isNull, isObject } from 'simple-bool';
 import { ARD_CALENDAR_DEFAULTS, ArdMultiCalendarLocation, DateRange, isDateRange, PartialDateRange } from '../../calendar';
 import { ARD_FORM_FIELD_CONTROL } from '../../form-field/form-field-child.token';
 import { _AbstractDateInput } from './abstract-date-input';
@@ -41,11 +40,6 @@ type CalendarDataItem = { location: ArdMultiCalendarLocation; activeDate: Date; 
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [
-    {
-      provide: NG_VALUE_ACCESSOR,
-      useExisting: forwardRef(() => ArdiumMultipageDateRangeInputComponent),
-      multi: true,
-    },
     {
       provide: ARD_FORM_FIELD_CONTROL,
       useExisting: ArdiumMultipageDateRangeInputComponent,
@@ -137,23 +131,33 @@ export class ArdiumMultipageDateRangeInputComponent extends _AbstractDateInput<D
   }
 
   override writeValue(v: any): void {
-    if (isObject(v) && 'from' in v && 'to' in v && isDate(v['from']) && isDate(v['to'])) {
-      this.value.set({ from: v['from'], to: v['to'] });
-    } else if (!isDefined(v)) {
-      this.value.set(null);
-    } else {
-      console.error(
-        new Error(
-          `ARD-NF0123: <ard-multipage-date-range-input> [writeValue] expected a { from: Date, to: Date } object or null, got "${v}".`
-        )
-      );
+    // not used anymore
+  }
+  override ngOnChanges(changes: SimpleChanges): void {
+    super.ngOnChanges(changes);
+    if (changes['value']) {
+      const newValue = changes['value'].currentValue;
+      if (
+        newValue !== null &&
+        (!isObject(newValue) ||
+          !('from' in newValue) ||
+          !('to' in newValue) ||
+          !isDate(newValue['from']) ||
+          !isDate(newValue['to']))
+      ) {
+        console.error(
+          new Error(
+            `ARD-NF0124: <ard-multipage-date-range-input> [writeValue] expected a { from: Date, to: Date } object or null, got "${newValue}".`
+          )
+        );
+      }
     }
   }
   protected _isFullValue(value: PartialDateRange | null): value is DateRange {
     return !!value?.from && !!value?.to;
   }
   protected getValueForEmit(): DateRange | null {
-    const value = this.value();
+    const value = this.partialValue();
     if (this._isFullValue(value)) {
       return new DateRange(value.from, value.to);
     }
@@ -161,10 +165,10 @@ export class ArdiumMultipageDateRangeInputComponent extends _AbstractDateInput<D
   }
 
   readonly shouldDisplayPlaceholder = computed(() => {
-    return isNull(this.value());
+    return isNull(this.partialValue());
   });
   readonly shouldDisplayValue = computed(() => {
-    return isDateRange(this.value());
+    return isDateRange(this.partialValue());
   });
   readonly shouldDisplayDateInput = computed(() => false);
 

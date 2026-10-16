@@ -6,17 +6,16 @@ import {
   contentChild,
   effect,
   ElementRef,
-  forwardRef,
   Inject,
   input,
   model,
   signal,
+  SimpleChanges,
   viewChild,
-  ViewEncapsulation,
+  ViewEncapsulation
 } from '@angular/core';
-import { NG_VALUE_ACCESSOR } from '@angular/forms';
 import { BooleanLike, coerceBooleanProperty } from '@ardium-pl/devkit';
-import { isDefined, isNull } from 'simple-bool';
+import { isNull } from 'simple-bool';
 import { getUTCDate } from '../../_internal/utils/date.utils';
 import { ARD_FORM_FIELD_CONTROL } from '../../form-field/form-field-child.token';
 import { _AbstractDateInput } from './abstract-date-input';
@@ -44,11 +43,6 @@ import { ArdDateInputDeserializeFn, ArdDateInputMinMaxStrategy, ArdDateInputSeri
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [
     {
-      provide: NG_VALUE_ACCESSOR,
-      useExisting: forwardRef(() => ArdiumDateInputComponent),
-      multi: true,
-    },
-    {
       provide: ARD_FORM_FIELD_CONTROL,
       useExisting: ArdiumDateInputComponent,
     },
@@ -64,7 +58,7 @@ export class ArdiumDateInputComponent extends _AbstractDateInput<Date> implement
     super(defaults);
 
     effect(() => {
-      const value = this.value();
+      const value = this.partialValue();
       const serializer = this.serializeFn();
       this._serializeValueIntoDateInput(value, serializer);
     });
@@ -73,19 +67,22 @@ export class ArdiumDateInputComponent extends _AbstractDateInput<Date> implement
   readonly dateInputValue = model<string>('');
 
   writeValue(v: Date | null): void {
-    if (v instanceof Date) {
-      this.value.set(v);
-    } else if (!isDefined(v)) {
-      this.value.set(null);
-    } else {
-      console.error(new Error(`ARD-NF0083: <ard-date-input> writeValue expected a Date or null, got "${v}".`));
+    // not used anymore
+  }
+  override ngOnChanges(changes: SimpleChanges): void {
+    super.ngOnChanges(changes);
+    if (changes['value']) {
+      const value = changes['value'].currentValue;
+      if (!(value instanceof Date) && value !== null) {
+        console.error(new Error(`ARD-NF0083: <ard-date-input> writeValue expected a Date or null, got "${value}".`));
+      }
     }
   }
   protected _isFullValue(_: Date | null): _ is Date {
     return true;
   }
   protected getValueForEmit(): Date | null {
-    return this.value();
+    return this.partialValue();
   }
 
   //! date input event handlers
@@ -132,7 +129,7 @@ export class ArdiumDateInputComponent extends _AbstractDateInput<Date> implement
     this.focus();
   }
   private _processDateInputText(value: string): void {
-    let date = this.deserializeFn()(value, this.value());
+    let date = this.deserializeFn()(value, this.partialValue());
 
     if (this.minMaxStrategy() === ArdDateInputMinMaxStrategy.Adjust && date) {
       const min = this._min();
@@ -151,8 +148,8 @@ export class ArdiumDateInputComponent extends _AbstractDateInput<Date> implement
         date = new Date(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate());
       }
 
-      if (date.toISOString() !== this.value()?.toISOString()) {
-        this.value.set(date);
+      if (date.toISOString() !== this.partialValue()?.toISOString()) {
+        this.partialValue.set(date);
       }
       return;
     }
@@ -162,8 +159,8 @@ export class ArdiumDateInputComponent extends _AbstractDateInput<Date> implement
       date = getUTCDate(date.getFullYear(), date.getMonth(), date.getDate());
     }
 
-    if (date?.toISOString() !== this.value()?.toISOString()) {
-      this.value.set(date);
+    if (date?.toISOString() !== this.partialValue()?.toISOString()) {
+      this.partialValue.set(date);
     }
   }
   private _setDateInputAttributes() {
@@ -192,11 +189,11 @@ export class ArdiumDateInputComponent extends _AbstractDateInput<Date> implement
 
   readonly shouldDisplayPlaceholder = computed(() => {
     if (this.isDateInputFocused() && this.dateInputValue()) return false;
-    return isNull(this.value());
+    return isNull(this.partialValue());
   });
   readonly shouldDisplayValue = computed(() => {
     if (this.isDateInputFocused()) return false;
-    return this.value() instanceof Date;
+    return this.partialValue() instanceof Date;
   });
   readonly shouldDisplayDateInput = computed(() => {
     return !this.inputReadOnly() && !this.shouldDisplayValue() && this.isDateInputFocused();

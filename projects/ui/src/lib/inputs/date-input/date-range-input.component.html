@@ -15,7 +15,7 @@
     class="ard-date-input ard-date-range-input"
     #dropdownHost
     (click)="onGeneralClick($event)"
-    [class.ard-has-value]="!!value()"
+    [class.ard-has-value]="!!partialValue()"
     [ngClass]="ngClasses()"
   >
     <div class="ard-date-input__value-container ard-input-container">
@@ -98,7 +98,7 @@
       [color]="color()"
       [disabled]="disabled() || calendarDisabled()"
       [tabIndex]="tabIndex()"
-      [value]="value()"
+      [value]="partialValue()"
       [daysViewHeaderDateFormat]="calendarDaysViewHeaderDateFormat()"
       [yearsViewHeaderDateFormat]="calendarYearsViewHeaderDateFormat()"
       [monthsViewHeaderDateFormat]="calendarMonthsViewHeaderDateFormat()"
