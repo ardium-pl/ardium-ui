@@ -2,10 +2,10 @@
   "name": "@ardium-pl/ui",
   "version": "5.0.0-alpha.111",
   "peerDependencies": {
-    "@angular/common": ">=18.0.0",
-    "@angular/core": ">=18.0.0",
-    "@angular/cdk": ">=18.0.0",
-    "@types/node": "^20.14.2"
+    "@angular/common": ">=22.2.0",
+    "@angular/core": ">=22.2.0",
+    "@angular/cdk": ">=22.2.0",
+    "@types/node": "^26.6.5"
   },
   "dependencies": {
     "tslib": "^2.3.0",
@@ -13,7 +13,7 @@
     "more-rounding": "^4.2.2",
     "resolve-object-path": "^2.0.0",
     "lodash": "^4.17.23",
-    "@ardium-pl/devkit": "8.3.3",
+    "@ardium-pl/devkit": "8.4.2",
     "simple-bool": "^4.1.1",
     "take-chance": "^4.3.2",
     "color": "^4.2.3"

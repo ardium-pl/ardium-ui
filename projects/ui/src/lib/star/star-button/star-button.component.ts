@@ -40,7 +40,7 @@ export class ArdiumStarButtonComponent extends _BooleanComponentBase implements 
   }
 
   protected readonly _componentId = '107';
-  protected readonly _componentName = 'start-button';
+  protected readonly _componentName = 'star-button';
 
   readonly wrapperClasses = input<string>('');
 
@@ -52,9 +52,9 @@ export class ArdiumStarButtonComponent extends _BooleanComponentBase implements 
   readonly ngClasses = computed<string>(() => [this.wrapperClasses(), `ard-color-${this.color()}`].join(' '));
 
   readonly starFillState = computed<StarFillMode>(() =>
-    this.selectedAccountingForReverse() ? StarFillMode.Filled : StarFillMode.None
+    this.valueAccountingForReverse() ? StarFillMode.Filled : StarFillMode.None
   );
-  readonly starFillInternal = computed<StarFillMode>(() => (this.selected() ? StarFillMode.Filled : StarFillMode.None));
+  readonly starFillInternal = computed<StarFillMode>(() => (this.value() ? StarFillMode.Filled : StarFillMode.None));
 
   onClick(): void {
     if (this.disabled() || this.readonly()) return;

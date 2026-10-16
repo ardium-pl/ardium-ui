@@ -8,8 +8,7 @@ import {
   forwardRef,
   input,
   output,
-  signal,
-  untracked,
+  untracked
 } from '@angular/core';
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
 import { BooleanLike, coerceBooleanProperty } from '@ardium-pl/devkit';
@@ -97,9 +96,6 @@ export class ArdiumFileInputComponent extends _FileInputComponentBase {
   }
 
   readonly clearEvent = output({ alias: 'clear' });
-
-  //! state
-  readonly touched = signal<boolean>(false);
 
   //! prefix & suffix
   readonly prefixTemplate = contentChild(ArdFileInputPrefixTemplateDirective);

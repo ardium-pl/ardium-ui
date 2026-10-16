@@ -1,16 +1,15 @@
 import {
-    ChangeDetectionStrategy,
-    Component,
-    Inject,
-    ViewEncapsulation,
-    computed,
-    contentChild,
-    forwardRef,
-    input,
-    model,
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  contentChild,
+  Inject,
+  input,
+  model,
+  ViewEncapsulation
 } from '@angular/core';
-import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
-import { coerceBooleanProperty } from '@ardium-pl/devkit';
+import { ControlValueAccessor } from '@angular/forms';
+import { FormValueControl } from '@angular/forms/signals';
 import { contextToInputs } from '../_internal/utils/context-to-inputs';
 import { SimpleComponentColor } from '../types/colors.types';
 import { _BooleanComponentBase } from './../_internal/boolean-component';
@@ -26,15 +25,11 @@ import { CheckboxLabelTemplateContext, CheckboxState, CheckboxTemplateContext } 
   styleUrls: ['./checkbox.component.scss'],
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  providers: [
-    {
-      provide: NG_VALUE_ACCESSOR,
-      useExisting: forwardRef(() => ArdiumCheckboxComponent),
-      multi: true,
-    },
-  ],
 })
-export class ArdiumCheckboxComponent extends _BooleanComponentBase implements ControlValueAccessor {
+export class ArdiumCheckboxComponent
+  extends _BooleanComponentBase
+  implements ControlValueAccessor, Omit<FormValueControl<boolean>, 'disabled' | 'readonly'>
+{
   protected override readonly _DEFAULTS!: ArdCheckboxDefaults;
   constructor(@Inject(ARD_CHECKBOX_DEFAULTS) defaults: ArdCheckboxDefaults) {
     super(defaults);
@@ -59,13 +54,6 @@ export class ArdiumCheckboxComponent extends _BooleanComponentBase implements Co
     )
   );
 
-  //override the "selected" setter, so it changes the state too.
-  override set _selected(v: any) {
-    const selected = coerceBooleanProperty(v);
-    this.selected.set(selected);
-    this.internalState.set(selected ? CheckboxState.Selected : CheckboxState.Unselected);
-  }
-
   readonly internalState = model<CheckboxState>(CheckboxState.Unselected, { alias: 'state' });
 
   readonly state = computed<CheckboxState>(() => {
@@ -85,7 +73,7 @@ export class ArdiumCheckboxComponent extends _BooleanComponentBase implements Co
       newState = CheckboxState.Selected;
     }
     this.internalState.set(newState);
-    this.selected.set(this.internalState() === CheckboxState.Selected);
+    this.value.set(this.internalState() === CheckboxState.Selected);
 
     this._emitChange();
     this._emitTouched();
@@ -101,9 +89,9 @@ export class ArdiumCheckboxComponent extends _BooleanComponentBase implements Co
   readonly labelTemplate = contentChild(ArdCheckboxLabelTemplateDirective);
 
   readonly checkboxTemplateContext = computed<CheckboxTemplateContext>(() => ({
-    $implicit: this.selectedAccountingForReverse(),
-    selected: this.selectedAccountingForReverse(),
-    internalSelected: this.selected(),
+    $implicit: this.valueAccountingForReverse(),
+    selected: this.valueAccountingForReverse(),
+    internalSelected: this.value(),
     state: this.state(),
     internalState: this.internalState(),
   }));

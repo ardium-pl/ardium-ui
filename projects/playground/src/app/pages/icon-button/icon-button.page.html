@@ -5,7 +5,7 @@
   >
     <ard-checkbox
       htmlId="alt-coloring"
-      [(selected)]="altColoring"
+      [(value)]="altColoring"
     />
     <label for="alt-coloring">Alternate coloring?</label>
   </div>
@@ -26,14 +26,14 @@
         <div class="form-field flex checkboxes">
           <div class="list-item flex horiz">
             <ard-checkbox
-              [(selected)]="compact"
+              [(value)]="compact"
               htmlId="compact"
             />
             <label for="compact">Compact</label>
           </div>
           <div class="list-item flex horiz">
             <ard-checkbox
-              [(selected)]="disabled"
+              [(value)]="disabled"
               htmlId="disabled"
             />
             <label for="disabled">Disabled</label>

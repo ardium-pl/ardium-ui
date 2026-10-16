@@ -180,7 +180,7 @@ export class ArdiumRadioGroupComponent extends _FormFieldComponentBase implement
   private _updateReadonlyRadioButtons(): void {
     if (this._radios()) {
       this._radios().forEach(radio => {
-        radio.readonly.set(this.readonly());
+        radio._readonly.set(this.readonly());
         radio.markForCheck();
       });
     }

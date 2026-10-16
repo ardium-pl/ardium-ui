@@ -305,8 +305,6 @@ export class ArdiumSelectComponent
 
   readonly filtered = computed<boolean>(() => this.searchable() && this.searchTerm() !== '');
 
-  readonly touched = signal<boolean>(false);
-
   //! custom options
   private readonly _defaultAddCustomFn: AddCustomFn<any> = (value: string) => value;
 
@@ -338,11 +336,6 @@ export class ArdiumSelectComponent
   }
 
   //! control value accessor
-  //override the writeValue and setDisabledState defined in _NgModelComponent
-  override setDisabledState(state: boolean): void {
-    this._disabled = state;
-    this._cd.markForCheck();
-  }
   writeValue(ngModel: any[]): void {
     this.itemStorage.handleWriteValue(ngModel);
     this._cd.markForCheck();
@@ -352,11 +345,6 @@ export class ArdiumSelectComponent
     const value = this.multiselectable() ? this.itemStorage.value() : this.itemStorage.value()[0];
     this._onChangeRegistered?.(value);
     this.valueChange.emit(value);
-  }
-  protected override _emitTouched(): void {
-    super._emitTouched();
-    if (this.isOpen()) return;
-    this.touched.set(true);
   }
 
   //! value input & output

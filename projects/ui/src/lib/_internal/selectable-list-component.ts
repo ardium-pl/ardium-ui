@@ -1,14 +1,14 @@
 import {
-    ChangeDetectorRef,
-    Directive,
-    HostBinding,
-    HostListener,
-    Input,
-    computed,
-    inject,
-    input,
-    output,
-    signal,
+  ChangeDetectorRef,
+  Directive,
+  HostBinding,
+  HostListener,
+  Input,
+  computed,
+  inject,
+  input,
+  output,
+  signal,
 } from '@angular/core';
 import { ControlValueAccessor } from '@angular/forms';
 import { BooleanLike, coerceArrayProperty, coerceBooleanProperty, coerceNumberProperty } from '@ardium-pl/devkit';
@@ -106,18 +106,12 @@ export abstract class _SelectableListComponentBase
   });
 
   //! control value accessor
-  //override the writeValue and setDisabledState defined in _NgModelComponent
-  override setDisabledState(state: boolean): void {
-    this.disabled.set(state);
-    this._cd.markForCheck();
-  }
   writeValue(ngModel: any[]): void {
     this.itemStorage.writeValue(ngModel);
     this._cd.markForCheck();
   }
 
   //! change & touch event emitters
-  readonly touched = signal<boolean>(false);
 
   @HostBinding('class.ard-touched')
   get _touchedHostAttribute(): boolean {
@@ -132,8 +126,7 @@ export abstract class _SelectableListComponentBase
   protected _onTouched(): void {
     if (this.touched()) return;
 
-    this._onTouchedRegistered?.();
-    this.touched.set(true);
+    this._emitTouched();
   }
 
   //! focus & blur handlers

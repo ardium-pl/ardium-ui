@@ -32,8 +32,20 @@
   <p>Form control touched: {{ control.touched }}</p>
 </div>
 <div class="master">
+  <span class="title">Checkbox with signal forms</span>
+  <ard-checkbox
+    [formField]="signalForm.value1"
+    (touch)="log('touch')"
+  />
+  <p>Signal form value: {{ signalForm.value1().value() }}</p>
+  <p>Signal form touched: {{ signalForm.value1().touched() }}</p>
+</div>
+<div class="master">
   <span class="title">Readonly checkbox</span>
-  <ard-checkbox selected readonly></ard-checkbox>
+  <ard-checkbox
+    selected
+    readonly
+  ></ard-checkbox>
 </div>
 <div class="master">
   <div class="flex horiz large-gap">
@@ -60,7 +72,7 @@
 </div>
 <div class="master">
   <span class="title">Checkbox with default icon component</span>
-  
+
   <app-checkbox-default-component />
 </div>
 <div class="flex master">

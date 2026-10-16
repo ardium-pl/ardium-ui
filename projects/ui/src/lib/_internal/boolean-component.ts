@@ -1,5 +1,6 @@
-import { computed, Directive, HostBinding, input, Input, output, signal } from '@angular/core';
+import { computed, Directive, HostBinding, input, Input, model, output } from '@angular/core';
 import { ControlValueAccessor } from '@angular/forms';
+import { FormValueControl } from '@angular/forms/signals';
 import { BooleanLike, coerceBooleanProperty } from '@ardium-pl/devkit';
 import { _NgModelComponentBase, _ngModelComponentDefaults, _NgModelComponentDefaults } from './ngmodel-component';
 
@@ -12,7 +13,10 @@ export const _booleanComponentDefaults: _BooleanComponentDefaults = { ..._ngMode
  * Common code for components, which only operate on the "selected" state.
  */
 @Directive()
-export abstract class _BooleanComponentBase extends _NgModelComponentBase implements ControlValueAccessor {
+export abstract class _BooleanComponentBase
+  extends _NgModelComponentBase
+  implements ControlValueAccessor, Omit<FormValueControl<boolean>, 'disabled' | 'readonly'>
+{
   protected override readonly _DEFAULTS!: _BooleanComponentDefaults;
 
   protected abstract readonly _componentId: string;
@@ -20,20 +24,17 @@ export abstract class _BooleanComponentBase extends _NgModelComponentBase implem
 
   //! control value accessor
   writeValue(v: any): void {
-    this._selected = v;
+    this.value.set(coerceBooleanProperty(v));
   }
   //emitter function
   /**
    * Emits all select-state-related events.
    */
   protected _emitChange() {
-    this._onChangeRegistered?.(this.selected());
+    this._onChangeRegistered?.(this.value());
 
-    if (this.selected()) this.selectEvent.emit(null);
+    if (this.value()) this.selectEvent.emit(null);
     else this.unselectEvent.emit(null);
-
-    this.selectedChange.emit(this.selected());
-    this.changeEvent.emit(this.selected());
   }
 
   //! events
@@ -45,47 +46,39 @@ export abstract class _BooleanComponentBase extends _NgModelComponentBase implem
    * The event emitter responsible for firing `unselect` events. Fired when the `selected` state is set to false.
    */
   readonly unselectEvent = output<null>({ alias: 'unselect' });
-  /**
-   * The event emitter responsible for firing `change` events. Fired when the `selected` state is changed.
-   */
-  readonly changeEvent = output<boolean>({ alias: 'change' });
 
-  //! [(selected)] two-way binding
+  //! [(value)] two-way binding
   // can be set using a no-value argument
-  readonly selected = signal<boolean>(false);
   /**
-   * The selection state of the component. Coercible into a boolean.
+   * The selection state of the component.
    */
+  readonly value = model<boolean>(false);
   @Input('selected')
   set _selected(v: any) {
-    this.selected.set(coerceBooleanProperty(v));
+    this.value.set(coerceBooleanProperty(v));
   }
   @HostBinding('attr.selected')
   @HostBinding('class.ard-selected')
   get _selectedHostAttribute(): boolean {
-    return this.selectedAccountingForReverse();
+    return this.valueAccountingForReverse();
   }
-  /**
-   * The event emitter responsible for firing `selectedChange` events. Fired when the `selected` state is changed.
-   */
-  readonly selectedChange = output<boolean>();
 
   /**
-   * The reverse of the `selected` state. Coercible into a boolean. Useful for cases where the "selected" state is semantically reversed, e.g. "disabled".
+   * Coercible into a boolean. Useful for cases where the "selected" state is semantically reversed, e.g. "disabled".
    */
   readonly reverseSelected = input<boolean, BooleanLike>(false, { transform: v => coerceBooleanProperty(v) });
 
   /**
    * The "selected" state, accounting for the `reverseSelected` input.
    */
-  readonly selectedAccountingForReverse = computed<boolean>(() => (this.reverseSelected() ? !this.selected() : this.selected()));
+  readonly valueAccountingForReverse = computed<boolean>(() => (this.reverseSelected() ? !this.value() : this.value()));
 
   /**
    * Toggles the selected state. Emits all appropriate events.
    */
   toggleSelected() {
     if (this.disabled() || this.readonly()) return;
-    this.selected.update(v => !v);
+    this.value.update(v => !v);
     this._emitChange();
     this._emitTouched();
   }
@@ -95,7 +88,7 @@ export abstract class _BooleanComponentBase extends _NgModelComponentBase implem
    */
   select() {
     if (this.disabled() || this.readonly()) return;
-    this.selected.set(true);
+    this.value.set(true);
     this._emitChange();
     this._emitTouched();
   }
@@ -104,7 +97,7 @@ export abstract class _BooleanComponentBase extends _NgModelComponentBase implem
    */
   unselect() {
     if (this.disabled() || this.readonly()) return;
-    this.selected.set(false);
+    this.value.set(false);
     this._emitChange();
     this._emitTouched();
   }

@@ -40,16 +40,16 @@
         <div class="form-field flex checkboxes">
           <div class="list-item flex horiz">
             <ard-checkbox
-              [(selected)]="hidden"
+              [(value)]="hidden"
               htmlId="hidden"
             />
             <label for="hidden">Hidden</label>
           </div>
           <div class="list-item flex horiz">
             <ard-checkbox
-              [(selected)]="overlap"
+              [(value)]="overlap"
               htmlId="overlap"
-              (selectedChange)="log('selectedChange', $event)"
+              (valueChange)="log('valueChange', $event)"
             />
             <label for="overlap">Overlap</label>
           </div>

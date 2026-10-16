@@ -22,28 +22,28 @@
     <div class="settings-right flex">
       <div class="list-item flex horiz">
         <ard-slide-toggle
-          [(selected)]="compact"
+          [(value)]="compact"
           htmlId="compact"
         />
         <label for="compact">Compact</label>
       </div>
       <div class="list-item flex horiz">
         <ard-slide-toggle
-          [(selected)]="noCloseButton"
+          [(value)]="noCloseButton"
           htmlId="noCloseButton"
         />
         <label for="noCloseButton">No close button?</label>
       </div>
       <div class="list-item flex horiz">
         <ard-slide-toggle
-          [(selected)]="noBackdrop"
+          [(value)]="noBackdrop"
           htmlId="noBackdrop"
         />
         <label for="noBackdrop">No backdrop?</label>
       </div>
       <div class="list-item flex horiz">
         <ard-slide-toggle
-          [(selected)]="disableBackdropClose"
+          [(value)]="disableBackdropClose"
           htmlId="disableBackdropClose"
         />
         <label for="disableBackdropClose">Disable backdrop close?</label>

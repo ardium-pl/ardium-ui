@@ -1,5 +1,6 @@
-import { Directive, HostBinding, Input, signal } from '@angular/core';
-import { coerceBooleanProperty } from '@ardium-pl/devkit';
+import { Directive, HostBinding, input, linkedSignal } from '@angular/core';
+import { FormUiControl } from '@angular/forms/signals';
+import { BooleanLike, coerceBooleanProperty } from '@ardium-pl/devkit';
 
 export interface _DisablableComponentDefaults {
   readonly: boolean;
@@ -11,31 +12,26 @@ export const _disablableComponentDefaults: _DisablableComponentDefaults = {
 };
 
 @Directive()
-export abstract class _DisablableComponentBase {
+export abstract class _DisablableComponentBase implements FormUiControl<unknown> {
   constructor(protected readonly _DEFAULTS: _DisablableComponentDefaults) {}
   //! no value arguments
   /**
    * Whether the component is read-only. Defines the `readonly` host attribute and `ard-readonly` host class. Coercible into a boolean.
    */
-  readonly readonly = signal<boolean>(this._DEFAULTS.readonly);
-  @Input('readonly')
-  set _readonly(v: any) {
-    this.readonly.set(coerceBooleanProperty(v));
-  }
+  // @ts-expect-error to keep typed transform, but adhere to the FormValueControl interface
+  readonly readonly = input<boolean, BooleanLike>(this._DEFAULTS.readonly, { transform: v => coerceBooleanProperty(v) });
+  readonly _readonly = linkedSignal<boolean>(() => this.readonly());
 
   /**
    * Whether the component is disabled. Defines the `disabled` host attribute and `ard-disabled` host class. Coercible into a boolean.
    */
-  readonly disabled = signal<boolean>(this._DEFAULTS.disabled);
-  @Input('disabled')
-  set _disabled(v: any) {
-    this.disabled.set(coerceBooleanProperty(v));
-  }
+  // @ts-expect-error to keep typed transform, but adhere to the FormValueControl interface
+  readonly disabled = input<boolean, BooleanLike>(this._DEFAULTS.disabled, { transform: v => coerceBooleanProperty(v) });
 
   @HostBinding('attr.readonly')
   @HostBinding('class.ard-readonly')
   get _readonlyHostAttribute(): boolean {
-    return this.readonly();
+    return this.readonly() || this._readonly();
   }
   @HostBinding('attr.disabled')
   @HostBinding('class.ard-disabled')

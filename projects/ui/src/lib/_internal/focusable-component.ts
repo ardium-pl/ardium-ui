@@ -1,6 +1,20 @@
-import { computed, Directive, ElementRef, input, output, QueryList, signal, ViewChildren } from '@angular/core';
+import {
+  computed,
+  Directive,
+  ElementRef,
+  input,
+  output,
+  QueryList,
+  signal,
+  ViewChildren
+} from '@angular/core';
+import { FormUiControl } from '@angular/forms/signals';
 import { coerceNumberProperty, NumberLike } from '@ardium-pl/devkit';
-import { _DisablableComponentBase, _disablableComponentDefaults, _DisablableComponentDefaults } from './disablable-component';
+import {
+  _DisablableComponentBase,
+  _disablableComponentDefaults,
+  _DisablableComponentDefaults
+} from './disablable-component';
 
 export interface _FocusableComponentDefaults extends _DisablableComponentDefaults {
   tabIndex: number;
@@ -10,13 +24,18 @@ export const _focusableComponentDefaults: _FocusableComponentDefaults = {
   tabIndex: 0,
 };
 
+// omit disabled and readonly from FormUiControl, since they are already implemented in _DisablableComponentBase
+// to get rid of typescript error
 @Directive()
-export abstract class _FocusableComponentBase extends _DisablableComponentBase {
+export abstract class _FocusableComponentBase
+  extends _DisablableComponentBase
+  implements Omit<FormUiControl<unknown>, 'disabled' | 'readonly'>
+{
   protected override readonly _DEFAULTS!: _FocusableComponentDefaults;
 
   //! make the component focusable programmatically
   @ViewChildren('focusableElement')
-  private readonly _focusableElement!: QueryList<ElementRef<HTMLElement>>;
+  protected readonly _focusableElement!: QueryList<ElementRef<HTMLElement>>;
 
   /**
    * Focuses the correct element in the component.
