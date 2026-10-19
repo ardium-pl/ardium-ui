@@ -35,37 +35,13 @@
         }
       }
       @if (shouldDisplayValue()) {
-        @for (item of itemStorage.selectedItems(); track item.index) {
-          <div
-            class="ard-select-value"
-            [class.ard-value-disabled]="item.disabled"
-            [attr.hidden]="!isValueWithinDisplayLimit($index)"
-          >
-            @if (isValueWithinDisplayLimit($index)) {
-              @if (valueComponent && !valueTemplate()) {
-                <ng-template
-                  [ngComponentOutlet]="valueComponent"
-                  [ngComponentOutletInputs]="valueComponentInputsGenerator()(item)"
-                />
-              } @else {
-                <ng-template
-                  [ngTemplateOutlet]="
-                    valueTemplate()?.template || (multiselectable() ? defaultMultiValueTemplate : defaultValueTemplate)
-                  "
-                  [ngTemplateOutletContext]="valueContextGenerator()(item)"
-                />
-              }
-            }
-          </div>
-        }
-
         <ng-template
           #defaultValueTemplate
           let-label="label"
         >
           <div
             class="ard-select-value"
-            [innerHTML]="isItemsInputUsed ? (label | escapeHTML) : label"
+            [innerHTML]="isOptionsInputUsed() ? (label | escapeHTML) : label"
           ></div>
         </ng-template>
         <ng-template
@@ -80,9 +56,33 @@
             compact
             appearance="outlined"
           >
-            <div [innerHTML]="isItemsInputUsed ? (label | escapeHTML) : label"></div>
+            <div [innerHTML]="isOptionsInputUsed() ? (label | escapeHTML) : label"></div>
           </ard-deletable-chip>
         </ng-template>
+
+        @for (item of itemStorage.selectedItems(); track item.index) {
+          <div
+            class="ard-select-value"
+            [class.ard-value-disabled]="item.disabled"
+            [attr.hidden]="!isValueWithinDisplayLimit($index)"
+          >
+            @if (isValueWithinDisplayLimit($index)) {
+              @if (valueComponent && !valueTemplate()) {
+                <ng-template
+                  [ngComponentOutlet]="valueComponent"
+                  [ngComponentOutletInputs]="valueComponentInputsGenerator()(item.index)"
+                />
+              } @else {
+                <ng-template
+                  [ngTemplateOutlet]="
+                    valueTemplate()?.template || (multiselectable() ? defaultMultiValueTemplate : defaultValueTemplate)
+                  "
+                  [ngTemplateOutletContext]="valueContextGenerator()(item.index)"
+                />
+              }
+            }
+          </div>
+        }
       }
       @if (itemStorage.isAnyItemSelected() && shouldShowItemDisplayLimit()) {
         <div class="ard-overflow-indicator">
@@ -197,6 +197,7 @@
   >
     @if (!shouldShowNoItemsFound()) {
       @for (group of itemStorage.groups(); track $index) {
+        @let groupIndex = $index;
         <div
           class="ard-optgroup"
           role="group"
@@ -208,7 +209,7 @@
             @if (optgroupComponent && !optgroupTemplate()) {
               <ng-template
                 [ngComponentOutlet]="optgroupComponent"
-                [ngComponentOutletInputs]="optgroupComponentInputsGenerator()(group)"
+                [ngComponentOutletInputs]="optgroupComponentInputsGenerator()(groupIndex)"
               />
             } @else {
               <ng-template
@@ -217,13 +218,13 @@
               >
                 <span
                   class="ard-optgroup-label"
-                  [innerHTML]="isItemsInputUsed ? (label | escapeHTML) : label"
+                  [innerHTML]="isOptionsInputUsed() ? (label | escapeHTML) : label"
                 ></span>
               </ng-template>
 
               <ng-template
                 [ngTemplateOutlet]="optgroupTemplate()?.template || defaultOptgroupTemplate"
-                [ngTemplateOutletContext]="groupContextGenerator()(group)"
+                [ngTemplateOutletContext]="groupContextGenerator()(groupIndex)"
               />
             }
           }
@@ -236,7 +237,7 @@
                 [class.ard-option-disabled]="option.disabled || (itemStorage.isItemLimitReached() && !option.selected)"
                 [class.ard-option-selected]="option.selected"
                 [class.ard-option-highlighted]="option.highlighted"
-                [class.ard-option-highlighted-recent]="option.highlighted_recently"
+                [class.ard-option-highlighted-recent]="option.index === itemStorage.recentlyHighlightedOption()?.index"
                 [attr.aria-selected]="option.selected"
                 [attr.id]="htmlId() + '-' + option.index"
                 (click)="onItemClick(option, $event)"
@@ -248,19 +249,19 @@
                   @if (optionComponent && !optionTemplate()) {
                     <ng-template
                       [ngComponentOutlet]="optionComponent"
-                      [ngComponentOutletInputs]="optionComponentInputsGenerator()(option)"
+                      [ngComponentOutletInputs]="optionComponentInputsGenerator()(option.index)"
                     />
                   } @else {
                     <ng-template
                       #defaultOptionTemplate
                       let-label="label"
                     >
-                      <span [innerHTML]="isItemsInputUsed ? (label | escapeHTML) : label"></span>
+                      <span [innerHTML]="isOptionsInputUsed() ? (label | escapeHTML) : label"></span>
                     </ng-template>
 
                     <ng-template
                       [ngTemplateOutlet]="optionTemplate()?.template || defaultOptionTemplate"
-                      [ngTemplateOutletContext]="optionContextGenerator()(option)"
+                      [ngTemplateOutletContext]="optionContextGenerator()(option.index)"
                     />
                   }
                 </div>

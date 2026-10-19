@@ -11,7 +11,7 @@ import {
 // Example 1: Custom option component
 @Component({
   selector: 'app-select-default-option',
-  template: `⭐ {{ label() }}`,
+  template: `{{ selected() ? '⭐' : '' }} {{ label() }}`,
   standalone: true,
 })
 export class SelectDefaultOptionComponent implements ArdSelectOptionComponent {
@@ -22,7 +22,7 @@ export class SelectDefaultOptionComponent implements ArdSelectOptionComponent {
 @Component({
   selector: 'app-select-default-option-demo',
   template: `<ard-select
-    [items]="items"
+    [options]="items"
     searchable
   />`,
   standalone: true,
@@ -50,7 +50,7 @@ export class SelectDefaultPlaceholderComponent implements ArdSelectPlaceholderCo
 @Component({
   selector: 'app-select-default-placeholder-demo',
   template: `<ard-select
-    [items]="items"
+    [options]="items"
     placeholder="Pick a fruit..."
   />`,
   standalone: true,
@@ -75,7 +75,7 @@ export class SelectDefaultDropdownArrowComponent implements ArdSelectDropdownArr
 
 @Component({
   selector: 'app-select-default-dropdown-arrow-demo',
-  template: `<ard-select [items]="items" />`,
+  template: `<ard-select [options]="items" />`,
   standalone: true,
   imports: [ArdiumSelectModule],
   providers: [
@@ -101,7 +101,7 @@ export class SelectDefaultNoItemsFoundComponent implements ArdSelectNoItemsFound
 @Component({
   selector: 'app-select-default-no-items-found-demo',
   template: `<ard-select
-    [items]="items"
+    [options]="items"
     searchable
   />`,
   standalone: true,

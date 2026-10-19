@@ -5,21 +5,21 @@
 <span class="title">Primitive options, searchable</span>
 <div class="grid master">
   <ard-select
-    [items]="fruits"
+    [options]="fruits"
     searchable
   />
 </div>
 <span class="title">Primitive options, disabled</span>
 <div class="grid master">
   <ard-select
-    [items]="fruits"
+    [options]="fruits"
     disabled
   />
 </div>
 <div class="master flex">
   <span class="title">Primitive options, readonly, clearable</span>
   <ard-select
-    [items]="fruits"
+    [options]="fruits"
     [readonly]="isReadOnly()"
     [value]="fruits[3]"
     clearable
@@ -30,7 +30,7 @@
 </div>
 <span class="title">Prefix template, primitive options</span>
 <div class="grid master">
-  <ard-select [items]="fruits">
+  <ard-select [options]="fruits">
     <ng-template ard-prefix-tmp>
       <ard-icon>restaurant</ard-icon>
     </ng-template>
@@ -43,7 +43,7 @@
 <span class="title">Select events</span>
 <div class="grid master">
   <ard-select
-    [items]="fruits"
+    [options]="fruits"
     searchable
     clearable
     (add)="log('add', $event)"
@@ -62,7 +62,7 @@
 <span class="title">Select events in multiselect</span>
 <div class="grid master">
   <ard-select
-    [items]="fruits"
+    [options]="fruits"
     searchable
     multiselectable
     maxSelectedItems="5"
@@ -83,7 +83,7 @@
 <span class="title">Object options, property binding, groups, searchable</span>
 <div class="grid master">
   <ard-select
-    [items]="animals"
+    [options]="animals"
     valueFrom="name"
     labelFrom="name"
     groupLabelFrom="classification"
@@ -93,7 +93,7 @@
 <span class="title">Object options, property binding, groups, customized with templates</span>
 <div class="grid master">
   <ard-select
-    [items]="animals"
+    [options]="animals"
     valueFrom="name"
     labelFrom="name"
     multiselectable
@@ -103,8 +103,8 @@
     <ng-template
       ard-optgroup-tmp
       let-group
-      let-total="totalChildren"
-      let-selected="selectedChildren"
+      let-total="totalChildrenCount"
+      let-selected="selectedChildrenCount"
     >
       <span class="ard-optgroup-label">
         {{ group.label }}
@@ -117,7 +117,7 @@
 <div class="grid master">
   <ard-select
     class="wide-select"
-    [items]="people"
+    [options]="people"
     valueFrom="email"
     labelFrom="nameAndSurname"
     multiselectable
@@ -131,7 +131,7 @@
 <span class="title">City selector example with only up to one option visible when selected</span>
 <div class="grid master">
   <ard-select
-    [items]="cities"
+    [options]="cities"
     multiselectable
     keepOpen
     [(value)]="selectedCities"
@@ -150,14 +150,14 @@
 <div class="master flex align-right">
   <span class="title">Select aligned to the right</span>
   <ard-select
-    [items]="fruits"
+    [options]="fruits"
     style="width: 5rem; margin-left: auto"
   />
 </div>
 <span class="title">Object options, customized with templates, custom search function (search by name or HEX)</span>
 <div class="grid master">
   <ard-select
-    [items]="colors"
+    [options]="colors"
     clearable="false"
     labelFrom="name"
     valueFrom="hex"
@@ -182,10 +182,14 @@
 <div class="master flex">
   <span class="title">Using ard-option components</span>
   <ard-select>
-    <ard-option>Pear</ard-option>
-    <ard-option disabled>Banana</ard-option>
-    <ard-option value="Tasty Apple">Apple</ard-option>
-    <ard-option>Cherry</ard-option>
+    <ard-option value="pear">Pear</ard-option>
+    <ard-option
+      value="banana"
+      disabled
+      >Banana</ard-option
+    >
+    <ard-option value="apple">Apple</ard-option>
+    <ard-option value="cherry">Cherry</ard-option>
   </ard-select>
 </div>
 <div class="master flex">
@@ -195,9 +199,9 @@
 <div class="master flex">
   <span class="title">Adding custom options, with some predefined</span>
   <ard-select addCustom>
-    <ard-option>Uber</ard-option>
-    <ard-option>KFC</ard-option>
-    <ard-option>Google</ard-option>
+    <ard-option value="uber">Uber</ard-option>
+    <ard-option value="kfc">KFC</ard-option>
+    <ard-option value="google">Google</ard-option>
   </ard-select>
 </div>
 <div class="master flex">
@@ -217,11 +221,11 @@
 </div>
 <div class="master flex align-right">
   <span class="title">Select aligned to the right</span>
-  <ard-select [items]="fruits" />
+  <ard-select [options]="fruits" />
 </div>
 <div class="master flex">
   <span class="title">Select with custom dropdown arrow</span>
-  <ard-select [items]="fruits">
+  <ard-select [options]="fruits">
     <ng-template ard-dropdown-arrow-tmp>
       <span class="custom-dropdown-arrow">v</span>
     </ng-template>
@@ -230,7 +234,7 @@
 <div class="master flex">
   <span class="title">Select with Reactive Forms</span>
   <ard-select
-    [items]="fruitsSmall"
+    [options]="fruitsSmall"
     [formControl]="form.controls.fruit"
   />
   <div>{{ form.controls.fruit.value }}</div>
@@ -239,7 +243,7 @@
 <div class="master flex">
   <span class="title">Select with editing mode changing</span>
   <ard-select
-    [items]="fruits"
+    [options]="fruits"
     [formControl]="form.controls.fruit"
     [readonly]="!isEditMode()"
     [appearance]="isEditMode() ? 'outlined' : 'transparent'"

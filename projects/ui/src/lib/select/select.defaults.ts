@@ -26,7 +26,6 @@ export interface ArdSelectDefaults extends _FormFieldComponentDefaults {
   disabledFrom: string;
   groupLabelFrom: string | GroupByFn;
   groupDisabledFrom: string;
-  childrenFrom: string;
   placeholder: string;
   searchPlaceholder: string;
   clearButtonTitle: string;
@@ -36,8 +35,6 @@ export interface ArdSelectDefaults extends _FormFieldComponentDefaults {
   loadingPlaceholderText: string;
   inputAttrs: Record<string, any>;
   isLoading: boolean;
-  deferValueWrites: boolean | null;
-  itemsAlreadyGrouped: boolean;
   invertDisabled: boolean;
   noGroupActions: boolean;
   autoHighlightFirst: boolean;
@@ -88,7 +85,6 @@ const _selectDefaults: ArdSelectDefaults = {
   disabledFrom: 'disabled',
   groupLabelFrom: 'group',
   groupDisabledFrom: 'disabled',
-  childrenFrom: 'children',
   searchFn: searchFunctions.byLabel,
   clearButtonTitle: 'Clear',
   noItemsFoundText: 'No items found.',
@@ -99,8 +95,6 @@ const _selectDefaults: ArdSelectDefaults = {
   dropdownPosition: ArdPanelPosition.Auto,
   inputAttrs: {},
   isLoading: false,
-  deferValueWrites: null,
-  itemsAlreadyGrouped: false,
   invertDisabled: false,
   noGroupActions: false,
   autoHighlightFirst: false,

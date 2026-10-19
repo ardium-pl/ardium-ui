@@ -1,12 +1,12 @@
 import {
-    ChangeDetectionStrategy,
-    Component,
-    Inject,
-    OnInit,
-    ViewEncapsulation,
-    computed,
-    input,
-    model
+  ChangeDetectionStrategy,
+  Component,
+  Inject,
+  OnInit,
+  ViewEncapsulation,
+  computed,
+  input,
+  model
 } from '@angular/core';
 import { BooleanLike, coerceBooleanProperty } from '@ardium-pl/devkit';
 import { _FocusableComponentBase } from '../_internal/focusable-component';

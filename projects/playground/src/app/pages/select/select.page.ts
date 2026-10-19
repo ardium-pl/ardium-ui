@@ -28,7 +28,7 @@ export class SelectPage {
 
   readonly isReadOnly = signal<boolean>(true);
 
-  selectedPeopleLogger = effect(() => console.log(this.selectedPeople()));
+  // selectedPeopleLogger = effect(() => console.log(this.selectedPeople()));
 
   //* color search fn
   readonly colorSearchFn = ArdSearchFunction.byLabelAndGroup;
@@ -70,11 +70,6 @@ export class SelectPage {
   });
 
   formLogger = this.form.valueChanges.subscribe(value => {
-    console.log(this.cities, this.cities.at(2));
     this.log('Select form value:', value);
   });
 }
-
-// @Component({
-//   selector: 'app-select-display'
-// })

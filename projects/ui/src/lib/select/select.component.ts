@@ -1,40 +1,35 @@
 import { Overlay, OverlayConfig, OverlayRef, ScrollStrategyOptions } from '@angular/cdk/overlay';
 import { TemplatePortal } from '@angular/cdk/portal';
 import {
-  AfterContentInit,
   AfterViewInit,
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
-  ContentChildren,
   ElementRef,
   HostBinding,
   HostListener,
   Inject,
-  Input,
   OnChanges,
   OnDestroy,
   OnInit,
-  QueryList,
-  Signal,
   SimpleChanges,
   TemplateRef,
   ViewContainerRef,
   ViewEncapsulation,
   computed,
   contentChild,
-  forwardRef,
+  contentChildren,
   inject,
   input,
   model,
   output,
   signal,
-  viewChild
+  viewChild,
 } from '@angular/core';
-import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
-import { BooleanLike, NumberLike, coerceArrayProperty, coerceBooleanProperty, coerceNumberProperty } from '@ardium-pl/devkit';
-import { Observable, Subject, merge, startWith, takeUntil } from 'rxjs';
-import { isAnyString, isArray, isFunction } from 'simple-bool';
+import { FormValueControl } from '@angular/forms/signals';
+import { BooleanLike, NumberLike, coerceBooleanProperty, coerceNumberProperty } from '@ardium-pl/devkit';
+import { Observable, Subject } from 'rxjs';
+import { isFunction } from 'simple-bool';
 import { _FormFieldComponentBase } from '../_internal/form-field-component';
 import { ItemStorage, ItemStorageHost } from '../_internal/item-storages/dropdown-item-storage';
 import { contextToInputs } from '../_internal/utils/context-to-inputs';
@@ -47,6 +42,7 @@ import {
   ArdOptionGroup,
   ArdPanelPosition,
   CompareWithFn,
+  ForcedStructureOption,
   GroupByFn,
   OptionContext,
   SearchFn,
@@ -94,11 +90,6 @@ import { transformDropdownPanelSize } from './select.utils';
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [
     {
-      provide: NG_VALUE_ACCESSOR,
-      useExisting: forwardRef(() => ArdiumSelectComponent),
-      multi: true,
-    },
-    {
       provide: ARD_FORM_FIELD_CONTROL,
       useExisting: ArdiumSelectComponent,
     },
@@ -106,7 +97,13 @@ import { transformDropdownPanelSize } from './select.utils';
 })
 export class ArdiumSelectComponent
   extends _FormFieldComponentBase
-  implements OnChanges, AfterViewInit, AfterContentInit, OnInit, OnDestroy, ControlValueAccessor, ItemStorageHost
+  implements
+    OnChanges,
+    AfterViewInit,
+    OnInit,
+    OnDestroy,
+    ItemStorageHost,
+    Omit<FormValueControl<unknown[] | null>, 'readonly' | 'disabled' | 'required'>
 {
   protected override readonly _DEFAULTS!: ArdSelectDefaults;
   constructor(@Inject(ARD_SELECT_DEFAULTS) defaults: ArdSelectDefaults) {
@@ -117,14 +114,12 @@ export class ArdiumSelectComponent
   readonly itemStorage = new ItemStorage(this);
 
   //! privates
-  private _items: any[] | null = [];
   private readonly _isMouseBeingUsed = signal<boolean>(false);
   private readonly _searchBarFocused = signal<boolean>(false);
   private readonly _destroy$ = new Subject<void>();
 
   //! publics
   readonly searchTerm = model<string>('');
-  isItemsInputUsed = false;
 
   //! binding-related inputs
   //value/label/disabled/group/pre-grouped children paths
@@ -134,7 +129,6 @@ export class ArdiumSelectComponent
   //! group-related inputs
   readonly groupLabelFrom = input<string | GroupByFn>(this._DEFAULTS.groupLabelFrom);
   readonly groupDisabledFrom = input<string>(this._DEFAULTS.groupDisabledFrom);
-  readonly childrenFrom = input<string>(this._DEFAULTS.childrenFrom);
   //! settings
   readonly placeholder = input<string>(this._DEFAULTS.placeholder);
   readonly searchPlaceholder = input<string>(this._DEFAULTS.searchPlaceholder);
@@ -150,14 +144,8 @@ export class ArdiumSelectComponent
   readonly inputAttrs = input<Record<string, any>>(this._DEFAULTS.inputAttrs);
   //! other inputs
   readonly isLoading = input<boolean, BooleanLike>(this._DEFAULTS.isLoading, { transform: v => coerceBooleanProperty(v) });
-  readonly _deferValueWrites = input<boolean | null>(this._DEFAULTS.deferValueWrites, { alias: 'deferValueWrites' });
-  readonly deferValueWrites = computed<boolean>(() => this._deferValueWrites() ?? this.isLoading());
 
   //! boolean settings
-  readonly itemsAlreadyGrouped = input<boolean, BooleanLike>(this._DEFAULTS.itemsAlreadyGrouped, {
-    transform: v => coerceBooleanProperty(v),
-  });
-
   readonly invertDisabled = input<boolean, BooleanLike>(this._DEFAULTS.invertDisabled, {
     transform: v => coerceBooleanProperty(v),
   });
@@ -182,7 +170,8 @@ export class ArdiumSelectComponent
   });
 
   //! number inputs
-  readonly maxSelectedItems = input<number, NumberLike>(this._DEFAULTS.maxSelectedItems, {
+  // @ts-expect-error to keep typed transform, but adhere to the FormValueControl interface
+  readonly maxLength = input<number, NumberLike>(this._DEFAULTS.maxSelectedItems, {
     transform: v => coerceNumberProperty(v, this._DEFAULTS.maxSelectedItems),
   });
   readonly itemDisplayLimit = input<number, NumberLike>(this._DEFAULTS.itemDisplayLimit, {
@@ -192,11 +181,8 @@ export class ArdiumSelectComponent
   //! function inputs
   /**
    * The function used to search for matching items based on the search term.
-   *
-   * When set to `null`, the search functionality will be disabled (all items will be shown),
-   * but the `searchEvent` will still be emitted with the search term whenever it changes.
    */
-  readonly searchFn = input<SearchFn | null>(this._DEFAULTS.searchFn);
+  readonly searchFn = input<SearchFn>(this._DEFAULTS.searchFn);
   readonly compareWith = input<Nullable<CompareWithFn>>(this._DEFAULTS.compareWith);
 
   //! appearance
@@ -239,62 +225,22 @@ export class ArdiumSelectComponent
     return this.groupLabelFrom();
   }
 
-  //! items setter/getter
-  @Input()
-  get items() {
-    return this._items;
-  }
-  set items(value: string | any[] | null) {
-    this.isItemsInputUsed = true;
-    if (value === null) {
-      value = [];
-      this.isItemsInputUsed = false;
-    } else if (isAnyString(value)) {
-      value = coerceArrayProperty(value);
-    }
-    this.itemStorage.setItems(value);
-  }
+  //! options
+  readonly optionsFromInput = input<any[]>([], { alias: 'options' });
 
-  @ContentChildren(ArdiumOptionComponent)
-  optionComponents!: QueryList<ArdiumOptionComponent>;
+  readonly optionComponents = contentChildren(ArdiumOptionComponent);
+  readonly optionsFromComponents = computed<ForcedStructureOption[]>(() =>
+    this.optionComponents().map(option => ({
+      value: option.value(),
+      oldValue: option.oldValue(),
+      label: option.labelOrInnerHtml(),
+      disabled: option.disabled(),
+    }))
+  );
 
-  private _setItemsFromComponents() {
-    const handleOptionChange = () => {
-      const changedOrDestroyed = merge(this.optionComponents.changes, this._destroy$);
-      merge(...this.optionComponents.map(option => option.stateChange$))
-        .pipe(takeUntil(changedOrDestroyed))
-        .subscribe(option => {
-          setTimeout(() => {
-            this.itemStorage.updateItemFromOptionComponent(option.oldValue ?? option.value, {
-              disabled: option.disabled,
-              label: option.label || undefined,
-              value: option.value,
-              itemData: {
-                label: option.label,
-                value: option.value,
-                disabled: option.disabled,
-              },
-            });
-          }, 0);
-        });
-    };
-    this.optionComponents.changes
-      .pipe(startWith(this.optionComponents), takeUntil(this._destroy$))
-      .subscribe((options: QueryList<ArdiumOptionComponent>) => {
-        if (options.length === 0) return;
-        setTimeout(() => {
-          this.items = options.map(option => {
-            return {
-              value: option.value() ?? option.labelOrInnerHtml,
-              label: option.labelOrInnerHtml ?? option.value(),
-              disabled: option.disabled(),
-            };
-          });
-          handleOptionChange();
-          this.detectChanges();
-        }, 0);
-      });
-  }
+  readonly isOptionsInputUsed = computed<boolean>(() => this.optionsFromInput().length > 0);
+
+  readonly recentlyHighlightedOption = this.itemStorage.recentlyHighlightedOption;
 
   //! attribute and/or class setters/getters
   readonly multiselectable = input<boolean, BooleanLike>(this._DEFAULTS.multiselectable, {
@@ -337,30 +283,14 @@ export class ArdiumSelectComponent
 
   //! control value accessor
   writeValue(ngModel: any[]): void {
-    this.itemStorage.handleWriteValue(ngModel);
-    this._cd.markForCheck();
+    // not used anymore
   }
-  //! change & touch event emitters
   protected _emitChange(): void {
-    const value = this.multiselectable() ? this.itemStorage.value() : this.itemStorage.value()[0];
-    this._onChangeRegistered?.(value);
-    this.valueChange.emit(value);
+    // not used anymore
   }
 
-  //! value input & output
-  @Input()
-  set value(newValue: any) {
-    //if is a string, coerce it into array of strings
-    if (isAnyString(newValue)) newValue = coerceArrayProperty(newValue);
-    //if it is not a string and not an array, just put it in an array
-    else if (!isArray(newValue)) newValue = [newValue];
-
-    this.writeValue(newValue);
-  }
-  get value(): Signal<any[]> {
-    return this.itemStorage.value;
-  }
-  readonly valueChange = output<any[]>();
+  //! value
+  readonly value = model<any[] | any>();
 
   //! output events
   readonly addEvent = output<any[]>({ alias: 'add' });
@@ -414,76 +344,87 @@ export class ArdiumSelectComponent
   readonly itemDisplayLimitComponent = this._DEFAULTS.ItemDisplayLimitComponent;
 
   //! context providers
-  readonly optionContextGenerator = computed<(item: ArdOption) => OptionContext<ArdOption>>(() => item => ({
-    $implicit: item,
-    item,
-    index: item.index,
-    value: item.value,
-    label: item.label,
-    selected: item.selected,
-    highlighted: item.highlighted,
-    itemData: item.itemData,
-    group: item.group,
-    disabled: item.disabled,
-    isExactMatch: item.isExactMatch,
-    highlighted_recently: item.highlighted_recently,
+  readonly optionContextGenerator = computed<(itemIndex: number) => OptionContext<ArdOption>>(() => {
+    const options = this.itemStorage.options();
+    const optionContexts: OptionContext<ArdOption>[] = options.map(item => ({
+      $implicit: item,
+      item,
+      index: item.index,
+      value: item.value,
+      label: item.label,
+      selected: item.selected,
+      highlighted: item.highlighted,
+      itemData: item.itemData,
+      group: item.group,
+      disabled: item.disabled,
+    }));
+    return (itemIndex: number) => optionContexts[itemIndex];
+  });
+  readonly valueContextGenerator = computed<(itemIndex: number) => ValueContext>(() => {
+    const options = this.itemStorage.options();
+    const optionContexts: ValueContext[] = options.map(item => ({
+      $implicit: item,
+      item,
+      index: item.index,
+      value: item.value,
+      label: item.label,
+      selected: item.selected,
+      highlighted: item.highlighted,
+      itemData: item.itemData,
+      group: item.group,
+      disabled: item.disabled,
+      unselect: () => {
+        this.unselectItem(item);
+      },
+      itemsSelectedCount: this.itemStorage.selectedItems().length,
+      totalItemsCount: this.itemStorage.options().length,
+    }));
+    return (itemIndex: number) => optionContexts[itemIndex];
+  });
+  readonly groupContextGenerator = computed<(groupIndex: number) => GroupContext>(() => {
+    const groups = this.itemStorage.groups();
+    const groupContexts: GroupContext[] = groups.map(group => ({
+      $implicit: group,
+      group,
+      label: group.label,
+      disabled: group.disabled,
+      selectedChildrenCount: group.children.filter(v => v.selected).length,
+      totalChildrenCount: group.children.length,
+    }));
+    return (groupIndex: number) => groupContexts[groupIndex];
+  });
+  readonly getStatsContext = computed<StatsContext>(() => ({
+    totalItems: this.totalItems(),
+    foundItems: this.foundItems(),
   }));
-  readonly valueContextGenerator = computed<(item: ArdOption) => ValueContext>(() => item => ({
-    ...this.optionContextGenerator()(item),
-    unselect: () => {
-      this.unselectItem(item);
-    },
-    itemsSelectedCount: this.itemStorage.selectedItems().length,
-    totalItemsCount: this.itemStorage.items().length,
+  readonly getSearchContext = computed<SearchContext>(() => ({
+    $implicit: this.searchTerm(),
+    searchTerm: this.searchTerm(),
+    totalItems: this.totalItems(),
+    foundItems: this.foundItems(),
   }));
-  readonly groupContextGenerator = computed<(group: ArdOptionGroup) => GroupContext>(() => group => ({
-    $implicit: group,
-    group,
-    label: group.label,
-    disabled: group.disabled,
-    selectedChildrenCount: group.children.filter(v => v.selected).length,
-    totalChildrenCount: group.children.length,
-  }));
-  readonly getStatsContext = computed(
-    (): StatsContext => ({
-      totalItems: this.totalItems(),
-      foundItems: this.foundItems(),
-    })
-  );
-  readonly getSearchContext = computed(
-    (): SearchContext => ({
-      $implicit: this.searchTerm(),
-      searchTerm: this.searchTerm(),
-      totalItems: this.totalItems(),
-      foundItems: this.foundItems(),
-    })
-  );
-  readonly getPlaceholderContext = computed((): PlaceholderContext => {
+  readonly getPlaceholderContext = computed<PlaceholderContext>(() => {
     const placeholder = this.placeholderForCurrentContext();
     return {
       placeholder,
       $implicit: placeholder,
     };
   });
-  readonly getCustomOptionContext = computed(
-    (): CustomOptionContext => ({
-      $implicit: this.searchTerm(),
-      searchTerm: this.searchTerm(),
-    })
-  );
-  readonly getItemLimitContext = computed(
-    (): ItemLimitContext => ({
-      totalItems: this.totalItems(),
-      selectedItems: this.itemStorage.selectedItems().length,
-      itemLimit: this.maxSelectedItems(),
-    })
-  );
-  readonly getItemDisplayLimitContext = computed((): ItemDisplayLimitContext => {
+  readonly getCustomOptionContext = computed<CustomOptionContext>(() => ({
+    $implicit: this.searchTerm(),
+    searchTerm: this.searchTerm(),
+  }));
+  readonly getItemLimitContext = computed<ItemLimitContext>(() => ({
+    totalItems: this.totalItems(),
+    selectedItems: this.itemStorage.selectedItems().length,
+    itemLimit: this.maxLength(),
+  }));
+  readonly getItemDisplayLimitContext = computed<ItemDisplayLimitContext>(() => {
     const selectedItems = this.itemStorage.selectedItems().length;
     return {
       totalItems: this.totalItems(),
       selectedItems,
-      itemLimit: this.maxSelectedItems(),
+      itemLimit: this.maxLength(),
       overflowCount: selectedItems - (this.itemDisplayLimit() ?? 0),
     };
   });
@@ -618,11 +559,6 @@ export class ArdiumSelectComponent
       this.focus();
     }
   }
-  ngAfterContentInit(): void {
-    if (!this.isItemsInputUsed) {
-      this._setItemsFromComponents();
-    }
-  }
   ngOnChanges(changes: SimpleChanges): void {
     //fire items load handler when loading is set to false
     if (changes['loading']) {
@@ -657,7 +593,7 @@ export class ArdiumSelectComponent
   readonly shouldShowNoItemsFound = computed<boolean>(
     () => this.itemStorage.isNoItemsFound() && !this.isLoading() && !this.shouldShowAddCustom()
   );
-  readonly totalItems = computed<number>(() => this.itemStorage.items().length);
+  readonly totalItems = computed<number>(() => this.itemStorage.options().length);
   readonly foundItems = computed<number | undefined>(() =>
     this.searchable() ? this.itemStorage.filteredItems().length : undefined
   );
@@ -683,7 +619,6 @@ export class ArdiumSelectComponent
   //! search input event handlers
   filter(filterTerm: string, shouldAutoOpen: boolean): void {
     this.searchTerm.set(filterTerm);
-    this.itemStorage.filter(filterTerm);
     if (shouldAutoOpen) {
       this.open();
     }

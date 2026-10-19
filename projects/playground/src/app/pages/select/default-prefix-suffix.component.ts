@@ -12,7 +12,7 @@ export class SelectDefaultPrefixComponent implements ArdFormFieldFramePrefixSuff
 
 @Component({
   selector: 'app-select-default-prefix-component',
-  template: `<ard-select [items]="items" />`,
+  template: `<ard-select [options]="items" />`,
   standalone: true,
   imports: [ArdiumSelectModule],
   providers: [

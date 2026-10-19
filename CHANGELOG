@@ -12,6 +12,7 @@
 - All components that previously used `[inputId]` input to set the id attribute now use `[htmlId]`. Both inputs existed before, but only the `[inputId]` actually set the attribute, which is considered a bug. Now only `[htmlId]` remains. Only a few input-like components are affected.
 - Calendar & Date Input now always use UTC dates in templates and template contexts
 - Range Slider now emits its value as `{ from: number, to: number }` (was: `{ low: number, high: number }`)
+- Removed `[itemsAlreadyGrouped]` and consequently `[childrenFrom]` inputs from `<ard-select>`.
 - Button, FAB, and Icon Button now place their content directly inside the `<button>` element.
   - Removed `.ard-focus-overlay`. It was used to add a colored overlay over the background, now `::before` is used for that purpose
   - Removed `.ard-button-content`. It was used to add flexbox to the content, now the button itself does that
@@ -27,9 +28,9 @@
 - `(change)` event has been removed from all components that supported it. Use `(valueChange)` or similar instead.
 - Due to contraints given by `FormValueControl` interface for Signal Forms compatibility, several inputs and outputs have been renamed.
   - `[(selected)]  ->  [(value)]` in `ard-checkbox`, `ard-selectable-chip`, `ard-slide-toggle`, `ard-star-button`
-  - `[maxSelectedItems]  ->  [maxLength]` in `ard-checkbox-list`
+  - `[maxSelectedItems]  ->  [maxLength]` in `ard-checkbox-list`, `ard-select`
 - Due to other reasons, other inputs and outputs have been renamed.
-  - `[items]  ->  [options]` in `ard-checkbox-list`
+  - `[items]  ->  [options]` in `ard-checkbox-list`, `ard-select`
 
 ### Additions & Changes
 

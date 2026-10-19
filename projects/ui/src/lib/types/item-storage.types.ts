@@ -5,6 +5,13 @@ export type OptionContext<T extends ArdSimplestStorageItem> = {
   [K in keyof Omit<T, 'filtered'>]: T[K];
 };
 
+export interface ForcedStructureOption {
+  value: any;
+  oldValue: any;
+  label: string;
+  disabled: boolean;
+}
+
 export interface ArdSimplestStorageItem {
   readonly itemData: object;
   readonly index: number;
@@ -19,10 +26,7 @@ export interface ArdOptionSimple extends ArdSimplestStorageItem {
 }
 
 export interface ArdOption extends ArdOptionSimple {
-  readonly filtered: boolean;
-  readonly isExactMatch: boolean;
   readonly group: unknown;
-  readonly highlighted_recently: boolean;
 }
 
 export interface ArdOptionGroup {
