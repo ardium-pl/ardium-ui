@@ -8,6 +8,7 @@ import {
   Input,
   input,
   model,
+  output,
   signal,
   ViewEncapsulation,
 } from '@angular/core';
@@ -40,6 +41,24 @@ export class ArdiumCheckboxListComponent
     super(defaults);
   }
 
+  //! removed bindings
+  /**
+   * @deprecated Use `[maxLength]` instead.
+   */
+  readonly maxSelectedItems = input<undefined, never>(undefined, { transform: () => undefined });
+  /**
+   * @deprecated Use `[options]` instead.
+   */
+  readonly items = input<undefined, never>(undefined, { transform: () => undefined });
+  /**
+   * @deprecated Use `[value]` instead.
+   */
+  readonly selected = input<undefined, never>(undefined, { transform: () => undefined });
+  /**
+   * @deprecated Use `(valueChange)` instead.
+   */
+  readonly selectedChange = output<never>();
+
   @HostBinding('attr.id')
   get _htmlIdHostAttribute() {
     return this.htmlId();
@@ -59,10 +78,10 @@ export class ArdiumCheckboxListComponent
   readonly disabledFrom = input<string>(this._DEFAULTS.disabledFrom);
 
   @Input({ alias: 'options' })
-  set items(v: any[]) {
+  set options(v: any[]) {
     this._itemStorage.setItems(v);
   }
-  get items(): ArdOptionSimple[] {
+  get options(): ArdOptionSimple[] {
     return this._itemStorage.options();
   }
 

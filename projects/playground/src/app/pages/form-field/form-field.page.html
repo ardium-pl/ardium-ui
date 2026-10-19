@@ -52,9 +52,7 @@
     <ard-auto-error [control]="controlAutoError" />
   </ard-form-field>
   <button (click)="controlAutoError.markAsTouched()">Mark as touched</button>
-  <p>
-    {{ controlAutoError.errors | json }}
-  </p>
+  <p>{{ controlAutoError.errors | json }}</p>
 </div>
 <div class="master first">
   <span class="title">Form field with success state</span>
@@ -149,7 +147,7 @@
     <ard-label optional>Test</ard-label>
     <ard-segment
       [formControl]="controlSegment"
-      [items]="['yes', 'no']"
+      [options]="['yes', 'no']"
       uniformWidths
     />
     <ard-hint>Lorem ipsum dolor sit amet consectetur.</ard-hint>
@@ -213,7 +211,7 @@
     <ard-form-field>
       <ard-label>segment</ard-label>
       <ard-segment
-        items="1,2"
+        [options]="['1','2']"
         hasError
       />
       <ard-error>Error here</ard-error>

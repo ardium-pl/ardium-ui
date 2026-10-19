@@ -1,5 +1,6 @@
 import { computed, Directive, input } from '@angular/core';
 import { Validators } from '@angular/forms';
+import { FormUiControl } from '@angular/forms/signals';
 import { BooleanLike, coerceBooleanProperty, trackBoundControl } from '@ardium-pl/devkit';
 import { TakeChance as Random } from 'take-chance';
 import { ARD_FORM_FIELD_CONTROL, ArdFormFieldControl } from './form-field-child.token';
@@ -19,18 +20,20 @@ import { ARD_FORM_FIELD_CONTROL, ArdFormFieldControl } from './form-field-child.
     '[class.ard-is-success]': 'isSuccess()',
   },
 })
-export class ArdiumFormFieldNativeInputAdapterDirective implements ArdFormFieldControl {
-  readonly _required = input<boolean | undefined, any>(undefined, {
+export class ArdiumFormFieldNativeInputAdapterDirective implements ArdFormFieldControl, FormUiControl<unknown> {
+  // @ts-expect-error
+  readonly required = input<boolean, BooleanLike>(false, {
     transform: v => coerceBooleanProperty(v),
     alias: 'required',
   });
-  readonly required = computed<boolean>(
+  readonly _required = computed<boolean>(
     () =>
-      this._required() ??
+      this.required() ??
       !!(this.control.validators()?.includes(Validators.required) || this.control.validators()?.includes(Validators.requiredTrue))
   );
 
   readonly isSuccess = input<boolean, BooleanLike>(false, { transform: v => coerceBooleanProperty(v) });
+  // @ts-expect-error
   readonly disabled = input<boolean, BooleanLike>(false, { transform: v => coerceBooleanProperty(v) });
 
   //! form field related
@@ -42,11 +45,9 @@ export class ArdiumFormFieldNativeInputAdapterDirective implements ArdFormFieldC
 
   readonly htmlId = input<string>(Random.id());
 
-  readonly _hasError = input<boolean | undefined, any>(undefined, {
-    transform: v => coerceBooleanProperty(v),
-    alias: 'hasError',
-  });
-  readonly hasError = computed<boolean>(() => this._hasError() ?? (this.control.touched() && this.control.invalid()));
+  readonly invalid = input<boolean>(false);
+  readonly touched = input<boolean>(false);
+  readonly hasError = computed<boolean>(() => this.control.touchedHasErrors() && this.touched() && this.invalid());
 
   ngOnDestroy(): void {
     this.control.destroy();

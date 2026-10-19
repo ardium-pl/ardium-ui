@@ -1,34 +1,34 @@
-<!-- <ard-segment [items]="options" variant="pill"/>
-<ard-segment [items]="options" variant="rounded"/>
-<ard-segment [items]="options" variant="sharp"/> -->
+<!-- <ard-segment [options]="options" variant="pill"/>
+<ard-segment [options]="options" variant="rounded"/>
+<ard-segment [options]="options" variant="sharp"/> -->
 
-<div class="master">
+<!-- <div class="master">
   <span class="title">Most basic segment</span>
-  <ard-segment [items]="options"/>
+  <ard-segment [options]="options"/>
 </div>
 <div class="master">
   <span class="title">Simple segment with two-way value binding</span>
   <ard-segment
-    [items]="optionsPesel"
+    [options]="optionsPesel"
     [(value)]="peselOrBirthdate"
   />
   <p>
     Current value: "{{ peselOrBirthdate() }}"
   </p>
-</div>
+</div> -->
 <div class="master">
   <span class="title">Multiselectable segment (max 3 items, one option pre-selected)</span>
   <ard-segment
-    [items]="optionsAnimals"
-    [value]="optionsAnimals[1]"
+    [options]="optionsAnimals"
+    [value]="[optionsAnimals[1]]"
     multiselectable
-    maxSelectedItems="3"
+    maxLength="3"
   />
 </div>
-<div class="master">
+<!-- <div class="master">
   <span class="title">Segment events, singleselectable</span>
   <ard-segment
-    [items]="options"
+    [options]="options"
     (valueChange)="log('valueChange', $event)"
     (add)="log('add', $event)"
     (remove)="log('remove', $event)"
@@ -40,7 +40,7 @@
 <div class="master">
   <span class="title">Readonly segment events, singleselectable</span>
   <ard-segment
-    [items]="options"
+    [options]="options"
     [value]="options[1]"
     readonly
     (valueChange)="log('valueChange', $event)"
@@ -54,7 +54,7 @@
 <div class="master">
   <span class="title">Segment events, multiselectable, uniform widths</span>
   <ard-segment
-    [items]="options"
+    [options]="options"
     multiselectable
     uniformWidths
     (valueChange)="log('valueChange', $event)"
@@ -68,7 +68,7 @@
 <div class="master">
   <span class="title">Custom segment data bindings</span>
   <ard-segment
-    [items]="optionsComplex"
+    [options]="optionsComplex"
     multiselectable
     labelFrom="label"
     valueFrom="type"
@@ -79,7 +79,7 @@
 <div class="master">
   <span class="title">Custom option template (using iconBased)</span>
   <ard-segment
-    [items]="optionsAlign"
+    [options]="optionsAlign"
     labelFrom="icon"
     valueFrom="value"
     value="left"
@@ -98,7 +98,7 @@
 <div class="master">
   <span class="title">Multiselectable segment (multirow)</span>
   <ard-segment
-    [items]="optionsAnimals"
+    [options]="optionsAnimals"
     itemsPerRow="3"
     multiselectable
   />
@@ -120,7 +120,7 @@
             [appearance]="appearance"
             [color]="color"
             [disabled]="disabled"
-            [items]="optionsComplex"
+            [options]="optionsComplex"
             valueFrom="type"
             labelFrom="label"
           />
@@ -133,4 +133,4 @@
     }
   </div>
   }
-</div>
+</div> -->

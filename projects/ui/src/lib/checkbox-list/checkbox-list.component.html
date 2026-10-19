@@ -2,7 +2,7 @@
   class="ard-checkbox-list"
   [ngClass]="ngClasses()"
 >
-  @for (item of items; track item.index) {
+  @for (item of options; track item.index) {
   <div
     class="ard-checkbox-list__item"
     [class.ard-item-highlighted]="item.highlighted"

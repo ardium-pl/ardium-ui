@@ -1,4 +1,4 @@
-import { Signal, WritableSignal, computed, effect, signal } from '@angular/core';
+import { Signal, WritableSignal, computed, signal } from '@angular/core';
 import { arraySignal } from '@ardium-pl/devkit';
 import { resolvePath } from 'resolve-object-path';
 import { evaluate, isArray, isDefined, isObject, isPrimitive } from 'simple-bool';
@@ -28,31 +28,11 @@ export interface SimpleItemStorageHost {
 export class SimpleItemStorage {
   private readonly _options = arraySignal<ArdOptionSimple>([]);
 
-  constructor(private readonly _ardParentComp: SimpleItemStorageHost) {
-    // validate all items exist in the options list
-    // TODO move to ngOnChanges of parent component
-    effect(() => {
-      if (!this._areItemsInitialized()) return;
-
-      const validValues: any[] = [];
-      for (const item of this._valueAsArray()) {
-        if (!this._options().some(i => this.itemHasValueOf(i, item))) {
-          const valueAsString = typeof item === 'string' ? `"${item}"` : item?.toString?.() || String(item);
-          console.warn(
-            `ARD-WA${this._ardParentComp._componentId}3: Couldn't find an item with value ${valueAsString}. Value will be ignored.`
-          );
-        } else {
-          validValues.push(item);
-        }
-      }
-      if (validValues.length !== this._valueAsArray().length) {
-        this._setValue(validValues);
-      }
-    });
-  }
+  constructor(private readonly _ardParentComp: SimpleItemStorageHost) {}
 
   private readonly _valueAsArray = computed<any[]>(() => {
     const value = this._ardParentComp.value();
+    if (!isDefined(value)) return [];
     return isArray(value) ? value : [value];
   });
 
@@ -64,11 +44,30 @@ export class SimpleItemStorage {
     }
   }
   private _addItemsToValue(items: any[]): void {
-    const newValue = [...this._valueAsArray(), ...items];
+    const newValue = this._ardParentComp.multiselectable() ? [...this._valueAsArray(), ...items] : items;
     this._setValue(newValue);
   }
 
   private readonly _highlightedItems = arraySignal<ArdOptionSimple>([]);
+
+  validateAllSelectedItemsExist(): void {
+    if (!this._areItemsInitialized()) return;
+
+    const validValues: any[] = [];
+    for (const item of this._valueAsArray()) {
+      if (!this._options().some(i => this.itemHasValueOf(i, item))) {
+        const valueAsString = typeof item === 'string' ? `"${item}"` : item?.toString?.() || String(item);
+        console.warn(
+          `ARD-WA${this._ardParentComp._componentId}3: Couldn't find an item with value ${valueAsString}. Value will be ignored.`
+        );
+      } else {
+        validValues.push(item);
+      }
+    }
+    if (validValues.length !== this._valueAsArray().length) {
+      this._setValue(validValues);
+    }
+  }
 
   /**
    * Gets all items.
@@ -113,7 +112,7 @@ export class SimpleItemStorage {
 
   readonly itemsLeftUntilLimit = computed(() =>
     this._ardParentComp.multiselectable() && isDefined(this._ardParentComp.maxLength())
-      ? this._ardParentComp.maxLength()! - this.selectedItems().length
+      ? this._ardParentComp.maxLength()! - this._valueAsArray().length
       : 1
   );
   /**
@@ -197,17 +196,18 @@ export class SimpleItemStorage {
    * @param ngModel The value of ngModel to validate.
    * @returns true if all items are valid, otherwise false.
    */
-  // TODO use in ngOnChanges of parent component to validate value on every change
-  validateWrittenValue(ngModel: unknown): boolean {
+  validateWrittenValue(ngModel: unknown) {
+    if (!isDefined(ngModel)) return;
     if (this._ardParentComp.multiselectable()) {
       if (!isArray(ngModel)) {
         throw new Error(
           `ARD-FT${this._ardParentComp._componentId}0m: a multiselectable <ard-${this._ardParentComp._componentName}> expects its value to be an array, got "${ngModel}".`
         );
       }
-      return ngModel.every(v => this._validateSingleElementType(v));
+      ngModel.forEach(v => this._validateSingleElementType(v));
+      return;
     }
-    return this._validateSingleElementType(ngModel);
+    this._validateSingleElementType(ngModel);
   }
   private _validateSingleElementType(item: unknown): boolean {
     if (!isDefined(this._ardParentComp.compareWith()) && isObject(item) && this._ardParentComp.valueFrom()) {
@@ -282,6 +282,8 @@ export class SimpleItemStorage {
     let itemsSelectedCount = 0;
     const itemsToAdd = new Set<any>();
     const itemsSelected: any[] = [];
+
+    console.log('itemsLeftUntilLimit', itemsLeftUntilLimit);
 
     for (const item of items) {
       if (item.selected) continue;

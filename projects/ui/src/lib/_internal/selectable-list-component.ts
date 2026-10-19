@@ -1,15 +1,4 @@
-import {
-  ChangeDetectorRef,
-  Directive,
-  HostBinding,
-  HostListener,
-  Input,
-  computed,
-  inject,
-  input,
-  output,
-  signal,
-} from '@angular/core';
+import { Directive, HostBinding, HostListener, Input, computed, effect, input, model, output, signal } from '@angular/core';
 import { ControlValueAccessor } from '@angular/forms';
 import { BooleanLike, coerceArrayProperty, coerceBooleanProperty, coerceNumberProperty } from '@ardium-pl/devkit';
 import { ArdFormFieldControl } from '../form-field/form-field-child.token';
@@ -47,6 +36,35 @@ export abstract class _SelectableListComponentBase
 {
   protected override readonly _DEFAULTS!: _SelectableListComponentDefaults;
 
+  constructor(defaults: _SelectableListComponentDefaults) {
+    super(defaults);
+
+    effect(() => {
+      this.itemStorage.validateAllSelectedItemsExist();
+    });
+    effect(() => {
+      this.itemStorage.validateWrittenValue(this.value());
+    });
+  }
+
+  //! removed bindings
+  /**
+   * @deprecated Use `[maxLength]` instead.
+   */
+  readonly maxSelectedItems = input<undefined, never>(undefined, { transform: () => undefined });
+  /**
+   * @deprecated Use `[options]` instead.
+   */
+  readonly items = input<undefined, never>(undefined, { transform: () => undefined });
+  /**
+   * @deprecated Use `[value]` instead.
+   */
+  readonly selected = input<undefined, never>(undefined, { transform: () => undefined });
+  /**
+   * @deprecated Use `(valueChange)` instead.
+   */
+  readonly selectedChange = output<never>();
+
   //! public constants
   readonly itemStorage = new SimpleItemStorage(this);
   readonly element!: HTMLElement;
@@ -55,20 +73,18 @@ export abstract class _SelectableListComponentBase
   abstract readonly _componentId: string;
   abstract readonly _componentName: string;
 
-  private readonly _cd = inject(ChangeDetectorRef);
-
   //! binding-related inputs
   readonly valueFrom = input<string>(this._DEFAULTS.valueFrom);
   readonly labelFrom = input<string>(this._DEFAULTS.labelFrom);
   readonly disabledFrom = input<string>(this._DEFAULTS.disabledFrom);
   readonly compareWith = input<Nullable<CompareWithFn>>(this._DEFAULTS.compareWith);
 
-  //! items setter/getter
+  //! options setter/getter
   @Input()
-  get items(): any[] {
+  get options(): any[] {
     return this.itemStorage.options();
   }
-  set items(value: any) {
+  set options(value: any) {
     if (!Array.isArray(value)) value = coerceArrayProperty(value);
 
     this.itemStorage.setItems(value);
@@ -107,9 +123,10 @@ export abstract class _SelectableListComponentBase
 
   //! control value accessor
   writeValue(ngModel: any[]): void {
-    // this.itemStorage.writeValue(ngModel);
-    // TODO
-    this._cd.markForCheck();
+    // not used anymore
+  }
+  protected _emitChange(): void {
+    // not used anymore
   }
 
   //! change & touch event emitters
@@ -118,15 +135,8 @@ export abstract class _SelectableListComponentBase
   get _touchedHostAttribute(): boolean {
     return this.touched();
   }
-
-  protected _emitChange(): void {
-    const value = this.itemStorage.value();
-    this._onChangeRegistered?.(value);
-    this.valueChange.emit(value);
-  }
   protected _onTouched(): void {
     if (this.touched()) return;
-
     this._emitTouched();
   }
 
@@ -155,25 +165,24 @@ export abstract class _SelectableListComponentBase
   readonly isItemLimitReached = computed(() => this.itemStorage.isItemLimitReached());
 
   //! context providers
-  readonly optionContextGenerator = computed<(item: ArdOptionSimple) => OptionContext<ArdOptionSimple>>(() => item => ({
-    $implicit: item,
-    item,
-    index: item.index,
-    value: item.value,
-    label: item.label,
-    selected: item.selected,
-    highlighted: item.highlighted,
-    itemData: item.itemData,
-    disabled: item.disabled,
-  }));
+  readonly optionContextGenerator = computed<(item: ArdOptionSimple) => OptionContext<ArdOptionSimple>>(() => {
+    const options = this.itemStorage.options();
+    const optionContexts: OptionContext<ArdOptionSimple>[] = options.map(item => ({
+      $implicit: item,
+      item,
+      index: item.index,
+      value: item.value,
+      label: item.label,
+      selected: item.selected,
+      highlighted: item.highlighted,
+      itemData: item.itemData,
+      disabled: item.disabled,
+    }));
+    return (item: ArdOptionSimple) => optionContexts[item.index];
+  });
 
   //! value input & output
-  @Input()
-  set value(newValue: any) {
-    if (this.multiselectable() && !Array.isArray(newValue)) newValue = coerceArrayProperty(newValue);
-    this.writeValue(newValue);
-  }
-  readonly valueChange = output<any[] | any>();
+  readonly value = model<any[] | any>();
 
   //! output events
   readonly addEvent = output<any[]>({ alias: 'add' });
@@ -211,7 +220,6 @@ export abstract class _SelectableListComponentBase
   }
 
   //! highligh-related
-
   readonly isMouseBeingUsed = signal<boolean>(false);
   @HostListener('mousemove')
   onMouseMove() {
@@ -219,13 +227,15 @@ export abstract class _SelectableListComponentBase
   }
   onItemMouseEnter(option: ArdOptionSimple, event: MouseEvent): void {
     if (this.disabled() || this.readonly()) return;
-    if (!this.isMouseBeingUsed) return;
+    if (!this.isMouseBeingUsed()) return;
+
     this.itemStorage.highlightSingleItem(option);
     event.stopPropagation();
   }
   onItemMouseLeave(option: ArdOptionSimple, event: MouseEvent): void {
     if (this.disabled() || this.readonly()) return;
-    if (!this.isMouseBeingUsed) return;
+    if (!this.isMouseBeingUsed()) return;
+
     this.itemStorage.unhighlightItem(option);
     event.stopPropagation();
   }

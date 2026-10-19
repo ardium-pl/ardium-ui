@@ -4,12 +4,11 @@ import {
   Component,
   computed,
   contentChild,
-  forwardRef,
+  effect,
   Inject,
   input,
   ViewEncapsulation,
 } from '@angular/core';
-import { NG_VALUE_ACCESSOR } from '@angular/forms';
 import { BooleanLike, coerceBooleanProperty, coerceNumberProperty, NumberLike } from '@ardium-pl/devkit';
 import { _SelectableListComponentBase } from '../_internal/selectable-list-component';
 import { contextToInputs } from '../_internal/utils/context-to-inputs';
@@ -17,7 +16,6 @@ import { ARD_FORM_FIELD_CONTROL } from '../form-field/form-field-child.token';
 import { OneAxisAlignment } from '../types/alignment.types';
 import { ComponentColor } from '../types/colors.types';
 import { ArdOptionSimple } from '../types/item-storage.types';
-import { SimpleItemStorageHost } from './../_internal/item-storages/simple-item-storage';
 import { ARD_SEGMENT_DEFAULTS, ArdSegmentDefaults } from './segment.defaults';
 import { ArdSegmentOptionTemplateDirective } from './segment.directives';
 import { SegmentAppearance, SegmentVariant } from './segment.types';
@@ -36,23 +34,25 @@ interface SegmentRow {
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [
     {
-      provide: NG_VALUE_ACCESSOR,
-      useExisting: forwardRef(() => ArdiumSegmentComponent),
-      multi: true,
-    },
-    {
       provide: ARD_FORM_FIELD_CONTROL,
       useExisting: ArdiumSegmentComponent,
     },
   ],
 })
-export class ArdiumSegmentComponent extends _SelectableListComponentBase implements SimpleItemStorageHost, AfterContentInit {
+export class ArdiumSegmentComponent extends _SelectableListComponentBase implements AfterContentInit {
   override readonly _componentId: string = '104';
   override readonly _componentName: string = 'segment';
 
   protected override readonly _DEFAULTS!: ArdSegmentDefaults;
   constructor(@Inject(ARD_SEGMENT_DEFAULTS) defaults: ArdSegmentDefaults) {
     super(defaults);
+
+    effect(() => {
+      this.itemStorage.validateAllSelectedItemsExist();
+    });
+    effect(() => {
+      this.itemStorage.validateWrittenValue(this.value());
+    });
   }
 
   //! appearance
@@ -101,7 +101,7 @@ export class ArdiumSegmentComponent extends _SelectableListComponentBase impleme
     },
   });
   get itemsInActualRow(): number {
-    return this.itemsPerRow() === Infinity ? this.items.length : this.itemsPerRow();
+    return this.itemsPerRow() === Infinity ? this.itemStorage.options().length : this.itemsPerRow();
   }
 
   //! option template
@@ -123,7 +123,7 @@ export class ArdiumSegmentComponent extends _SelectableListComponentBase impleme
     const itemRows: SegmentRow[] = [];
     let currentRow: ArdOptionSimple[] = [];
     //get all rows
-    for (const item of this.items) {
+    for (const item of this.itemStorage.options()) {
       //add item
       currentRow.push(item);
 

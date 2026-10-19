@@ -21,8 +21,11 @@ export abstract class _FormFieldBase {
   readonly control = contentChild<ArdFormFieldControl>(ARD_FORM_FIELD_CONTROL);
 
   get controlHasError() {
-    const fnOrValue = this.control()?.hasError;
-    return isFunction(fnOrValue) ? fnOrValue() : fnOrValue;
+    const fnOrValueInvalid = this.control()?.invalid;
+    const fnOrValueTouched = this.control()?.touched;
+    const invalid = isFunction(fnOrValueInvalid) ? fnOrValueInvalid() : fnOrValueInvalid;
+    const touched = isFunction(fnOrValueTouched) ? fnOrValueTouched() : fnOrValueTouched;
+    return invalid && touched;
   }
   get controlIsSuccess() {
     const fnOrValue = this.control()?.isSuccess;

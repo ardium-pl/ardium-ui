@@ -113,6 +113,24 @@ export class ArdiumSelectComponent
   readonly _componentId: string = '000';
   readonly itemStorage = new ItemStorage(this);
 
+  //! removed bindings
+  /**
+   * @deprecated Use `[maxLength]` instead.
+   */
+  readonly maxSelectedItems = input<undefined, never>(undefined, { transform: () => undefined });
+  /**
+   * @deprecated Use `[options]` instead.
+   */
+  readonly items = input<undefined, never>(undefined, { transform: () => undefined });
+  /**
+   * @deprecated Use `[value]` instead.
+   */
+  readonly selected = input<undefined, never>(undefined, { transform: () => undefined });
+  /**
+   * @deprecated Use `(valueChange)` instead.
+   */
+  readonly selectedChange = output<never>();
+
   //! privates
   private readonly _isMouseBeingUsed = signal<boolean>(false);
   private readonly _searchBarFocused = signal<boolean>(false);

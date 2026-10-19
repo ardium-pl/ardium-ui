@@ -1,9 +1,10 @@
 import { InjectionToken, Signal } from '@angular/core';
 
 export interface ArdFormFieldControl {
-  hasError: Signal<boolean> | (() => boolean) | boolean;
+  invalid: Signal<boolean> | (() => boolean) | boolean;
+  touched: Signal<boolean> | (() => boolean) | boolean;
   isSuccess?: Signal<boolean> | (() => boolean) | boolean;
-  disabled: Signal<boolean> | (() => boolean) | boolean;
+  disabled?: Signal<boolean> | (() => boolean) | boolean;
   htmlId: Signal<string> | (() => string) | string;
   // removed for now
   // will bring back when I figure out how (and if) to pass it onto the label
