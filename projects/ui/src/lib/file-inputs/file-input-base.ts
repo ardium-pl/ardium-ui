@@ -230,7 +230,7 @@ export abstract class _FileInputComponentBase
   //! event handlers
   onDragover(event: DragEvent): void {
     event.preventDefault();
-    if (this.shouldBeBlocked) {
+    if (this.shouldBeBlocked()) {
       if (!event.dataTransfer) return;
 
       event.dataTransfer.dropEffect = 'none';
@@ -246,7 +246,7 @@ export abstract class _FileInputComponentBase
     this.currentViewState.set('dragover');
   }
   onDragleave(): void {
-    if (this.shouldBeBlocked) return;
+    if (this.shouldBeBlocked()) return;
     if (this.currentViewState() !== 'dragover') return;
 
     this.currentViewState.set(this._beforeDragoverState);
@@ -254,7 +254,7 @@ export abstract class _FileInputComponentBase
   onDrop(event: DragEvent): void {
     event.preventDefault();
 
-    if (this.shouldBeBlocked) return;
+    if (this.shouldBeBlocked()) return;
 
     const filelist = event.dataTransfer?.files;
     if (!filelist) {

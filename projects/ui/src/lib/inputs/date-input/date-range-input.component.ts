@@ -61,9 +61,6 @@ export class ArdiumDateRangeInputComponent extends _AbstractDateInput<DateRange,
 
   readonly serializeFn = input<ArdDateInputSerializeFn<PartialDateRange>>(this._DEFAULTS.rangeSerializeFn);
 
-  override writeValue(v: any): void {
-    // not used anymore
-  }
   override ngOnChanges(changes: SimpleChanges): void {
     super.ngOnChanges(changes);
     if (changes['value']) {

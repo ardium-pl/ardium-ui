@@ -113,6 +113,7 @@ export interface NumberInputModelHost {
   readonly fixedDecimalPlaces: Signal<boolean>;
   readonly decimalSeparator: Signal<string>;
   readonly allowFloat: Signal<boolean>;
+  readonly isFocused: Signal<boolean>;
   readonly inputEl: Signal<ElementRef<HTMLInputElement> | undefined>;
 }
 export class NumberInputModel {
@@ -122,9 +123,13 @@ export class NumberInputModel {
   protected readonly _value = signal<string | null>(null);
   readonly value = this._value.asReadonly();
   readonly stringValue = computed(() => this._value() ?? '');
-  readonly numberValue = computed(() => (this._value() === null ? null : Number(this._value())));
+  readonly numberValue = computed(() => this._valueToNumber(this._value()));
 
-  setValue(v: string | number | null): void {
+  private _valueToNumber(v: string | null): number | null {
+    return v === null ? null : Number(v);
+  }
+
+  setValue(v: string | number | null, shouldUpdate: boolean = false): boolean {
     let stringV = isNumber(v) ? String(v) : v;
 
     if (stringV) {
@@ -136,12 +141,24 @@ export class NumberInputModel {
         }
       }
     }
-    this._value.set(stringV);
-    this._updateInputEl();
+    const oldVal = this.numberValue();
+    if (oldVal !== this._valueToNumber(stringV)) {
+      this._value.set(stringV);
+    }
+    if (shouldUpdate) {
+      this._updateInputEl();
+    }
+    return oldVal !== this._valueToNumber(stringV);
   }
-  updateOnBlur(adjustMinMax?: boolean): void {
+  updateOnBlur(adjustMinMax?: boolean): boolean {
     let v = this._value();
-    if (isNull(v)) return;
+    if (isNull(v)) {
+      return this.setValue(null, true);
+    }
+    const el = this._ardHostCmp.inputEl()?.nativeElement;
+    if (el && el.value === '-') {
+      return this.setValue(null, true);
+    }
 
     v = this._applyStandardConstraints(
       v,
@@ -164,7 +181,7 @@ export class NumberInputModel {
       v = this._fixDecimalPlaces(v);
     }
 
-    this.setValue(v);
+    return this.setValue(v, true);
   }
   private _fixDecimalPlaces(v: string): string {
     const maxDp = this._ardHostCmp.maxDecimalPlaces();
@@ -189,7 +206,7 @@ export class NumberInputModel {
   }
 
   //! write value handlers
-  writeValue(v: any, applyConstraints: boolean): boolean {
+  writeValue(v: any, applyConstraints: boolean, shouldUpdate: boolean = false): boolean {
     if (!isNumber(v) && !isAnyString(v) && !isNull(v)) {
       //warn when using non-string/non-null value
       console.warn(
@@ -198,26 +215,25 @@ export class NumberInputModel {
       //normalize the value
       v = v?.toString?.() ?? String(v);
     }
-    // check if value is already the same as current value
-    if (v === null ? v === this._value() : Number(v) === this.numberValue()) return false;
-
-    v = v === null ? null : String(v);
-    return this._writeValue(v, applyConstraints);
+    v = !isDefined(v) ? null : String(v);
+    return this._writeValue(v, applyConstraints, shouldUpdate);
   }
-  protected _writeValue(v: string | null, applyConstraints: boolean): boolean {
+  protected _writeValue(v: string | null, applyConstraints: boolean, shouldUpdate: boolean = false): boolean {
     //constraints
     if (applyConstraints) {
       v = this._applyStandardConstraints(v, this._ardHostCmp.minMaxBehavior() === ArdNumberInputMinMaxBehavior.AdjustOnInput);
     }
 
-    if (v === '') v = null;
+    if (v === '' || v === '-') v = null;
     //update view
     const oldVal = this._value();
-    this.setValue(v);
-    return oldVal !== v;
+    if (oldVal === v) return false;
+
+    this.setValue(v, shouldUpdate);
+    return true;
   }
   rewriteValueAfterHostUpdate(): void {
-    this._writeValue(this._value(), false);
+    this._writeValue(this._value(), false, true);
   }
 
   //! input element methods

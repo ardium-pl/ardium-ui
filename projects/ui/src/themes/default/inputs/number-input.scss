@@ -14,14 +14,8 @@
     --ard-number-input-line-height: 1.25;
     --ard-number-input-line-height-compact: 1;
     --ard-number-input-font-weight: 400;
-    // --ard-number-input-padding-top: ;
-    // --ard-number-input-padding-right: ;
-    // --ard-number-input-padding-bottom: ;
-    // --ard-number-input-padding-left: ;
-    // --ard-number-input-padding-top-compact: ;
-    // --ard-number-input-padding-right-compact: ;
-    // --ard-number-input-padding-bottom-compact: ;
-    // --ard-number-input-padding-left-compact: ;
+    // --ard-number-input-padding: ;
+    // --ard-number-input-padding-compact: ;
     // --ard-number-input-color: ;
     // --ard-number-input-placeholder-color: ;
     --ard-number-input-placeholder-opacity: 60%;
@@ -69,13 +63,10 @@
       align-items: center;
       height: 100%;
       gap: var(--ard-number-input-gap, 0.375rem);
+      padding: var(--ard-number-input-padding, var(--ard-form-field-padding, 0 0.375rem));
     }
     .ard-input-container {
       position: relative;
-      padding-left: var(--ard-number-input-padding-left, var(--ard-form-field-padding-left, 0.375rem));
-      padding-right: var(--ard-number-input-padding-right, var(--ard-form-field-padding-right, 0.375rem));
-      padding-top: var(--ard-number-input-padding-top, var(--ard-form-field-padding-top, 0));
-      padding-bottom: var(--ard-number-input-padding-bottom, var(--ard-form-field-padding-bottom, 0));
     }
 
     //! prefix & suffix
@@ -85,12 +76,6 @@
       max-height: 100%;
       display: flex;
       align-items: center;
-    }
-    .ard-number-input-prefix-container {
-      padding-left: var(--ard-number-input-gap, 0.375rem);
-    }
-    .ard-number-input-suffix-container {
-      padding-right: var(--ard-number-input-gap, 0.375rem);
     }
 
     //! buttons
@@ -180,10 +165,7 @@
     //! compact
     &.ard-compact {
       .ard-number-input-wrapper {
-        padding-left: var(--ard-number-input-padding-left-compact, var(--ard-form-field-padding-left-compact, 0.375rem));
-        padding-right: var(--ard-number-input-padding-right-compact, var(--ard-form-field-padding-right-compact, 0.375rem));
-        padding-top: var(--ard-number-input-padding-top-compact, var(--ard-form-field-padding-top-compact, 0));
-        padding-bottom: var(--ard-number-input-padding-bottom-compact, var(--ard-form-field-padding-bottom-compact, 0));
+        padding: var(--ard-number-input-padding-compact, var(--ard-form-field-padding, 0 0.375rem));
       }
       .ard-quick-change-button {
         min-width: var(--ard-number-input-height-compact, var(--ard-form-field-height-compact, 1.6875rem));

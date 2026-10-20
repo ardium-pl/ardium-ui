@@ -1,10 +1,10 @@
 <div class="master flex">
   <span class="title">Simplest number input</span>
-  <ard-number-input/>
+  <ard-number-input />
 </div>
 <div class="master flex">
   <span class="title">Simplest number input compact</span>
-  <ard-number-input compact/>
+  <ard-number-input compact />
 </div>
 <div class="master flex">
   <span class="title">Number input with min, max, value, placeholder</span>
@@ -12,7 +12,7 @@
   <ard-number-input
     min="-10"
     max="10"
-    value="5"
+    [value]="5"
     placeholder="Foo"
   />
 </div>
@@ -21,13 +21,16 @@
   <ard-number-input
     min="0"
     max="100"
-    value="40"
+    [value]="40"
     stepSize="5"
   />
 </div>
 <div class="master flex">
   <span class="title">Readonly number input</span>
-  <ard-number-input readonly value="5"/>
+  <ard-number-input
+    readonly
+    [value]="5"
+  />
 </div>
 <div class="master flex">
   <span class="title">Compact & with error number input</span>
@@ -42,9 +45,7 @@
     min="-10"
     max="10"
     [(value)]="value"
-    (ngModelChange)="log('ngModelChange', $event)"
     (valueChange)="log('valueChange', $event)"
-    (change)="log('change', $event)"
     (focus)="log('focus', $event)"
     (blur)="log('blur', $event)"
     (quickChange)="log('quickChange', $event)"
@@ -60,7 +61,7 @@
 </div>
 <div class="master flex">
   <span class="title">Number input with no buttons</span>
-  <ard-number-input noButtons/>
+  <ard-number-input noButtons />
 </div>
 <div class="master flex">
   <span class="title">Number input with no buttons and placeholder (left)</span>
@@ -78,6 +79,89 @@
     alignText="left"
     compact
   />
+</div>
+<div class="master flex">
+  <span class="title">Number input spacings and paddings</span>
+  <ard-number-input
+    placeholder="Enter a number"
+    alignText="left"
+  />
+  <ard-number-input
+    placeholder="Enter a number"
+    alignText="left"
+    [value]="89"
+  />
+  <ard-number-input
+    placeholder="Enter a number"
+    alignText="left"
+    [value]="89"
+  >
+    <ng-template ard-prefix-tmp>$</ng-template>
+    <ng-template ard-suffix-tmp>.00</ng-template>
+  </ard-number-input>
+  <ard-number-input
+    noButtons
+    placeholder="Enter a number"
+    alignText="left"
+  />
+  <ard-number-input
+    noButtons
+    placeholder="Enter a number"
+    alignText="left"
+    [value]="89"
+  />
+  <ard-number-input
+    noButtons
+    placeholder="Enter a number"
+    alignText="left"
+    [value]="89"
+  >
+    <ng-template ard-prefix-tmp>$</ng-template>
+    <ng-template ard-suffix-tmp>.00</ng-template>
+  </ard-number-input>
+  <ard-number-input
+    compact
+    placeholder="Enter a number"
+    alignText="left"
+  />
+  <ard-number-input
+    compact
+    placeholder="Enter a number"
+    alignText="left"
+    [value]="89"
+  />
+  <ard-number-input
+    compact
+    placeholder="Enter a number"
+    alignText="left"
+    [value]="89"
+  >
+    <ng-template ard-prefix-tmp>$</ng-template>
+    <ng-template ard-suffix-tmp>.00</ng-template>
+  </ard-number-input>
+  <ard-number-input
+    compact
+    noButtons
+    placeholder="Enter a number"
+    alignText="left"
+  />
+  <ard-number-input
+    compact
+    noButtons
+    placeholder="Enter a number"
+    alignText="left"
+    [value]="89"
+  />
+  <ard-number-input
+    compact
+    noButtons
+    placeholder="Enter a number"
+    alignText="left"
+    [value]="89"
+  >
+    <ng-template ard-prefix-tmp>$</ng-template>
+    <ng-template ard-suffix-tmp>.00</ng-template>
+  </ard-number-input>
 </div>
 <div class="master flex">
   <span class="title">Number input with [keepFocusOnQuickChange]</span>
@@ -108,7 +192,7 @@
 <div class="master flex">
   <span class="title">Number input with max 2 decimal places (fixed amount)</span>
   <ard-number-input
-    min="0"
+    min="-10"
     max="10"
     stepSize="0.05"
     allowFloat
@@ -164,7 +248,7 @@
   <p>Increase the value by one and then wait 3 secs to be able to increase again</p>
   <ard-number-input
     keepFocusOnQuickChangeButton
-    value="0"
+    [value]="0"
     (valueChange)="increaseMax()"
     [max]="maxSignal()"
   />

@@ -13,7 +13,7 @@ import {
   viewChild,
   ViewEncapsulation,
 } from '@angular/core';
-import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { NG_VALUE_ACCESSOR } from '@angular/forms';
 import { BooleanLike, coerceBooleanProperty, coerceNumberProperty } from '@ardium-pl/devkit';
 import { _FormFieldComponentBase } from '../../_internal/form-field-component';
 import { contextToInputs } from '../../_internal/utils/context-to-inputs';
@@ -51,7 +51,7 @@ import { HexInputModel, HexInputModelHost } from './hex-input.model';
 })
 export class ArdiumHexInputComponent
   extends _FormFieldComponentBase
-  implements ControlValueAccessor, HexInputModelHost, AfterViewInit
+  implements HexInputModelHost, AfterViewInit
 {
   protected override readonly _DEFAULTS!: ArdHexInputDefaults;
   constructor(@Inject(ARD_HEX_INPUT_DEFAULTS) defaults: ArdHexInputDefaults) {
@@ -177,7 +177,6 @@ export class ArdiumHexInputComponent
   protected _emitInput(): void {
     const v = this.inputModel.hashSignValue();
     this.inputEvent.emit(v);
-    this._onChangeRegistered?.(v);
     this.valueChange.emit(v);
   }
 

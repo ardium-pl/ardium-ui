@@ -3,7 +3,7 @@
   [ngClass]="ngClasses()"
   [class.ard-has-error]="hasError()"
   [class.ard-is-success]="isSuccess()"
-  [class.ard-has-value]="value"
+  [class.ard-has-value]="value() !== null"
   (mousedown)="$event.preventDefault()"
   (mouseup)="onMouseup()"
 >
@@ -56,7 +56,10 @@
             <div class="ard-placeholder">{{ plchldr }}</div>
           </ng-template>
 
-          <ng-template [ngTemplateOutlet]="placeholderTemplate()?.template || defaultPlaceholderTemplate" />
+          <ng-template
+            [ngTemplateOutlet]="placeholderTemplate()?.template || defaultPlaceholderTemplate"
+            [ngTemplateOutletContext]="placeholderTemplateContext()"
+          />
         }
       }
 

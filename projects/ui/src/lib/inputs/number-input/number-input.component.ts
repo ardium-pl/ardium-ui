@@ -6,16 +6,15 @@ import {
   contentChild,
   effect,
   ElementRef,
-  forwardRef,
   Inject,
-  Input,
   input,
+  model,
   output,
   untracked,
   viewChild,
   ViewEncapsulation,
 } from '@angular/core';
-import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { FormValueControl } from '@angular/forms/signals';
 import { BooleanLike, coerceBooleanProperty, coerceNumberProperty, NumberLike } from '@ardium-pl/devkit';
 import { roundToPrecision } from 'more-rounding';
 import { isDefined } from 'simple-bool';
@@ -28,7 +27,8 @@ import { OneAxisAlignment } from '../../types/alignment.types';
 import { ArdPlaceholderContext } from '../../types/templates.types';
 import { FormElementAppearance, FormElementVariant } from '../../types/theming.types';
 import { Nullable } from '../../types/utility.types';
-import { NumberInputModel, NumberInputModelHost } from '../input-utils';
+import { NumberInputModelHost } from '../input-utils';
+import { NumberInputModel2 } from './number-input-model';
 import { ARD_NUMBER_INPUT_DEFAULTS, ArdNumberInputDefaults } from './number-input.defaults';
 import {
   ArdNumberInputPlaceholderTemplateDirective,
@@ -46,11 +46,6 @@ import { ArdNumberInputMinMaxBehavior } from './number-input.types';
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [
     {
-      provide: NG_VALUE_ACCESSOR,
-      useExisting: forwardRef(() => ArdiumNumberInputComponent),
-      multi: true,
-    },
-    {
       provide: ARD_FORM_FIELD_CONTROL,
       useExisting: ArdiumNumberInputComponent,
     },
@@ -58,7 +53,7 @@ import { ArdNumberInputMinMaxBehavior } from './number-input.types';
 })
 export class ArdiumNumberInputComponent
   extends _FormFieldComponentBase
-  implements ControlValueAccessor, NumberInputModelHost, AfterViewInit
+  implements NumberInputModelHost, AfterViewInit, Omit<FormValueControl<number | null>, 'readonly' | 'disabled' | 'required'>
 {
   protected override readonly _DEFAULTS!: ArdNumberInputDefaults;
   constructor(@Inject(ARD_NUMBER_INPUT_DEFAULTS) defaults: ArdNumberInputDefaults) {
@@ -78,23 +73,39 @@ export class ArdiumNumberInputComponent
     effect(() => {
       this.decimalSeparator();
       // calling rewrite ensures element value includes new separator
-      untracked(() => this.inputModel.rewriteValueAfterHostUpdate());
+      // untracked(() => this.inputModel.rewriteValueAfterHostUpdate());
+    });
+    effect(() => {
+      // if (this._shouldIgnoreNextValueChange) {
+      //   this._shouldIgnoreNextValueChange = false;
+      //   return;
+      // }
+      const v = this.value();
+      this.allowFloat();
+      this.decimalSeparator();
+      this.maxDecimalPlaces();
+      this.fixedDecimalPlaces();
+      untracked(() => {
+        this.inputModel.updateValueOnChange(v, this.minMaxBehavior() === ArdNumberInputMinMaxBehavior.AdjustOnInput);
+        // this.inputModel.writeValue(v, false, true);
+        // this.inputModel.updateOnBlur(true);
+        // this.value.set(this.inputModel.numberValue());
+      });
+    });
+    effect(() => {
+      const v = this.inputModel.numberValue();
+      untracked(() => {
+        this.value.set(v);
+      });
     });
   }
 
   //! input view
   readonly inputEl = viewChild<ElementRef<HTMLInputElement>>('textInput');
 
-  protected readonly inputModel = new NumberInputModel(this);
-  private _wasViewInit = false;
+  protected readonly inputModel = new NumberInputModel2(this);
   ngAfterViewInit(): void {
     this._setInputAttributes();
-    this._wasViewInit = true;
-    //set the value
-    if (this._valueBeforeInit) {
-      this.writeValue(this._valueBeforeInit);
-      delete this._valueBeforeInit;
-    }
   }
 
   //! placeholder
@@ -164,30 +175,10 @@ export class ArdiumNumberInputComponent
   //! other inputs
   readonly inputAttrs = input<Record<string, any>>({});
 
-  //! control value accessor's write value implementation
-  writeValue(v: any) {
-    this.inputModel.writeValue(v, false);
-
-    if (this.isFocused()) return;
-    this.inputModel.updateOnBlur(true);
-  }
-
   //! value two-way binding
-  protected _valueBeforeInit?: string | null = null;
-  @Input()
-  set value(v: string | number | null) {
-    if (typeof v === 'number') v = v.toString();
-    if (!this._wasViewInit) {
-      this._valueBeforeInit = v;
-      return;
-    }
-    this.writeValue(v);
-  }
-  readonly valueChange = output<number | null>();
+  readonly value = model<number | null>(null);
 
   //! event emitters
-  readonly inputEvent = output<number | null>({ alias: 'input' });
-  readonly changeEvent = output<number | null>({ alias: 'change' });
   readonly clearEvent = output<MouseEvent>({ alias: 'clear' });
   readonly quickChangeEvent = output<{
     readonly direction: 1 | -1;
@@ -195,11 +186,13 @@ export class ArdiumNumberInputComponent
   }>({ alias: 'quickChange' });
 
   //! min/max and number type
-  readonly min = input<number | null, NumberLike>(this._DEFAULTS.min, {
-    transform: v => (v === null ? null : coerceNumberProperty(v, this._DEFAULTS.min)),
+  // @ts-expect-error
+  readonly min = input<number, NumberLike>(this._DEFAULTS.min ?? -Infinity, {
+    transform: v => coerceNumberProperty(v, this._DEFAULTS.min ?? -Infinity),
   });
-  readonly max = input<number | null, NumberLike>(this._DEFAULTS.max, {
-    transform: v => (v === null ? null : coerceNumberProperty(v, this._DEFAULTS.max)),
+  // @ts-expect-error
+  readonly max = input<number, NumberLike>(this._DEFAULTS.max ?? Infinity, {
+    transform: v => coerceNumberProperty(v, this._DEFAULTS.max ?? Infinity),
   });
 
   readonly minMaxBehavior = input<ArdNumberInputMinMaxBehavior>(this._DEFAULTS.minMaxBehavior);
@@ -274,7 +267,8 @@ export class ArdiumNumberInputComponent
     //9 is an arbitrary number that just works well. ¯\_(ツ)_/¯
     const newValuePrecise = roundToPrecision(newValue, 9);
 
-    this.writeValue(newValuePrecise);
+    // this.inputModel.writeValue(newValuePrecise, true, true);
+    this.inputModel.updateValueWithCleanup(String(newValuePrecise), true);
     this.quickChangeEvent.emit({ direction, value: newValuePrecise });
     this._emitChange();
     this._emitTouched();
@@ -311,16 +305,21 @@ export class ArdiumNumberInputComponent
   });
 
   //! event handlers
+  private _shouldIgnoreNextValueChange = false;
   onInput(newVal: string): void {
     if (this.disabled() || this.readonly()) return;
 
-    const valueHasChanged = this.inputModel.writeValue(newVal, true);
-    if (!valueHasChanged) return;
-    this._emitInput();
-  }
-  protected _emitInput(): void {
-    this.inputEvent.emit(this.inputModel.numberValue());
-    this._emitChange();
+    if (newVal === '-') {
+      const min = this.min();
+      if (min !== null && min >= 0) {
+        this.inputModel.updateValueOnInput('', this.minMaxBehavior() === ArdNumberInputMinMaxBehavior.AdjustOnInput);
+      }
+      return;
+    }
+    // this._shouldIgnoreNextValueChange = true;
+    // this.inputModel.writeValue(newVal, true, false);
+    // this._emitChange();
+    this.inputModel.updateValueOnInput(newVal, this.minMaxBehavior() === ArdNumberInputMinMaxBehavior.AdjustOnInput);
   }
 
   //focus, blur, change
@@ -332,7 +331,11 @@ export class ArdiumNumberInputComponent
     if (this.disabled() || this.readonly()) return;
     this.onBlur(event);
 
-    this.inputModel.updateOnBlur();
+    // const valueChanged = this.inputModel.updateOnBlur();
+    // if (valueChanged) {
+    //   this._emitChange();
+    // }
+    this.inputModel.updateValueWithCleanup(this.inputModel.stringValue(), this.minMaxBehavior() === ArdNumberInputMinMaxBehavior.AdjustOnBlur);
   }
   //change
   onChange(event: Event): void {
@@ -341,9 +344,7 @@ export class ArdiumNumberInputComponent
   }
   protected _emitChange(): void {
     const v = this.inputModel.numberValue();
-    this.valueChange.emit(v);
-    this.changeEvent.emit(v);
-    this._onChangeRegistered?.(v);
+    this.value.set(v);
   }
 
   //smart focus
@@ -359,14 +360,14 @@ export class ArdiumNumberInputComponent
   // copy
   onCopy(event: ClipboardEvent): void {
     if (
-      this.value &&
+      this.value() &&
       //does the selection cover the entire input
       ((this.inputEl()?.nativeElement.selectionStart === 0 &&
         this.inputEl()?.nativeElement.selectionEnd === this.inputEl()?.nativeElement.value.length) ||
         //or is zero-wide
         this.inputEl()?.nativeElement.selectionStart === this.inputEl()?.nativeElement.selectionEnd)
     ) {
-      event.clipboardData?.setData('text/plain', String(this.value));
+      event.clipboardData?.setData('text/plain', String(this.value()));
       event.preventDefault();
     }
   }

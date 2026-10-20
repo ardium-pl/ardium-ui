@@ -14,7 +14,7 @@ import {
   model,
   viewChild,
 } from '@angular/core';
-import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { NG_VALUE_ACCESSOR } from '@angular/forms';
 import { BooleanLike, coerceBooleanProperty, coerceNumberProperty } from '@ardium-pl/devkit';
 import { isAnyString, isDefined } from 'simple-bool';
 import { _FormFieldComponentBase } from '../../_internal/form-field-component';
@@ -51,7 +51,7 @@ import { PasswordInputRevealButtonContext } from './password-input.types';
     },
   ],
 })
-export class ArdiumPasswordInputComponent extends _FormFieldComponentBase implements ControlValueAccessor, OnInit, OnDestroy {
+export class ArdiumPasswordInputComponent extends _FormFieldComponentBase implements OnInit, OnDestroy {
   protected override readonly _DEFAULTS!: ArdPasswordInputDefaults;
   constructor(@Inject(ARD_PASSWORD_INPUT_DEFAULTS) defaults: ArdPasswordInputDefaults) {
     super(defaults);
@@ -187,7 +187,7 @@ export class ArdiumPasswordInputComponent extends _FormFieldComponentBase implem
   }
   protected _emitChange(): void {
     const v = this.value();
-    this._onChangeRegistered?.(v);
+    // this._onChangeRegistered?.(v);
   }
   //focus, blur, change
   onChange(event: Event): void {

@@ -53,7 +53,29 @@ const int: ArdTransformerFn = (currentText: string, previousText: string, caretP
   }
   return obj;
 };
+const positiveInt: ArdTransformerFn = (currentText: string, previousText: string, caretPos: number) => {
+  const regexes: ([RegExp] | [RegExp, string] | [RegExp, string, number])[] = [[/[^0-9]/]];
+  let obj = { text: currentText, caretPos };
+  for (const arr of regexes) {
+    const [regex, replace, caretModif] = arr;
+    obj = new RegExpTransformer(regex, replace, caretModif).apply(obj.text, previousText, obj.caretPos);
+  }
+  return obj;
+};
 const float: ArdTransformerFn = (currentText: string, previousText: string, caretPos: number) => {
+  const regexes: ([RegExp] | [RegExp, string] | [RegExp, string, number])[] = [
+    [/[^0-9.]/],
+    [/\.(.*)\./, '$1.'],
+    [/^\./, '$10.'],
+  ];
+  let obj = { text: currentText, caretPos };
+  for (const arr of regexes) {
+    const [regex, replace, caretModif] = arr;
+    obj = new RegExpTransformer(regex, replace, caretModif).apply(obj.text, previousText, obj.caretPos);
+  }
+  return obj;
+};
+const positiveFloat: ArdTransformerFn = (currentText: string, previousText: string, caretPos: number) => {
   const regexes: ([RegExp] | [RegExp, string] | [RegExp, string, number])[] = [
     [/[^0-9.-]/],
     [/(.+)-/, '$1'],
@@ -71,5 +93,7 @@ export const ArdTransformer = {
   ToUpper: toUpper,
   ToLower: toLower,
   Integer: int,
+  PositiveInteger: positiveInt,
   Float: float,
+  PositiveFloat: positiveFloat,
 } as const;

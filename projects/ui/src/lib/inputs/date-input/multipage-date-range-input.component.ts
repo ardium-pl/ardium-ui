@@ -130,9 +130,6 @@ export class ArdiumMultipageDateRangeInputComponent extends _AbstractDateInput<D
     this.highlightedDate.set(date);
   }
 
-  override writeValue(v: any): void {
-    // not used anymore
-  }
   override ngOnChanges(changes: SimpleChanges): void {
     super.ngOnChanges(changes);
     if (changes['value']) {
