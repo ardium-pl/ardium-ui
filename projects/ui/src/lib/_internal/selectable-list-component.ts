@@ -1,5 +1,4 @@
 import { Directive, HostBinding, HostListener, Input, computed, effect, input, model, output, signal } from '@angular/core';
-import { ControlValueAccessor } from '@angular/forms';
 import { BooleanLike, coerceArrayProperty, coerceBooleanProperty, coerceNumberProperty } from '@ardium-pl/devkit';
 import { ArdFormFieldControl } from '../form-field/form-field-child.token';
 import { ArdOptionSimple, CompareWithFn, OptionContext } from '../types/item-storage.types';
@@ -32,7 +31,7 @@ export const _selectableListComponentDefaults: _SelectableListComponentDefaults 
 @Directive()
 export abstract class _SelectableListComponentBase
   extends _FormFieldComponentBase
-  implements ControlValueAccessor, SimpleItemStorageHost, ArdFormFieldControl
+  implements SimpleItemStorageHost, ArdFormFieldControl
 {
   protected override readonly _DEFAULTS!: _SelectableListComponentDefaults;
 
@@ -121,14 +120,6 @@ export abstract class _SelectableListComponentBase
     transform: v => coerceNumberProperty(v, undefined),
   });
 
-  //! control value accessor
-  writeValue(ngModel: any[]): void {
-    // not used anymore
-  }
-  protected _emitChange(): void {
-    // not used anymore
-  }
-
   //! change & touch event emitters
 
   @HostBinding('class.ard-touched')
@@ -207,7 +198,6 @@ export abstract class _SelectableListComponentBase
 
     if (selected.length > 0) {
       this.addEvent.emit(selected);
-      this._emitChange();
     }
   }
   unselectItem(...items: ArdOptionSimple[]): void {
@@ -215,8 +205,6 @@ export abstract class _SelectableListComponentBase
     const unselected = this.itemStorage.unselectItem(...items);
 
     if (unselected.length > 0) this.removeEvent.emit(unselected);
-
-    this._emitChange();
   }
 
   //! highligh-related

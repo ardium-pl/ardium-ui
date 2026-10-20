@@ -1,24 +1,24 @@
 import { AutofillMonitor } from '@angular/cdk/text-field';
 import {
-    AfterViewInit,
-    ChangeDetectionStrategy,
-    Component,
-    ElementRef,
-    Inject,
-    Input,
-    OnDestroy,
-    OnInit,
-    ViewEncapsulation,
-    computed,
-    effect,
-    forwardRef,
-    inject,
-    input,
-    output,
-    signal,
-    viewChildren,
+  AfterViewInit,
+  ChangeDetectionStrategy,
+  Component,
+  ElementRef,
+  Inject,
+  Input,
+  OnDestroy,
+  OnInit,
+  ViewEncapsulation,
+  computed,
+  effect,
+  forwardRef,
+  inject,
+  input,
+  output,
+  signal,
+  viewChildren,
 } from '@angular/core';
-import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { NG_VALUE_ACCESSOR } from '@angular/forms';
 import { BooleanLike, coerceBooleanProperty } from '@ardium-pl/devkit';
 import { Subscription } from 'rxjs';
 import { _FormFieldComponentBase } from '../../_internal/form-field-component';
@@ -50,7 +50,7 @@ import { DigitInputModelHost } from './digit-input.utils';
 })
 export class ArdiumDigitInputComponent
   extends _FormFieldComponentBase
-  implements ControlValueAccessor, DigitInputModelHost, OnInit, AfterViewInit, OnDestroy
+  implements DigitInputModelHost, OnInit, AfterViewInit, OnDestroy
 {
   protected override readonly _DEFAULTS!: ArdDigitInputDefaults;
   constructor(@Inject(ARD_DIGIT_INPUT_DEFAULTS) defaults: ArdDigitInputDefaults) {
@@ -295,7 +295,7 @@ export class ArdiumDigitInputComponent
   }
   protected _emitChange(): void {
     const v = this.emittableValue();
-    if (!this.outputControlValueAccessorOnFinish() || this.model.isValueFull()) this._onChangeRegistered?.(v);
+    // if (!this.outputControlValueAccessorOnFinish() || this.model.isValueFull()) this._onChangeRegistered?.(v);
     this.valueChange.emit(v);
     if (this.model.isValueFull()) {
       this.finishedValue.emit(v);

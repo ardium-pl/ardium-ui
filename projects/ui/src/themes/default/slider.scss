@@ -217,7 +217,7 @@
 
         &::before {
           bottom: 0;
-          border-top-color: var(--ard-slider-label-b, var(--ard-text3));
+          border-top-color: var(--ard-slider-label-bg, #{ARD.$text3});
           transform: translate(-50%, 100%);
         }
       }
@@ -229,7 +229,7 @@
 
         &::before {
           top: 0;
-          border-bottom-color: var(--ard-slider-label-bg, var(--ard-text3));
+          border-bottom-color: var(--ard-slider-label-bg, #{ARD.$text3});
           transform: translate(-50%, -100%);
         }
       }

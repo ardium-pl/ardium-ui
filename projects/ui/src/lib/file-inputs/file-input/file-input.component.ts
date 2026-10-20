@@ -10,7 +10,6 @@ import {
   output,
   untracked
 } from '@angular/core';
-import { NG_VALUE_ACCESSOR } from '@angular/forms';
 import { BooleanLike, coerceBooleanProperty } from '@ardium-pl/devkit';
 import { contextToInputs } from '../../_internal/utils/context-to-inputs';
 import { ARD_FORM_FIELD_CONTROL } from '../../form-field/form-field-child.token';
@@ -37,11 +36,6 @@ import {
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [
     {
-      provide: NG_VALUE_ACCESSOR,
-      useExisting: forwardRef(() => ArdiumFileInputComponent),
-      multi: true,
-    },
-    {
       provide: ARD_FORM_FIELD_CONTROL,
       useExisting: forwardRef(() => ArdiumFileInputComponent),
     },
@@ -66,7 +60,7 @@ export class ArdiumFileInputComponent extends _FileInputComponentBase {
 
   //! root element classes
   readonly ngClasses = computed<string>(() =>
-    [`ard-color-${this.color()}`, `ard-state-${this.currentViewState()}`, this.value ? 'ard-has-value' : ''].join(' ')
+    [`ard-color-${this.color()}`, `ard-state-${this.currentViewState()}`, this.value() ? 'ard-has-value' : ''].join(' ')
   );
 
   //! clear button
@@ -74,9 +68,8 @@ export class ArdiumFileInputComponent extends _FileInputComponentBase {
 
   readonly clearButtonTitle = input<string>(this._DEFAULTS.clearButtonTitle);
 
-  get shouldShowClearButton(): boolean {
-    return this.clearable() && !this.disabled() && !this.readonly() && Boolean(this.value);
-  }
+  readonly shouldShowClearButton = computed<boolean>(() => this.clearable() && !this.disabled() && !this.readonly() && Boolean(this.value()));
+
   onClearButtonClick(event: MouseEvent): void {
     if (this.disabled() || this.readonly()) return;
 
@@ -90,8 +83,7 @@ export class ArdiumFileInputComponent extends _FileInputComponentBase {
     if (this.disabled() || this.readonly()) return;
     if (!this.clearable()) return;
 
-    this.writeValue(null);
-    this._emitChange();
+    this.value.set(null);
     this.clearEvent.emit();
   }
 
@@ -122,7 +114,7 @@ export class ArdiumFileInputComponent extends _FileInputComponentBase {
     },
   }));
   readonly uploadedContext = computed<FileInputFilesContext>(() => {
-    const files = this._value()!;
+    const files = this._valueAsArray()!;
     return {
       $implicit: files,
       amount: files.length,

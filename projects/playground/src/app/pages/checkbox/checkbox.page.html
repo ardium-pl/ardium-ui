@@ -30,6 +30,10 @@
   <ard-checkbox [formControl]="control" />
   <p>Form control value: {{ control.value }}</p>
   <p>Form control touched: {{ control.touched }}</p>
+  <p>Form control disabled: {{ control.disabled }}</p>
+  <button (click)="control.disabled ? control.enable() : control.disable()">
+    {{ control.disabled ? 'Enable' : 'Disable' }} control
+  </button>
 </div>
 <div class="master">
   <span class="title">Checkbox with signal forms</span>

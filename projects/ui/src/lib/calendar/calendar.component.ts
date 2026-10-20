@@ -1,12 +1,4 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  computed,
-  effect,
-  Inject,
-  model,
-  ViewEncapsulation
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, effect, Inject, model, ViewEncapsulation } from '@angular/core';
 import { isDefined } from 'simple-bool';
 import { ARD_FORM_FIELD_CONTROL } from '../form-field/form-field-child.token';
 import { _AbstractCalendar } from './abstract-calendar';
@@ -40,23 +32,18 @@ export class ArdiumCalendarComponent extends _AbstractCalendar<Date> {
         return;
       }
       this.value.set(v);
-      this._emitChange();
+    });
+    effect(() => {
+      const v = this.value();
+      if (isDefined(v) && !(v instanceof Date)) {
+        console.error(new Error(`ARD-NF2003: <ard-calendar> [writeValue] expected a Date or null, got "${v}".`));
+      }
     });
   }
 
   readonly value = model<Date | null>(null);
 
   readonly endDate = computed<null>(() => null);
-
-  override writeValue(v: any): void {
-    if (v instanceof Date) {
-      this.selectionStart.set(v);
-    } else if (!isDefined(v)) {
-      this.selectionStart.set(null);
-    } else {
-      console.error(new Error(`ARD-NF2003: <ard-calendar> [writeValue] expected a Date or null, got "${v}".`));
-    }
-  }
 
   protected getValueForEmit(): Date | null {
     return this.value();

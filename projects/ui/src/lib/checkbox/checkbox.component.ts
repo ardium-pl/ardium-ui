@@ -8,7 +8,7 @@ import {
   model,
   OnChanges,
   SimpleChanges,
-  ViewEncapsulation,
+  ViewEncapsulation
 } from '@angular/core';
 import { FormValueControl } from '@angular/forms/signals';
 import { contextToInputs } from '../_internal/utils/context-to-inputs';
@@ -76,7 +76,6 @@ export class ArdiumCheckboxComponent
     this.internalState.set(newState);
     this.value.set(this.internalState() === CheckboxState.Selected);
 
-    this._emitChange();
     this._emitTouched();
   }
 

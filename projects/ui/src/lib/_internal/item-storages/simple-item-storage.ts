@@ -283,8 +283,6 @@ export class SimpleItemStorage {
     const itemsToAdd = new Set<any>();
     const itemsSelected: any[] = [];
 
-    console.log('itemsLeftUntilLimit', itemsLeftUntilLimit);
-
     for (const item of items) {
       if (item.selected) continue;
       itemsSelectedCount++;

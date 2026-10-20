@@ -36,16 +36,6 @@ export class ArdiumRadioComponent extends _FocusableComponentBase {
 
   readonly htmlId = input<string>(Random.id());
 
-  /**
-   * Emits all select-state-related events.
-   */
-  protected _emitChange() {
-    if (this.selected()) this.selectEvent.emit();
-    else this.unselectEvent.emit();
-
-    this.selectedChange.emit(this.selected());
-    this.changeEvent.emit(this.selected());
-  }
   protected _emitTouched() {
     this.touchedEvent.emit();
   }
@@ -94,7 +84,6 @@ export class ArdiumRadioComponent extends _FocusableComponentBase {
   toggleSelected() {
     if (this.disabled() || this.readonly()) return;
     this.selected.update(v => !v);
-    this._emitChange();
     this._emitTouched();
   }
 
@@ -104,7 +93,6 @@ export class ArdiumRadioComponent extends _FocusableComponentBase {
   select() {
     if (this.disabled() || this.readonly()) return;
     this.selected.set(true);
-    this._emitChange();
     this._emitTouched();
   }
   /**
@@ -113,7 +101,6 @@ export class ArdiumRadioComponent extends _FocusableComponentBase {
   unselect() {
     if (this.disabled() || this.readonly()) return;
     this.selected.set(false);
-    this._emitChange();
     this._emitTouched();
   }
 
@@ -135,7 +122,6 @@ export class ArdiumRadioComponent extends _FocusableComponentBase {
     if (this.disabled() || this.readonly()) return;
     this.focus();
     this.selected.set(true);
-    this._emitChange();
   }
 
   //! radio-group access points

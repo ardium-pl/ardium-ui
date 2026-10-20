@@ -1,5 +1,4 @@
 import { Directive, input } from '@angular/core';
-import { ControlValueAccessor } from '@angular/forms';
 import { FormUiControl } from '@angular/forms/signals';
 import { BooleanLike, coerceBooleanProperty } from '@ardium-pl/devkit';
 import { ArdFormFieldControl } from '../form-field/form-field-child.token';
@@ -22,7 +21,7 @@ export const _formFieldComponentDefaults: _FormFieldComponentDefaults = {
 @Directive()
 export abstract class _FormFieldComponentBase
   extends _NgModelComponentBase
-  implements ControlValueAccessor, ArdFormFieldControl, Omit<FormUiControl<any>, 'disabled' | 'readonly'>
+  implements ArdFormFieldControl, Omit<FormUiControl<any>, 'disabled' | 'readonly'>
 {
   protected override readonly _DEFAULTS!: _FormFieldComponentDefaults;
 

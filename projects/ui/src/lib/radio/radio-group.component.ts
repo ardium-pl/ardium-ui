@@ -1,24 +1,20 @@
 import {
-  AfterContentInit,
   ChangeDetectionStrategy,
   Component,
   HostBinding,
-  Input,
   OnDestroy,
   OutputRefSubscription,
   ViewEncapsulation,
   computed,
   contentChildren,
   effect,
-  forwardRef,
   model,
-  output,
+  untracked
 } from '@angular/core';
-import { NG_VALUE_ACCESSOR } from '@angular/forms';
+import { FormValueControl } from '@angular/forms/signals';
 import { TakeChance as Random } from 'take-chance';
 import { _FormFieldComponentBase, _formFieldComponentDefaults } from '../_internal/form-field-component';
 import { ARD_FORM_FIELD_CONTROL } from '../form-field/form-field-child.token';
-import { Nullable } from '../types/utility.types';
 import { ArdiumRadioComponent } from './radio/radio.component';
 
 @Component({
@@ -37,17 +33,15 @@ import { ArdiumRadioComponent } from './radio/radio.component';
   },
   providers: [
     {
-      provide: NG_VALUE_ACCESSOR,
-      useExisting: forwardRef(() => ArdiumRadioGroupComponent),
-      multi: true,
-    },
-    {
       provide: ARD_FORM_FIELD_CONTROL,
       useExisting: ArdiumRadioGroupComponent,
     },
   ],
 })
-export class ArdiumRadioGroupComponent extends _FormFieldComponentBase implements AfterContentInit, OnDestroy {
+export class ArdiumRadioGroupComponent
+  extends _FormFieldComponentBase
+  implements OnDestroy, Omit<FormValueControl<any>, 'readonly' | 'disabled' | 'required'>
+{
   private readonly _radios = contentChildren<ArdiumRadioComponent>(ArdiumRadioComponent, { descendants: true });
 
   @HostBinding('attr.id')
@@ -59,16 +53,12 @@ export class ArdiumRadioGroupComponent extends _FormFieldComponentBase implement
     super(_formFieldComponentDefaults); // no need for injecting a token with default values
 
     effect(() => {
-      this.name();
+      this.nameOrGenerated();
       this._updateRadioButtonNames();
     });
     effect(() => {
       this.readonly();
       this._updateReadonlyRadioButtons();
-    });
-    effect(() => {
-      this.selected();
-      this._checkSelectedRadioButton();
     });
     effect(() => {
       const radios = this._radios();
@@ -79,104 +69,34 @@ export class ArdiumRadioGroupComponent extends _FormFieldComponentBase implement
       }, 0);
 
       this._destroyChildSubscriptions();
-
-      //sub to child component events
-      for (const radio of radios) {
-        this._childEventSubs.push(
-          radio.blurEvent.subscribe(v => {
-            this._handleBlurEvents(v);
-          })
-        );
-        this._childEventSubs.push(
-          radio.focusEvent.subscribe(v => {
-            this._handleFocusEvents(v);
-          })
-        );
-        this._childEventSubs.push(
-          radio.selectedChange.subscribe((v: boolean) => {
-            if (!v) return;
-            this._handleChangeEvents(radio);
-          })
-        );
-        this._childEventSubs.push(
-          radio.touchedEvent.subscribe(() => {
-            this._emitTouched();
-          })
-        );
-      }
+      this._subscribeToRadioButtonEvents();
+    });
+    effect(() => {
+      this.value();
+      this._updateRadioButtonsSelected();
     });
   }
+
+  fnjdf = effect(() => {
+    console.log(this.disabled());
+  });
 
   //! value
-  @Input()
-  get value(): any | undefined {
-    return this.selected()?.value();
-  }
-  set value(v: any) {
-    this.writeValue(v);
-  }
-
-  readonly valueChange = output<any>();
-  readonly changeEvent = output<any>({ alias: 'change' });
-
-  private _valueBeforeInit: any;
-  writeValue(v: any): void {
-    if (this.value !== v) {
-      if (!this._isContentInit) {
-        this._valueBeforeInit = v;
-        return;
-      }
-
-      this._findRadioByValue(v);
-    }
-    setTimeout(() => {
-      this._updateRadiosByValue();
-    }, 0);
-  }
-
-  private _findRadioByValue(v: any): void {
-    if (!this._radios) return;
-
-    this.selected.set(this._radios().find(radio => v === radio.value()) ?? null);
-  }
-
-  /** Updates all child radios depending on the currently selected radio. */
-  private _updateRadiosByValue(): void {
-    if (!this._isContentInit) return;
-
-    this._radios().forEach(radio => {
-      radio.selected.set(this.value === radio.value());
-      radio.markForCheck();
-    });
-  }
-
-  /**
-   * The currently selected radio button. If set to a new radio button, the radio group value
-   * will be updated to match the new selected button.
-   */
-  readonly selected = model<Nullable<ArdiumRadioComponent>>(null);
-
-  private _checkSelectedRadioButton() {
-    const s = this.selected();
-    if (s && !s.selected()) {
-      s.selected.set(true);
-      s.markForCheck();
-    }
-  }
+  readonly value = model<any>(null);
 
   //! name
   /** Name of the radio button group. All radio buttons inside this group will use this name. */
-  readonly name = computed<string>(() => this.htmlName() ?? Random.id());
+  readonly nameOrGenerated = computed<string>(() => this.name() || Random.id());
 
+  //! updaters
   private _updateRadioButtonNames(): void {
     if (this._radios()) {
       this._radios().forEach(radio => {
-        radio.name.set(this.name());
+        radio.name.set(this.nameOrGenerated());
         radio.markForCheck();
       });
     }
   }
-
   private _updateReadonlyRadioButtons(): void {
     if (this._radios()) {
       this._radios().forEach(radio => {
@@ -185,43 +105,24 @@ export class ArdiumRadioGroupComponent extends _FormFieldComponentBase implement
       });
     }
   }
-
-  //! update handlers
-  private _handleBlurEvents(event: FocusEvent): void {
-    this.onBlur(event);
-  }
-  private _handleFocusEvents(event: FocusEvent): void {
-    this.onFocus(event);
-  }
-  private _handleChangeEvents(selected: ArdiumRadioComponent): void {
-    this.writeValue(selected.value());
-
-    this._emitChange();
-  }
-
-  protected _emitChange(): void {
-    const v = this.value;
-    this._onChangeRegistered?.(v);
-    this.changeEvent.emit(v);
-    this.valueChange.emit(v);
-  }
-
-  //! hooks
-  private _childEventSubs: OutputRefSubscription[] = [];
-  private _isContentInit = false;
-  ngAfterContentInit(): void {
-    this._isContentInit = true;
-
-    if (this._valueBeforeInit !== undefined) {
-      this.writeValue(this._valueBeforeInit);
+  private _updateRadioButtonsSelected(): void {
+    const value = this.value();
+    if (this._radios()) {
+      this._radios().forEach(radio => {
+        radio.selected.set(value === radio.value());
+        radio.markForCheck();
+      });
     }
+  }
+  private _subscribeToRadioButtonEvents(): void {
+    const radios = this._radios();
+    if (!radios) return;
 
-    setTimeout(() => {
-      this._updateRadioButtonNames();
-    }, 0);
+    for (const radio of radios) {
+      if (untracked(() => radio.selected())) {
+        this._handleChangeEvents(radio);
+      }
 
-    //sub to child component events
-    for (const radio of this._radios()) {
       this._childEventSubs.push(
         radio.blurEvent.subscribe(v => {
           this._handleBlurEvents(v);
@@ -245,6 +146,20 @@ export class ArdiumRadioGroupComponent extends _FormFieldComponentBase implement
       );
     }
   }
+
+  //! update handlers
+  private _handleBlurEvents(event: FocusEvent): void {
+    this.onBlur(event);
+  }
+  private _handleFocusEvents(event: FocusEvent): void {
+    this.onFocus(event);
+  }
+  private _handleChangeEvents(selected: ArdiumRadioComponent): void {
+    this.value.set(selected.value());
+  }
+
+  //! hooks
+  private _childEventSubs: OutputRefSubscription[] = [];
   override ngOnDestroy(): void {
     super.ngOnDestroy();
     this._destroyChildSubscriptions();

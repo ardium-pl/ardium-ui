@@ -1,13 +1,4 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  effect,
-  Inject,
-  model,
-  output,
-  untracked,
-  ViewEncapsulation
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, effect, Inject, model, output, untracked, ViewEncapsulation } from '@angular/core';
 import { isDate, isDefined, isObject } from 'simple-bool';
 import { ARD_FORM_FIELD_CONTROL } from '../form-field/form-field-child.token';
 import { _AbstractCalendar } from './abstract-calendar';
@@ -33,7 +24,6 @@ export class ArdiumRangeCalendarComponent extends _AbstractCalendar<DateRange, P
   readonly componentName = 'calendar';
   readonly isRangeSelector = true;
 
-
   constructor(@Inject(ARD_CALENDAR_DEFAULTS) defaults: ArdCalendarDefaults) {
     super(defaults);
 
@@ -54,8 +44,22 @@ export class ArdiumRangeCalendarComponent extends _AbstractCalendar<DateRange, P
         return;
       }
       this.value.set(new PartialDateRange(start, end));
-      if (end) {
-        this._emitChange();
+    });
+    effect(() => {
+      const v = this.value();
+
+      if (isObject(v) && 'from' in v && 'to' in v && isDate(v['from']) && isDate(v['to'])) {
+        this.selectionStart.set(v['from']);
+        this.selectionEnd.set(v['to']);
+      } else if (!isDefined(v)) {
+        this.selectionStart.set(null);
+        this.selectionEnd.set(null);
+      } else {
+        console.error(
+          new Error(
+            `ARD-NF2003: <ard-range-calendar> [writeValue] expected a { from: Date, to: Date } object or null, got "${v}".`
+          )
+        );
       }
     });
   }
@@ -65,20 +69,6 @@ export class ArdiumRangeCalendarComponent extends _AbstractCalendar<DateRange, P
   readonly startSelection = output<Date>();
 
   readonly endDate = this.selectionEnd.asReadonly();
-
-  override writeValue(v: any): void {
-    if (isObject(v) && 'from' in v && 'to' in v && isDate(v['from']) && isDate(v['to'])) {
-      this.selectionStart.set(v['from']);
-      this.selectionEnd.set(v['to']);
-    } else if (!isDefined(v)) {
-      this.selectionStart.set(null);
-      this.selectionEnd.set(null);
-    } else {
-      console.error(
-        new Error(`ARD-NF2003: <ard-range-calendar> [writeValue] expected a { from: Date, to: Date } object or null, got "${v}".`)
-      );
-    }
-  }
 
   protected override getValueForEmit(): DateRange | null {
     const value = this.value();

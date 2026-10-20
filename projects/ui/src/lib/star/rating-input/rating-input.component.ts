@@ -4,7 +4,6 @@ import {
   computed,
   contentChild,
   effect,
-  forwardRef,
   HostListener,
   Inject,
   input,
@@ -12,13 +11,13 @@ import {
   output,
   signal,
   viewChildren,
-  ViewEncapsulation,
+  ViewEncapsulation
 } from '@angular/core';
-import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { FormValueControl } from '@angular/forms/signals';
 import { coerceNumberProperty, NumberLike } from '@ardium-pl/devkit';
 import { _FormFieldComponentBase } from '../../_internal/form-field-component';
 import { contextToInputs } from '../../_internal/utils/context-to-inputs';
-import { ArdFormFieldControl } from '../../form-field';
+import { ARD_FORM_FIELD_CONTROL, ArdFormFieldControl } from '../../form-field';
 import { ArdiumStarButtonComponent } from '../star-button/star-button.component';
 import { StarColor } from '../star.types';
 import { ARD_RATING_INPUT_DEFAULTS, ArdRatingInputDefaults } from './rating-input.defaults';
@@ -34,13 +33,12 @@ import { ArdRatingInputStarButtonTemplateContext } from './rating-input.types';
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [
     {
-      provide: NG_VALUE_ACCESSOR,
-      useExisting: forwardRef(() => ArdiumRatingInputComponent),
-      multi: true,
+      provide: ARD_FORM_FIELD_CONTROL,
+      useExisting: ArdiumRatingInputComponent,
     },
   ],
 })
-export class ArdiumRatingInputComponent extends _FormFieldComponentBase implements ControlValueAccessor, ArdFormFieldControl {
+export class ArdiumRatingInputComponent extends _FormFieldComponentBase implements Omit<FormValueControl<number | null>, 'readonly' | 'disabled' | 'required'>, ArdFormFieldControl {
   readonly wrapperClasses = input<string>('');
 
   protected override readonly _DEFAULTS!: ArdRatingInputDefaults;
@@ -66,6 +64,7 @@ export class ArdiumRatingInputComponent extends _FormFieldComponentBase implemen
   }
 
   //! stars
+  // @ts-expect-error
   readonly max = input<number, NumberLike>(this._DEFAULTS.max, { transform: v => coerceNumberProperty(v, this._DEFAULTS.max) });
 
   readonly starButtonInstances = viewChildren<ArdiumStarButtonComponent>('starButton');
@@ -75,8 +74,12 @@ export class ArdiumRatingInputComponent extends _FormFieldComponentBase implemen
 
   //! ControlValueAccessor's writeValue
   writeValue(v: number): void {
-    this.value.set(v);
+    // not used anymore
   }
+  protected _emitChange(): void {
+    // not used anymore
+  }
+
   onStarClick(index: number): void {
     if (this.disabled() || this.readonly()) return;
     this.value.set(index + 1);
@@ -90,11 +93,8 @@ export class ArdiumRatingInputComponent extends _FormFieldComponentBase implemen
   setDisplayToValue() {
     this._highlightedStarIndex.set(null);
   }
-  protected _emitChange(): void {
-    this._onChangeRegistered?.(this.value());
-  }
 
-  //* focus handlers
+  //! focus handlers
   private _isFocusEventSuppressed = false;
   private _isBlurEventSuppressed = false;
   private _currentFocusIndex: number | null = null;

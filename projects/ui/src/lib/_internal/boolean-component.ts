@@ -1,5 +1,4 @@
 import { computed, Directive, HostBinding, input, model, output } from '@angular/core';
-import { ControlValueAccessor } from '@angular/forms';
 import { FormValueControl } from '@angular/forms/signals';
 import { BooleanLike, coerceBooleanProperty } from '@ardium-pl/devkit';
 import { _NgModelComponentBase, _ngModelComponentDefaults, _NgModelComponentDefaults } from './ngmodel-component';
@@ -15,37 +14,22 @@ export const _booleanComponentDefaults: _BooleanComponentDefaults = { ..._ngMode
 @Directive()
 export abstract class _BooleanComponentBase
   extends _NgModelComponentBase
-  implements ControlValueAccessor, Omit<FormValueControl<boolean>, 'disabled' | 'readonly'>
+  implements Omit<FormValueControl<boolean>, 'disabled' | 'readonly'>
 {
   protected override readonly _DEFAULTS!: _BooleanComponentDefaults;
 
   protected abstract readonly _componentId: string;
   protected abstract readonly _componentName: string;
 
-  //! control value accessor
-  writeValue(v: any): void {
-    this.value.set(coerceBooleanProperty(v));
-  }
-  //emitter function
-  /**
-   * Emits all select-state-related events.
-   */
-  protected _emitChange() {
-    this._onChangeRegistered?.(this.value());
-
-    if (this.value()) this.selectEvent.emit(null);
-    else this.unselectEvent.emit(null);
-  }
-
   //! events
   /**
    * The event emitter responsible for firing `select` events. Fired when the `selected` state is set to true.
    */
-  readonly selectEvent = output<null>({ alias: 'select' });
+  readonly selectEvent = output<void>({ alias: 'select' });
   /**
    * The event emitter responsible for firing `unselect` events. Fired when the `selected` state is set to false.
    */
-  readonly unselectEvent = output<null>({ alias: 'unselect' });
+  readonly unselectEvent = output<void>({ alias: 'unselect' });
 
   //! [(value)] two-way binding
   // can be set using a no-value argument
@@ -53,6 +37,14 @@ export abstract class _BooleanComponentBase
    * The selection state of the component.
    */
   readonly value = model<boolean>(false);
+
+  protected _setValue(newValue: boolean): void {
+    if (this.disabled() || this.readonly()) return;
+    this.value.set(newValue);
+
+    if (newValue) this.selectEvent.emit();
+    else this.unselectEvent.emit();
+  }
 
   @HostBinding('attr.selected')
   @HostBinding('class.ard-selected')
@@ -75,9 +67,7 @@ export abstract class _BooleanComponentBase
    */
   toggleSelected() {
     if (this.disabled() || this.readonly()) return;
-    this.value.update(v => !v);
-    this._emitChange();
-    this._emitTouched();
+    this._setValue(!this.value());
   }
 
   /**
@@ -85,17 +75,13 @@ export abstract class _BooleanComponentBase
    */
   select() {
     if (this.disabled() || this.readonly()) return;
-    this.value.set(true);
-    this._emitChange();
-    this._emitTouched();
+    this._setValue(true);
   }
   /**
    * Sets the state to "unselected". Emits all appropriate events only if the state changes.
    */
   unselect() {
     if (this.disabled() || this.readonly()) return;
-    this.value.set(false);
-    this._emitChange();
-    this._emitTouched();
+    this._setValue(false);
   }
 }

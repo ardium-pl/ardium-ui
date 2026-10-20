@@ -1,13 +1,15 @@
 import {
-    ChangeDetectionStrategy,
-    Component,
-    computed,
-    HostListener,
-    Inject,
-    input,
-    OnInit,
-    signal,
-    ViewEncapsulation,
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  HostListener,
+  Inject,
+  input,
+  model,
+  OnInit,
+  signal,
+  SimpleChanges,
+  ViewEncapsulation,
 } from '@angular/core';
 import { coerceNumberProperty, NumberLike } from '@ardium-pl/devkit';
 import { roundToPrecision } from 'more-rounding';
@@ -34,56 +36,50 @@ export class ArdiumRangeSliderComponent extends _AbstractSlider<SliderRange> imp
     super(defaults);
   }
 
-  protected readonly _value = signal<SliderRange>({ from: -Number.MIN_SAFE_INTEGER, to: Number.MIN_SAFE_INTEGER });
+  readonly unnormalizedValue = signal<SliderRange>({ from: -Number.MIN_SAFE_INTEGER, to: Number.MIN_SAFE_INTEGER });
+  readonly value = model<SliderRange>({ from: -Number.MIN_SAFE_INTEGER, to: Number.MIN_SAFE_INTEGER });
+
+  protected _setValue(v: SliderRange): void {
+    this.unnormalizedValue.set(v);
+    this.value.set(this._normalizeSliderRange(v));
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['value']) {
+      const value = changes['value'].currentValue;
+      if (
+        this._isValidObject(value) &&
+        ((value.from === this.unnormalizedValue().from && value.to === this.unnormalizedValue().to) ||
+          (value.from === this.unnormalizedValue().to && value.to === this.unnormalizedValue().from))
+      ) {
+        return;
+      }
+      this._setValue(value);
+    }
+  }
 
   //! writeValue
   private _isValidObject(v: any): v is SliderRange {
     return isObject(v) && isNumber(v['from']) && isNumber(v['to']);
   }
-  private _isValidTuple(v: any): v is [number, number] {
-    return Array.isArray(v) && isNumber(v[0]) && isNumber(v[1]) && v.length === 2;
-  }
   private _normalizeSliderRange(v: SliderRange): SliderRange {
     if (v.from <= v.to) return v;
     return { from: v.to, to: v.from };
   }
-  writeValue(v: any): void {
-    if (!this._isValidObject(v) && !this._isValidTuple(v)) {
+  protected _cleanupValueAfterMinMaxStepChange(): void {
+    const v = this.unnormalizedValue();
+    if (!this._isValidObject(v)) {
       this.reset();
       return;
     }
-    let from = -Number.MIN_SAFE_INTEGER;
-    let to = Number.MIN_SAFE_INTEGER;
-    if (this._isValidObject(v)) {
-      from = v.from;
-      to = v.to;
-    } else if (this._isValidTuple(v)) {
-      from = v[0];
-      to = v[1];
-    }
-    const fromClamped = this._clampValue(from);
-    const toClamped = this._clampValue(to);
+    const fromClamped = this._clampValue(v.from);
+    const toClamped = this._clampValue(v.to);
     const value = this._normalizeSliderRange({ from: fromClamped, to: toClamped });
 
-    if (value.from === this.value.from && value.to === this.value.to) {
+    if (value.from === this.unnormalizedValue().from && value.to === this.unnormalizedValue().to) {
       return;
     }
-    this._value.set(value);
-  }
-  override get value(): SliderRange {
-    return this._normalizeSliderRange(this._value());
-  }
-  override set value(v: any) {
-    this.writeValue(v);
-  }
-  cleanupValueAfterMinMaxStepChange(): void {
-    const prevValue = this._value();
-    this.writeValue(prevValue);
-    const newValue = this._value();
-
-    if (prevValue.from !== newValue.from || prevValue.to !== newValue.to) {
-      this._emitChange();
-    }
+    this._setValue(value);
   }
 
   readonly selectionBehavior = input<ArdRangeSelectionBehavior>(this._DEFAULTS.selectionBehavior);
@@ -93,7 +89,7 @@ export class ArdiumRangeSliderComponent extends _AbstractSlider<SliderRange> imp
 
   //! tooltip updater
   protected readonly _tooltipValue = computed<SliderRange<string>>(() => {
-    const v = this._value();
+    const v = this.unnormalizedValue();
     const formatFn = this.tooltipFormatFn();
 
     const tooltipValue = {
@@ -119,7 +115,7 @@ export class ArdiumRangeSliderComponent extends _AbstractSlider<SliderRange> imp
   //! methods for programmatic manipulation
   reset(): void {
     if (this.disabled() || this.readonly()) return;
-    this._value.set({ from: -this.min(), to: this.max() });
+    this._setValue({ from: -this.min(), to: this.max() });
   }
 
   //! track overlay getters
@@ -157,7 +153,7 @@ export class ArdiumRangeSliderComponent extends _AbstractSlider<SliderRange> imp
     newVal = roundToPrecision(newVal, 9);
 
     const minimumDistanceInSteps = this.step() * this.minimumDistance();
-    const currValue = this._value();
+    const currValue = this.unnormalizedValue();
     const newValObj = { from: currValue.from, to: currValue.to };
     if (handleId === 1) {
       if (newVal >= currValue.to - minimumDistanceInSteps) {
@@ -187,7 +183,7 @@ export class ArdiumRangeSliderComponent extends _AbstractSlider<SliderRange> imp
 
   protected readonly _handlePositions = computed<[number, number]>(() => {
     const minMaxDifference = Math.abs(this.min() - this.max());
-    const value = this._value();
+    const value = this.unnormalizedValue();
     const pos1 = (value.from - this.min()) / minMaxDifference;
     const pos2 = (value.to - this.min()) / minMaxDifference;
     return [pos1, pos2];

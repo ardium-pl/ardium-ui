@@ -1,12 +1,14 @@
 import { Overlay, ScrollStrategyOptions } from '@angular/cdk/overlay';
 
 import {
+  DOCUMENT,
   Directive,
   ElementRef,
   HostListener,
-  Input,
+  ModelSignal,
   Renderer2,
   Signal,
+  Type,
   ViewContainerRef,
   WritableSignal,
   computed,
@@ -14,25 +16,24 @@ import {
   effect,
   inject,
   input,
-  output,
   signal,
   untracked,
   viewChild,
-  DOCUMENT
 } from '@angular/core';
+import { FormValueControl } from '@angular/forms/signals';
 import { BooleanLike, NumberLike, coerceArrayProperty, coerceBooleanProperty, coerceNumberProperty } from '@ardium-pl/devkit';
 import { roundToMultiple, roundToPrecision } from 'more-rounding';
 import { isDefined } from 'simple-bool';
 import { _NgModelComponentBase, _NgModelComponentDefaults, _ngModelComponentDefaults } from '../_internal/ngmodel-component';
 import { SimpleComponentColor } from '../types/colors.types';
 import { ArdRangeSelectionBehavior } from './range-slider/range-slider.types';
-import { ArdSliderTooltipDirective } from './slider.directive';
+import { ArdSliderTooltip, ArdSliderTooltipDirective } from './slider.directive';
 import {
-    SliderDecorationPosition,
-    SliderLabelObject,
-    SliderTooltipBehavior,
-    SliderTooltipFormatFn,
-    _InternalSliderLabelObject,
+  SliderDecorationPosition,
+  SliderLabelObject,
+  SliderTooltipBehavior,
+  SliderTooltipFormatFn,
+  _InternalSliderLabelObject,
 } from './slider.types';
 
 export interface _AsbtractSliderDefaults extends _NgModelComponentDefaults {
@@ -52,6 +53,7 @@ export interface _AsbtractSliderDefaults extends _NgModelComponentDefaults {
   selectionBehavior: ArdRangeSelectionBehavior;
   minimumDistance: number;
   emitTouchedOnEveryChange: boolean;
+  TooltipComponent?: Type<ArdSliderTooltip>;
 }
 
 export const _asbtractSliderDefaults: _AsbtractSliderDefaults = {
@@ -72,14 +74,38 @@ export const _asbtractSliderDefaults: _AsbtractSliderDefaults = {
   selectionBehavior: ArdRangeSelectionBehavior.Allow,
   minimumDistance: 0,
   emitTouchedOnEveryChange: false,
+  TooltipComponent: undefined,
 };
 
 @Directive()
-export abstract class _AbstractSlider<T> extends _NgModelComponentBase {
+export abstract class _AbstractSlider<T>
+  extends _NgModelComponentBase
+  implements Omit<FormValueControl<T>, 'readonly' | 'disabled'>
+{
   abstract readonly componentId: string;
   abstract readonly componentName: string;
 
   protected override readonly _DEFAULTS!: _AsbtractSliderDefaults;
+
+  constructor(defaults: _AsbtractSliderDefaults) {
+    super(defaults);
+
+    effect(() => {
+      this.min();
+      this.max();
+      this.step();
+      untracked(() => this._cleanupValueAfterMinMaxStepChange());
+    });
+    effect(() => {
+      const min = this.min();
+      const max = this.max();
+      if (min >= max) {
+        throw new Error(
+          `ARD-FT${this.componentId}0: Cannot set <ard-${this.componentName}>'s [min] to a value greater than or equal to [max], got min=${min} and max=${max}.`
+        );
+      }
+    });
+  }
 
   public readonly elementRef = viewChild<ElementRef<HTMLElement>>('track');
 
@@ -90,9 +116,11 @@ export abstract class _AbstractSlider<T> extends _NgModelComponentBase {
   protected readonly viewContainerRef = inject(ViewContainerRef);
 
   //! min, max, step sizes
+  // @ts-expect-error
   readonly min = input<number, NumberLike>(this._DEFAULTS.min, {
     transform: v => coerceNumberProperty(v, this._DEFAULTS.min),
   });
+  // @ts-expect-error
   readonly max = input<number, NumberLike>(this._DEFAULTS.max, {
     transform: v => coerceNumberProperty(v, this._DEFAULTS.max),
   });
@@ -110,22 +138,6 @@ export abstract class _AbstractSlider<T> extends _NgModelComponentBase {
       }
       return step;
     },
-  });
-
-  readonly minMaxStepValueCleanup = effect(() => {
-    this.min();
-    this.max();
-    this.step();
-    untracked(() => this.cleanupValueAfterMinMaxStepChange());
-  });
-  readonly minMaxErrorCheck = effect(() => {
-    const min = this.min();
-    const max = this.max();
-    if (min >= max) {
-      throw new Error(
-        `ARD-FT${this.componentId}0: Cannot set <ard-${this.componentName}>'s [min] to a value greater than or equal to [max], got min=${min} and max=${max}.`
-      );
-    }
   });
 
   readonly shiftMultiplier = input<number, NumberLike>(this._DEFAULTS.shiftMultiplier, {
@@ -220,21 +232,20 @@ export abstract class _AbstractSlider<T> extends _NgModelComponentBase {
 
   //! value input & output
   //! abstract here
-  protected abstract readonly _value: WritableSignal<T>;
-  @Input()
-  set value(newValue: T) {
-    this.writeValue(newValue);
-  }
-  get value(): T {
-    return this._value();
-  }
-  readonly valueChange = output<T>();
+  abstract readonly unnormalizedValue: WritableSignal<T>;
+  abstract readonly value: ModelSignal<T>;
+
+  protected abstract _setValue(v: T): void; //* abstact
 
   //! writeValue
-  //! abstract here
-  abstract override writeValue(v: any): void; //* abstact
+  writeValue(v: any): void {
+    // not used anymore
+  }
+  protected _emitChange(): void {
+    // not used anymore
+  }
 
-  abstract cleanupValueAfterMinMaxStepChange(): void; //* abstact
+  protected abstract _cleanupValueAfterMinMaxStepChange(): void; //* abstact
 
   //! methods for programmatic manipulation
   abstract reset(): void;
@@ -269,11 +280,6 @@ export abstract class _AbstractSlider<T> extends _NgModelComponentBase {
   protected _valueToPercent(v: number): number {
     const minMaxDifference = Math.abs(this.min() - this.max());
     return (v - this.min()) / minMaxDifference;
-  }
-  protected _emitChange(): void {
-    const v = this.value;
-    this._onChangeRegistered?.(v);
-    this.valueChange.emit(v);
   }
 
   //! tooltip
@@ -346,9 +352,9 @@ export abstract class _AbstractSlider<T> extends _NgModelComponentBase {
   protected _setValueFromPercent(percent: number, handleId: number | null = 1): void {
     if (!handleId) return;
     if (this._handlePositions()[handleId - 1] === percent) return;
-    this._value.set(this._percentValueToValue(percent, handleId));
-
-    this._emitChange();
+    
+    const newValue = this._percentValueToValue(percent, handleId);
+    this._setValue(newValue);
   }
   protected _writeValueFromEvent(event: MouseEvent | TouchEvent, handleId?: number | null): void {
     if (this.disabled() || this.readonly()) return;

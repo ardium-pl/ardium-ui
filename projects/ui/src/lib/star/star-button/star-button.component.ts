@@ -1,14 +1,5 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  Inject,
-  ViewEncapsulation,
-  computed,
-  contentChild,
-  forwardRef,
-  input,
-} from '@angular/core';
-import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { ChangeDetectionStrategy, Component, Inject, ViewEncapsulation, computed, contentChild, input } from '@angular/core';
+import { FormValueControl } from '@angular/forms/signals';
 import { _BooleanComponentBase } from '../../_internal/boolean-component';
 import { contextToInputs } from '../../_internal/utils/context-to-inputs';
 import { ClickStrategy } from '../../types/utility.types';
@@ -25,15 +16,11 @@ import { ArdStarButtonStarTemplateContext } from './star-button.types';
   styleUrls: ['./star-button.component.scss'],
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  providers: [
-    {
-      provide: NG_VALUE_ACCESSOR,
-      useExisting: forwardRef(() => ArdiumStarButtonComponent),
-      multi: true,
-    },
-  ],
 })
-export class ArdiumStarButtonComponent extends _BooleanComponentBase implements ControlValueAccessor {
+export class ArdiumStarButtonComponent
+  extends _BooleanComponentBase
+  implements Omit<FormValueControl<boolean>, 'readonly' | 'disabled' | 'required'>
+{
   protected override readonly _DEFAULTS!: ArdStarButtonDefaults;
   constructor(@Inject(ARD_STAR_BUTTON_DEFAULTS) defaults: ArdStarButtonDefaults) {
     super(defaults);

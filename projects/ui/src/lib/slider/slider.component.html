@@ -17,14 +17,14 @@
         [style]="{ width: handlePositionsPercent()[0] }"
       ></div>
       @if (showValueTicks()) {
-      <div class="ard-value-tick-container">
-        @for (tick of _tickArray(); track tick) {
-        <div
-          class="ard-value-tick"
-          [style]="{ left: tick }"
-        ></div>
-        }
-      </div>
+        <div class="ard-value-tick-container">
+          @for (tick of _tickArray(); track tick) {
+            <div
+              class="ard-value-tick"
+              [style]="{ left: tick }"
+            ></div>
+          }
+        </div>
       }
     </div>
     <button
@@ -43,36 +43,43 @@
       <div class="ard-hitbox"></div>
     </button>
     @if (tooltipBehavior() !== 'never') {
-    <div
-      class="ard-slider-tooltip-wrapper"
-      [class.ard-tooltip-always]="tooltipBehavior() === 'always'"
-      [style]="{ left: handlePositionsPercent()[0] }"
-    >
-      <ng-template
-        #defaultTooltipTemplate
-        let-value
+      <div
+        class="ard-slider-tooltip-wrapper"
+        [class.ard-tooltip-always]="tooltipBehavior() === 'always'"
+        [style]="{ left: handlePositionsPercent()[0] }"
       >
-        <div class="ard-slider-tooltip">{{ value }}</div>
-      </ng-template>
+        @if (tooltipComponent && !tooltipTemplate()) {
+          <!-- render the component -->
+          <ng-template
+            [ngComponentOutlet]="tooltipComponent"
+            [ngComponentOutletInputs]="tooltipComponentInputs()"
+          />
+        } @else {
+          <ng-template
+            #defaultTooltipTemplate
+            let-value
+          >
+            <div class="ard-slider-tooltip">{{ value }}</div>
+          </ng-template>
 
-      <ng-template
-        [ngTemplateOutlet]="tooltipTemplate()?.template || defaultTooltipTemplate"
-        [ngTemplateOutletContext]="tooltipContext()"
-      >
-      </ng-template>
-    </div>
+          <ng-template
+            [ngTemplateOutlet]="tooltipTemplate()?.template || defaultTooltipTemplate"
+            [ngTemplateOutletContext]="tooltipContext()"
+          />
+        }
+      </div>
     }
   </div>
   @if (labelObjects().length > 0) {
-  <div class="ard-slider-label-container">
-    @for (label of labelObjects(); track $index) {
-    <div
-      class="ard-slider-label"
-      [style]="{ left: label.positionPercent }"
-    >
-      {{ label.label }}
+    <div class="ard-slider-label-container">
+      @for (label of labelObjects(); track $index) {
+        <div
+          class="ard-slider-label"
+          [style]="{ left: label.positionPercent }"
+        >
+          {{ label.label }}
+        </div>
+      }
     </div>
-    }
-  </div>
   }
 </div>

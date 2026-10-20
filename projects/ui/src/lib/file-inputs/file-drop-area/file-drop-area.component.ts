@@ -75,7 +75,7 @@ export class ArdiumFileDropAreaComponent extends _FileInputComponentBase {
     },
   }));
   readonly uploadedContext = computed<FileInputFilesContext>(() => {
-    const files = this._value()!;
+    const files = this._valueAsArray()!;
     return {
       $implicit: files,
       amount: files.length,

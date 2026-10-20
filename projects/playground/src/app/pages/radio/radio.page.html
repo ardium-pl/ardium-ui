@@ -1,4 +1,4 @@
-<!-- <div class="master">
+<div class="master">
   <span class="title">Simplest radio</span>
   <ard-radio-group>
     <ard-radio value="value1">Option 1</ard-radio>
@@ -24,7 +24,7 @@
 </div>
 <div class="master">
   <span class="title">Radios with preselected radio (by reference)</span>
-  <ard-radio-group [selected]="selectMe">
+  <ard-radio-group [value]="selectMe.value()">
     <ard-radio value="value1">Option 1</ard-radio>
     <ard-radio value="value2">Option 2</ard-radio>
     <ard-radio
@@ -45,21 +45,21 @@
       >Option 3</ard-radio
     >
   </ard-radio-group>
-</div> -->
+</div>
 <div class="master">
   <span class="title">Readonly radios with preselected radio (by value)</span>
-  <ard-radio-group value="value2" readonly>
+  <ard-radio-group
+    value="value2"
+    readonly
+  >
     <ard-radio value="value1">Option 1</ard-radio>
     <ard-radio value="value2">Option 2</ard-radio>
     <ard-radio value="value3">Option 3</ard-radio>
   </ard-radio-group>
 </div>
-<!-- <div class="master">
+<div class="master">
   <span class="title">Radio events</span>
-  <ard-radio-group
-    (valueChange)="log('valueChange', $event)"
-    (change)="log('change', $event)"
-  >
+  <ard-radio-group (valueChange)="log('valueChange', $event)">
     <ard-radio value="value1">Option 1</ard-radio>
     <ard-radio value="value2">Option 2</ard-radio>
     <ard-radio value="value3">Option 3</ard-radio>
@@ -106,4 +106,4 @@
   <button (click)="control.disabled ? control.enable() : control.disable()">
     {{ control.disabled ? 'Enable' : 'Disable' }} control
   </button>
-</div> -->
+</div>

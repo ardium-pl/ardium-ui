@@ -8,7 +8,7 @@
     min="-100"
     max="100"
     step="50"
-    [value]="[-70, 70]"
+    [value]="{ from: -70, to: 70 }"
   ></ard-range-slider>
 </div>
 <div class="master flex">
@@ -17,7 +17,7 @@
     min="-100"
     max="100"
     step="50"
-    [value]="[-70, 70]"
+    [value]="{ from: -70, to: 70 }"
     readonly
   ></ard-range-slider>
 </div>
@@ -70,6 +70,11 @@
   <span class="title">Controlled slider</span>
   <ard-range-slider [(value)]="value" />
   <p>Selected range: {{ value().from }} – {{ value().to }}</p>
+</div>
+<div class="master flex">
+  <span class="title">Slider allowing reversed values</span>
+  <ard-range-slider [(value)]="valueAllow" selectionBehavior="allow" />
+  <p>Selected range: {{ valueAllow().from }} – {{ valueAllow().to }}</p>
 </div>
 <div class="master flex">
   <span class="title">Slider blocking reversed values</span>

@@ -199,12 +199,6 @@ export abstract class _AbstractCalendar<T, PT = T>
 
   readonly filter = input<ArdCalendarFilterFn | null>(this._DEFAULTS.filter);
 
-  abstract override writeValue(v: any): void;
-
-  protected override _emitChange(): void {
-    this._onChangeRegistered?.(this.getValueForEmit());
-  }
-
   protected abstract getValueForEmit(): T | null;
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -216,9 +210,6 @@ export abstract class _AbstractCalendar<T, PT = T>
           `ARD-NF${this.componentId}4: <ard-${this.componentName}>'s [UTC] attribute should not be changed dynamically. This change will be ignored.`
         );
       }
-    }
-    if (changes['value']) {
-      this.writeValue(changes['value'].currentValue);
     }
   }
 

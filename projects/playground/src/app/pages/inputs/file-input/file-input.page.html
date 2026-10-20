@@ -20,7 +20,7 @@
     <ard-label>My file input</ard-label>
     <ard-file-input
       [formControl]="control"
-      (valueChange)="log('valueChange', $event?.[0])"
+      (valueChange)="log('valueChange', $event)"
     />
     <ard-hint>touched: {{ control.touched}}, errors: {{ control.errors }}, value: {{ control.value }}</ard-hint>
   </ard-form-field>
@@ -29,7 +29,7 @@
   <span class="title">File input with accept (pdf only)</span>
   <ard-file-input
     [formControl]="control2"
-    (valueChange)="log('valueChange', $event?.[0])"
+    (valueChange)="log('valueChange', $event)"
     accept=".pdf"
   />
 </div>
@@ -37,7 +37,7 @@
   <span class="title">File input test for resetting the control</span>
   <ard-file-input
     [formControl]="control3"
-    (valueChange)="log('valueChange', $event?.[0])"
+    (valueChange)="log('valueChange', $event)"
   />
   <button (click)="onClickReset()">Reset</button>
 </div>
@@ -45,7 +45,7 @@
   <span class="title">File input with file types (images only)</span>
   <ard-file-input
     [formControl]="control2"
-    (valueChange)="log('valueChange', $event?.[0])"
+    (valueChange)="log('valueChange', $event)"
     directoryId="File-input-with-FileSystemApi"
     [fileTypes]="FILE_TYPES"
     (dragFiles)="log('dragFiles', $event)"

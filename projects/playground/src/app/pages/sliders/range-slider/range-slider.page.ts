@@ -16,6 +16,7 @@ export class RangeSliderPage {
   readonly tooltipFormatFn: SliderTooltipFormatFn = (v: number): string => String(v / 1000) + 'k';
 
   readonly value = signal<SliderRange>({ from: 20, to: 50 });
+  readonly valueAllow = signal<SliderRange>({ from: 20, to: 50 });
   readonly valueBlock = signal<SliderRange>({ from: 20, to: 50 });
   readonly valuePush = signal<SliderRange>({ from: 20, to: 50 });
   readonly valueBlock2 = signal<SliderRange>({ from: 20, to: 50 });

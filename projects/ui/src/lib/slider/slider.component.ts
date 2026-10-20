@@ -2,14 +2,16 @@ import {
   ChangeDetectionStrategy,
   Component,
   computed,
-  forwardRef,
   HostListener,
   Inject,
+  model,
+  OnChanges,
   signal,
+  SimpleChanges,
   ViewEncapsulation,
 } from '@angular/core';
-import { NG_VALUE_ACCESSOR } from '@angular/forms';
 import { roundToPrecision } from 'more-rounding';
+import { contextToInputs } from '../_internal/utils/context-to-inputs';
 import { _AbstractSlider } from './abstract-slider';
 import { ARD_SLIDER_DEFAULTS, ArdSliderDefaults } from './slider.defaults';
 import { SliderTooltipContext } from './slider.types';
@@ -21,15 +23,8 @@ import { SliderTooltipContext } from './slider.types';
   styleUrls: ['./slider.component.scss'],
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  providers: [
-    {
-      provide: NG_VALUE_ACCESSOR,
-      useExisting: forwardRef(() => ArdiumSliderComponent),
-      multi: true,
-    },
-  ],
 })
-export class ArdiumSliderComponent extends _AbstractSlider<number> {
+export class ArdiumSliderComponent extends _AbstractSlider<number> implements OnChanges {
   readonly componentId = '105';
   readonly componentName = 'slider';
 
@@ -39,11 +34,27 @@ export class ArdiumSliderComponent extends _AbstractSlider<number> {
   }
 
   //! value input & output
-  protected readonly _value = signal<number>(0);
+  readonly unnormalizedValue = signal<number>(0);
+  readonly value = model<number>(0);
+
+  protected _setValue(v: number): void {
+    this.unnormalizedValue.set(v);
+    this.value.set(v);
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['value']) {
+      const value = changes['value'].currentValue;
+      if (value === this.unnormalizedValue()) {
+        return;
+      }
+      this._setValue(value);
+    }
+  }
 
   //! tooltip updater
   protected readonly _tooltipValue = computed<string>(() => {
-    const v = this._value();
+    const v = this.value();
     const formatFn = this.tooltipFormatFn();
 
     const tooltipValue = String(formatFn?.(v) ?? v);
@@ -56,30 +67,22 @@ export class ArdiumSliderComponent extends _AbstractSlider<number> {
       $implicit: this._tooltipValue(),
     };
   });
+  readonly tooltipComponent = this._DEFAULTS.TooltipComponent;
+
+  readonly tooltipComponentInputs = contextToInputs(this.tooltipContext, this.tooltipComponent);
 
   //! writeValue
-  writeValue(v: any): void {
-    v = Number(v);
-    if (isNaN(v)) {
-      this.reset();
-      return;
-    }
-    v = this._clampValue(v);
-    this._value.set(v);
-  }
-  cleanupValueAfterMinMaxStepChange(): void {
-    const prevValue = this._value();
-    this.writeValue(this._value());
-    const newValue = this._value();
-
-    if (prevValue !== newValue) {
-      this._emitChange();
+  protected _cleanupValueAfterMinMaxStepChange(): void {
+    const v = this.value();
+    const clampedValue = this._clampValue(v);
+    if (clampedValue !== v) {
+      this._setValue(clampedValue);
     }
   }
 
   //! methods for programmatic manipulation
   reset(): void {
-    this._value.set(0);
+    this._setValue(this.min());
   }
   increment(steps = 1): void {
     this._offset(steps, false);
@@ -113,7 +116,7 @@ export class ArdiumSliderComponent extends _AbstractSlider<number> {
 
   protected readonly _handlePositions = computed<[number, number]>(() => {
     const minMaxDifference = Math.abs(this.min() - this.max());
-    const percentPosition = (this._value() - this.min()) / minMaxDifference;
+    const percentPosition = (this.value() - this.min()) / minMaxDifference;
     return [percentPosition, percentPosition];
   });
 }

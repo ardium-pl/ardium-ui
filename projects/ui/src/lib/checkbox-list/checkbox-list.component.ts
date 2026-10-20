@@ -109,13 +109,6 @@ export class ArdiumCheckboxListComponent
   //! value
   readonly value = model<any[]>([]);
 
-  writeValue(v: any): void {
-    // not used anymore
-  }
-  protected _emitChange(): void {
-    // not used anymore
-  }
-
   onItemHighlight(v: ArdOptionSimple): void {
     if (this.disabled() || this.readonly()) return;
     this._itemStorage.highlightSingleItem(v);
@@ -130,13 +123,11 @@ export class ArdiumCheckboxListComponent
   selectItem(v: ArdOptionSimple): void {
     if (this.disabled() || this.readonly()) return;
     this._itemStorage.selectItem(v);
-    this._emitChange();
     this._emitTouched();
   }
   unselectItem(v: ArdOptionSimple): void {
     if (this.disabled() || this.readonly()) return;
     this._itemStorage.unselectItem(v);
-    this._emitChange();
     this._emitTouched();
   }
   toggleItem(v: ArdOptionSimple): void {

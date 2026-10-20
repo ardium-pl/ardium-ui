@@ -1,4 +1,5 @@
 import { Directive, TemplateRef } from '@angular/core';
+import { TemplateComponent } from '../types/utility.types';
 import { SliderTooltipContext } from './slider.types';
 
 @Directive({
@@ -8,3 +9,5 @@ import { SliderTooltipContext } from './slider.types';
 export class ArdSliderTooltipDirective {
   constructor(public template: TemplateRef<SliderTooltipContext>) {}
 }
+
+export interface ArdSliderTooltip extends TemplateComponent<SliderTooltipContext> {}

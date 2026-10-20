@@ -1,9 +1,7 @@
 import { computed, Directive, input, OnDestroy, OnInit, output } from '@angular/core';
-import { ControlValueAccessor } from '@angular/forms';
 import { FormUiControl } from '@angular/forms/signals';
 import { coerceBooleanProperty, trackBoundControl } from '@ardium-pl/devkit';
 import { TakeChance as Random } from 'take-chance';
-import { Nullable } from '../types/utility.types';
 import { _FocusableComponentBase, _focusableComponentDefaults, _FocusableComponentDefaults } from './focusable-component';
 
 export interface _NgModelComponentDefaults extends _FocusableComponentDefaults {}
@@ -20,41 +18,14 @@ export const _ngModelComponentDefaults: _NgModelComponentDefaults = {
 @Directive()
 export abstract class _NgModelComponentBase
   extends _FocusableComponentBase
-  implements ControlValueAccessor, OnInit, OnDestroy, Omit<FormUiControl<unknown>, 'disabled' | 'readonly'>
+  implements OnInit, OnDestroy, Omit<FormUiControl<unknown>, 'disabled' | 'readonly'>
 {
   protected override readonly _DEFAULTS!: _NgModelComponentDefaults;
 
-  //! control value accessor
-  protected _onChangeRegistered!: (_: any) => void;
-  protected _onTouchedRegistered!: () => void;
   /**
-   * Registers a function to handle touched state. Required by ControlValueAccessor.
-   * @param fn The function to register.
+   * @deprecated Use `[valueChange]` instead.
    */
-  registerOnTouched(fn: () => void): void {
-    this._onTouchedRegistered = fn;
-  }
-  /**
-   * Registers a function to handle value change. Required by ControlValueAccessor.
-   * @param fn The function to register.
-   */
-  registerOnChange(fn: (_: any) => void): void {
-    this._onChangeRegistered = fn;
-  }
-
-  /**
-   * Writes the a new value into the component. Required by ControlValueAccessor.
-   * @abstract
-   * @param v The new value to write.
-   */
-  abstract writeValue(v: any): void; //* abstract
-
-  /**
-   * Writes the a new value into the component. Required by ControlValueAccessor.
-   * @abstract
-   * @param v The new value to write.
-   */
-  protected abstract _emitChange(): void; //* abstract
+  readonly change = output<never>();
 
   //! event handlers
   override onFocus(event: FocusEvent): void {
@@ -93,7 +64,7 @@ export abstract class _NgModelComponentBase
   }
 
   readonly htmlId = input<string>(Random.id());
-  readonly htmlName = input<Nullable<string>>(undefined);
+  readonly name = input<string>('');
 
   readonly _hasError = input<boolean | undefined, any>(undefined, {
     transform: v => coerceBooleanProperty(v),

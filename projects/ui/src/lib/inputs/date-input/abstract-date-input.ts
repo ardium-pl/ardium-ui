@@ -4,7 +4,6 @@ import {
   computed,
   contentChild,
   Directive,
-  effect,
   ElementRef,
   inject,
   input,
@@ -17,7 +16,7 @@ import {
   SimpleChanges,
   TemplateRef,
   viewChild,
-  ViewContainerRef,
+  ViewContainerRef
 } from '@angular/core';
 import { BooleanLike, coerceBooleanProperty, coerceDateOnlyProperty, coerceNumberProperty, NumberLike } from '@ardium-pl/devkit';
 import { _FormFieldComponentBase } from '../../_internal/form-field-component';
@@ -56,12 +55,6 @@ export abstract class _AbstractDateInput<T, PT = T> extends _FormFieldComponentB
   protected override readonly _DEFAULTS!: ArdDateInputDefaults;
   constructor(defaults: ArdDateInputDefaults) {
     super(defaults);
-
-    // emit value whenever it changes
-    effect(() => {
-      if (!this._isFullValue(this.partialValue())) return;
-      this._emitChange();
-    });
   }
 
   private readonly elementRef = inject(ElementRef<HTMLElement>);
@@ -84,13 +77,6 @@ export abstract class _AbstractDateInput<T, PT = T> extends _FormFieldComponentB
   //! control value accessor
   readonly partialValue = signal<PT | null>(null);
   readonly value = model<T | null>(null);
-
-  abstract override writeValue(value: T | null): void;
-
-  //! change & touch event emitters
-  protected _emitChange(): void {
-    this.value.set(this.getValueForEmit());
-  }
 
   protected abstract getValueForEmit(): T | null;
 

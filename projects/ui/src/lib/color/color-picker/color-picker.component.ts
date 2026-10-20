@@ -1,37 +1,37 @@
 import {
-    ChangeDetectionStrategy,
-    Component,
-    ContentChild,
-    ElementRef,
-    HostListener,
-    Input,
-    OnChanges,
-    OnInit,
-    SimpleChanges,
-    TemplateRef,
-    ViewEncapsulation,
-    computed,
-    input,
-    model,
-    output,
-    signal,
-    viewChild,
+  ChangeDetectionStrategy,
+  Component,
+  ContentChild,
+  ElementRef,
+  HostListener,
+  Input,
+  OnChanges,
+  OnInit,
+  SimpleChanges,
+  TemplateRef,
+  ViewEncapsulation,
+  computed,
+  input,
+  model,
+  output,
+  signal,
+  viewChild,
 } from '@angular/core';
 import { BooleanLike, coerceBooleanProperty, coerceNumberProperty, getEventRelativePos } from '@ardium-pl/devkit';
 import * as Color from 'color';
 import { round, roundToMultiple, roundToPrecision } from 'more-rounding';
 import { _NgModelComponentBase, _ngModelComponentDefaults } from '../../_internal/ngmodel-component';
 import {
-    ArdColorPickerColorReferenceTemplateDirective,
-    ArdColorPickerHueIndicatorTemplateDirective,
-    ArdColorPickerOpacityIndicatorTemplateDirective,
-    ArdColorPickerShadeIndicatorTemplateDirective,
+  ArdColorPickerColorReferenceTemplateDirective,
+  ArdColorPickerHueIndicatorTemplateDirective,
+  ArdColorPickerOpacityIndicatorTemplateDirective,
+  ArdColorPickerShadeIndicatorTemplateDirective,
 } from './color-picker.directives';
 import {
-    ColorPickerColorReferenceContext,
-    ColorPickerIndicatorContext,
-    ColorPickerVariant,
-    _ColorPickerInputsSectionType,
+  ColorPickerColorReferenceContext,
+  ColorPickerIndicatorContext,
+  ColorPickerVariant,
+  _ColorPickerInputsSectionType,
 } from './color-picker.types';
 
 const validHexColorRegex = /^#[0-9a-f]{3}(?:[0-9a-f]{3})?$/i;
@@ -139,7 +139,7 @@ export class ArdiumColorPickerComponent extends _NgModelComponentBase implements
     this._updateTripleInputValues();
   }
 
-  ngOnInit(): void {
+  override ngOnInit(): void {
     if (this._wasReferenceColorSet) return;
 
     this._wasReferenceColorSet = true;
@@ -213,7 +213,6 @@ export class ArdiumColorPickerComponent extends _NgModelComponentBase implements
 
     this.value = Color(this.value).saturationv(newSaturation).value(newValue);
 
-    this._emitChange();
     this._updateCurrentOpacityMapColor();
     //emit specific events
     if (oldSaturation !== this.value.saturationv()) this.colorSaturationChange.emit(this.value.saturationv());
@@ -233,7 +232,6 @@ export class ArdiumColorPickerComponent extends _NgModelComponentBase implements
 
     this.value = Color(this.value).hue(newHueExact);
 
-    this._emitChange();
     this.colorHueChange.emit(this.value.hue());
     this._updateCurrentShadeMapColor();
     this._updateCurrentOpacityMapColor();
@@ -253,7 +251,6 @@ export class ArdiumColorPickerComponent extends _NgModelComponentBase implements
 
     this.value = Color(this.value).alpha(newOpacity);
 
-    this._emitChange();
     this.colorOpacityChange.emit(this.value.alpha());
   }
 
@@ -372,13 +369,6 @@ export class ArdiumColorPickerComponent extends _NgModelComponentBase implements
 
   // eslint-disable-next-line
   onTripleInputChange(value: number | null, index: number): void {} //TODO
-
-  //! events
-  protected _emitChange() {
-    const v = this.value;
-    this._onChangeRegistered?.(v);
-    this.valueChange.emit(v);
-  }
 
   //! template customization
   @Input() shadeIndicatorTemplate?: TemplateRef<any>;

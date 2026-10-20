@@ -1,16 +1,18 @@
 import {
-  AfterViewInit,
   computed,
   Directive,
+  effect,
   ElementRef,
   inject,
-  Input,
   input,
+  linkedSignal,
+  model,
   OnInit,
   output,
   signal,
   viewChild,
 } from '@angular/core';
+import { FormValueControl } from '@angular/forms/signals';
 import {
   BooleanLike,
   coerceBooleanProperty,
@@ -18,6 +20,7 @@ import {
   FileSystemMethod,
   FileSystemService,
   FileSystemStartDirectory,
+  NumberLike,
 } from '@ardium-pl/devkit';
 import { isDefined } from 'simple-bool';
 import { _FormFieldComponentBase } from '../_internal/form-field-component';
@@ -26,16 +29,28 @@ import { _FileInputBaseDefaults } from './file-input-base.defaults';
 import { FileInputFailedUpload, FileInputFailedUploadReason, FileInputFileTypes } from './file-input-types';
 
 @Directive()
-export abstract class _FileInputComponentBase extends _FormFieldComponentBase implements OnInit, AfterViewInit {
+export abstract class _FileInputComponentBase
+  extends _FormFieldComponentBase
+  implements OnInit, Omit<FormValueControl<File | File[] | null>, 'readonly' | 'disabled'>
+{
   protected override readonly _DEFAULTS!: _FileInputBaseDefaults;
+
+  constructor(defaults: _FileInputBaseDefaults) {
+    super(defaults);
+
+    effect(() => {
+      this._validateWrittenValue();
+    });
+    effect(() => {
+      this._updateElementValue();
+    });
+  }
 
   private readonly _fileSystemService = inject(FileSystemService);
 
   abstract readonly componentId: string;
 
   readonly fileInputEl = viewChild<ElementRef<HTMLInputElement>>('fileInput');
-
-  readonly name = input<string>('');
 
   override ngOnInit(): void {
     super.ngOnInit();
@@ -47,27 +62,24 @@ export abstract class _FileInputComponentBase extends _FormFieldComponentBase im
       );
     }
   }
-  protected _wasViewInit = false;
-  ngAfterViewInit(): void {
-    this._wasViewInit = true;
-
-    this._updateElementValue();
-  }
 
   //! appearance
   readonly compact = input<boolean, BooleanLike>(false, { transform: v => coerceBooleanProperty(v) });
 
   //! settings
   readonly multiple = input<boolean, BooleanLike>(false, { transform: v => coerceBooleanProperty(v) });
-  readonly maxFiles = input<Nullable<number>, any>(null, { transform: v => coerceNumberProperty(v, null) });
+  // @ts-expect-error
+  readonly maxLength = input<number, NumberLike>(0, { transform: v => coerceNumberProperty(v, 0) });
+  /**
+   * @deprecated Use `[maxLength]` instead.
+   */
+  readonly maxFiles = input<undefined, never>(undefined, { transform: () => undefined });
 
-  readonly maxFilesWithMultiple = computed<number>(() => (this.multiple() ? (this.maxFiles() ?? Infinity) : 1));
+  readonly fileLimit = computed<number>(() => (this.multiple() ? (this.maxLength() > 1 ? this.maxLength() : Infinity) : 1));
 
   readonly blockAfterUpload = input<boolean, BooleanLike>(false, { transform: v => coerceBooleanProperty(v) });
 
-  get shouldBeBlocked(): boolean {
-    return this.disabled() || this.readonly() || (this.blockAfterUpload() && isDefined(this.value));
-  }
+  readonly shouldBeBlocked = computed<boolean>(() => this.disabled() || this.readonly() || (this.blockAfterUpload() && isDefined(this.value())));
 
   readonly maxFileSizeBytes = input<Nullable<number>, any>(null, { transform: v => coerceNumberProperty(v, null) });
 
@@ -118,61 +130,53 @@ export abstract class _FileInputComponentBase extends _FormFieldComponentBase im
   });
 
   //! value
-  protected readonly _value = signal<File[] | null>(null);
-  @Input()
-  get value(): File[] | null {
-    return this._value();
-  }
-  set value(v: File | File[] | null) {
-    this.writeValue(v);
+  readonly value = model<File | File[] | null>(null);
+  protected readonly _valueAsArray = computed<File[] | null>(() => {
+    const v = this.value();
+    if (v === null) return null;
+    if (v instanceof File) return [v];
+    return v;
+  });
+
+  private _setValue(v: File | File[] | null): void {
+    if (!isDefined(v)) {
+      this.value.set(null);
+      return;
+    }
+    if (v instanceof File) {
+      if (this.multiple()) {
+        this.value.set([v]);
+      } else {
+        this.value.set(v);
+      }
+      return;
+    }
+    if (this.multiple()) {
+      this.value.set(v.length > 0 ? v.slice(0, this.fileLimit()) : null);
+    } else {
+      this.value.set(v.length > 0 ? v[0] : null);
+    }
   }
 
-  readonly valueChange = output<File[] | null>();
   readonly dragFilesEvent = output<File[]>({ alias: 'dragFiles' });
   readonly failedUploadEvent = output<FileInputFailedUpload[]>({ alias: 'failedUpload' });
 
   protected _valueBeforeInit: File[] | null = null;
-  writeValue(v: File | File[] | null): void {
-    this._writeValue(v, false);
-  }
-  protected _writeValue(v: File | File[] | null, emitEvents = true): void {
-    if (!(v instanceof File) && !Array.isArray(v) && v !== null) {
-      console.error(
-        new Error(`ARD-FT${this.componentId}1: <ard-file-input>'s value must be a File, an array of Files, or null.`)
-      );
+  private _validateWrittenValue(): void {
+    const v = this.value();
+    if (!isDefined(v)) return;
+    if (v instanceof File) return;
+    if (Array.isArray(v) && v.every(file => file instanceof File)) {
+      if (!this.multiple() && v.length > 1) {
+        console.warn(
+          `ARD-WA${this.componentId}1: <ard-file-input> received an array of files but the 'multiple' input is not set to true. Only the first file will be used.`
+        );
+        this.value.set([v[0]]);
+      }
       return;
     }
-    if (v instanceof File) {
-      v = [v];
-    }
-    if (Array.isArray(v) && !this.multiple() && v.length > 1) {
-      console.warn(
-        `ARD-WA${this.componentId}2: <ard-file-input> received an array of files but the 'multiple' input is not set to true. Only the first file will be used.`
-      );
-      v = [v[0]];
-    }
-    if (Array.isArray(v) && v.length === 0) {
-      v = null;
-    }
-
-    if (v === null) {
-      this.currentViewState.set('idle');
-    } else {
-      this.currentViewState.set('uploaded');
-    }
-    this._value.set(v);
-
-    if (this._wasViewInit) this._updateElementValue();
-
-    if (emitEvents) {
-      this._emitChange();
-    }
-  }
-
-  protected _emitChange(): void {
-    const v = this.value;
-    this._onChangeRegistered?.(v);
-    this.valueChange.emit(v);
+    console.error(new Error(`ARD-FT${this.componentId}1: <ard-file-input>'s value must be a File, an array of Files, or null.`));
+    this.value.set(null);
   }
 
   openBrowseDialog(): void {
@@ -194,14 +198,19 @@ export abstract class _FileInputComponentBase extends _FormFieldComponentBase im
           accept: this.accept() === '*' ? undefined : this.accept(),
         })
         .then(fileOrFiles => {
+          this._isFilePickerOpen = false;
           if (!fileOrFiles) {
-            this._writeValue(null);
-            this.currentViewState.set('idle');
+            this.value.set(null);
             return;
           }
-          const files = Array.isArray(fileOrFiles) ? fileOrFiles : [fileOrFiles];
-          this._writeFilesToValue(files);
-          this._isFilePickerOpen = false;
+          const { acceptedFiles, failedFiles } = this._filterFilesOnValueChange(
+            Array.isArray(fileOrFiles) ? fileOrFiles : [fileOrFiles]
+          );
+
+          if (failedFiles.length > 0) {
+            this.failedUploadEvent.emit(failedFiles);
+          }
+          this._setValue(acceptedFiles);
         });
       return;
     }
@@ -212,10 +221,10 @@ export abstract class _FileInputComponentBase extends _FormFieldComponentBase im
 
   //! temporary value
   //for drag event handling
-  protected _draggedFiles = signal<number | null>(null);
+  protected readonly _draggedFiles = signal<number | null>(null);
 
   //! view state
-  readonly currentViewState = signal<'idle' | 'dragover' | 'uploaded'>('idle');
+  readonly currentViewState = linkedSignal<'idle' | 'dragover' | 'uploaded'>(() => (this.value() ? 'uploaded' : 'idle'));
   private _beforeDragoverState: 'idle' | 'uploaded' = 'idle';
 
   //! event handlers
@@ -257,93 +266,27 @@ export abstract class _FileInputComponentBase extends _FormFieldComponentBase im
       this.currentViewState.set('idle');
       return;
     }
-    const filteredFiles: File[] = [];
-    const failedFiles: FileInputFailedUpload[] = [];
-    const acceptedMimeTypes = this.acceptedMimeTypes();
-    if (acceptedMimeTypes) {
-      let mimeTypeMatched = false;
-      fileLoop: for (const file of files) {
-        const { shouldAccept, reason } = this._filterFilesBasedOnSizeAndCount(file, filteredFiles.length);
-        if (!shouldAccept) {
-          failedFiles.push({ file, reason: reason! });
-          continue;
-        }
+    const { acceptedFiles, failedFiles } = this._filterFilesOnValueChange(files);
 
-        mimeTypeMatched = false;
-        for (const mimeTypeObj of acceptedMimeTypes) {
-          if (isMimeTypeMatching(file, mimeTypeObj.mimeType)) {
-            mimeTypeMatched = true;
-
-            const extension = '.' + file.name.split('.').pop()?.toLowerCase();
-            if (mimeTypeObj.extensions.size === 0 || mimeTypeObj.extensions.has('*') || mimeTypeObj.extensions.has(extension)) {
-              filteredFiles.push(file);
-              continue fileLoop;
-            }
-          }
-        }
-        if (!mimeTypeMatched) {
-          failedFiles.push({ file, reason: FileInputFailedUploadReason.InvalidMimeType });
-        } else {
-          failedFiles.push({ file, reason: FileInputFailedUploadReason.MimeTypeFoundButExtensionNotAllowed });
-        }
-      }
-    } else {
-      const accept = this.accept();
-      let acceptEntries: string[] = [];
-      if (Array.isArray(accept)) {
-        acceptEntries = accept.map(e => e.trim().toLowerCase());
-      } else {
-        acceptEntries = accept.split(',').map(e => e.trim().toLowerCase());
-      }
-      if (typeof accept === 'string' && accept === '*') {
-        for (const file of files) {
-          const { shouldAccept, reason } = this._filterFilesBasedOnSizeAndCount(file, filteredFiles.length);
-          if (!shouldAccept) {
-            failedFiles.push({ file, reason: reason! });
-          }
-        }
-      } else {
-        fileLoop: for (const file of files) {
-          const { shouldAccept, reason } = this._filterFilesBasedOnSizeAndCount(file, filteredFiles.length);
-          if (!shouldAccept) {
-            failedFiles.push({ file, reason: reason! });
-            continue;
-          }
-
-          const extension = '.' + file.name.split('.').at(-1)?.toLowerCase();
-          for (const entry of acceptEntries) {
-            if (extension === entry) {
-              filteredFiles.push(file);
-              continue fileLoop;
-            }
-          }
-          failedFiles.push({ file, reason: FileInputFailedUploadReason.InvalidExtension });
-        }
-      }
+    if (acceptedFiles.length > 0) {
+      this.dragFilesEvent.emit(acceptedFiles);
+    }
+    if (failedFiles.length > 0) {
+      this.failedUploadEvent.emit(failedFiles);
     }
 
-    this.dragFilesEvent.emit(filteredFiles);
-    this.failedUploadEvent.emit(failedFiles);
-
-    this.currentViewState.set('uploaded');
-    this._writeValue(filteredFiles.length > 0 ? filteredFiles : null);
+    this._setValue(acceptedFiles);
     this._emitTouched();
   }
   onFileInputChange(): void {
     this._isFilePickerOpen = false;
     const files = Array.from(this.fileInputEl()?.nativeElement.files ?? []);
-    this._writeFilesToValue(files);
-  }
-  private _writeFilesToValue(files: File[]) {
-    if (files.length === 0) {
-      this._writeValue(null);
-      this.currentViewState.set('idle');
-      this._emitTouched();
-      return;
+    const { acceptedFiles, failedFiles } = this._filterFilesOnValueChange(files);
+
+    if (failedFiles.length > 0) {
+      this.failedUploadEvent.emit(failedFiles);
     }
-    this._writeValue(files);
-    this.currentViewState.set('uploaded');
-    this._emitTouched();
+    this._setValue(acceptedFiles);
   }
 
   //! touched event handling
@@ -368,12 +311,79 @@ export abstract class _FileInputComponentBase extends _FormFieldComponentBase im
   }
 
   //! helpers
+  private _filterFilesOnValueChange(files: File[]): { acceptedFiles: File[]; failedFiles: FileInputFailedUpload[] } {
+    const acceptedFiles: File[] = [];
+    const failedFiles: FileInputFailedUpload[] = [];
+    const acceptedMimeTypes = this.acceptedMimeTypes();
+    if (acceptedMimeTypes) {
+      let mimeTypeMatched = false;
+      fileLoop: for (const file of files) {
+        const { shouldAccept, reason } = this._filterFilesBasedOnSizeAndCount(file, acceptedFiles.length);
+        if (!shouldAccept) {
+          failedFiles.push({ file, reason: reason! });
+          continue;
+        }
+
+        mimeTypeMatched = false;
+        for (const mimeTypeObj of acceptedMimeTypes) {
+          if (isMimeTypeMatching(file, mimeTypeObj.mimeType)) {
+            mimeTypeMatched = true;
+
+            const extension = '.' + file.name.split('.').pop()?.toLowerCase();
+            if (mimeTypeObj.extensions.size === 0 || mimeTypeObj.extensions.has('*') || mimeTypeObj.extensions.has(extension)) {
+              acceptedFiles.push(file);
+              continue fileLoop;
+            }
+          }
+        }
+        if (!mimeTypeMatched) {
+          failedFiles.push({ file, reason: FileInputFailedUploadReason.InvalidMimeType });
+        } else {
+          failedFiles.push({ file, reason: FileInputFailedUploadReason.MimeTypeFoundButExtensionNotAllowed });
+        }
+      }
+    } else {
+      const accept = this.accept();
+      let acceptEntries: string[] = [];
+      if (Array.isArray(accept)) {
+        acceptEntries = accept.map(e => e.trim().toLowerCase());
+      } else {
+        acceptEntries = accept.split(',').map(e => e.trim().toLowerCase());
+      }
+      if (typeof accept === 'string' && accept === '*') {
+        for (const file of files) {
+          const { shouldAccept, reason } = this._filterFilesBasedOnSizeAndCount(file, acceptedFiles.length);
+          if (!shouldAccept) {
+            failedFiles.push({ file, reason: reason! });
+          }
+        }
+      } else {
+        fileLoop: for (const file of files) {
+          const { shouldAccept, reason } = this._filterFilesBasedOnSizeAndCount(file, acceptedFiles.length);
+          if (!shouldAccept) {
+            failedFiles.push({ file, reason: reason! });
+            continue;
+          }
+
+          const extension = '.' + file.name.split('.').at(-1)?.toLowerCase();
+          for (const entry of acceptEntries) {
+            if (extension === entry) {
+              acceptedFiles.push(file);
+              continue fileLoop;
+            }
+          }
+          failedFiles.push({ file, reason: FileInputFailedUploadReason.InvalidExtension });
+        }
+      }
+    }
+    return { acceptedFiles: acceptedFiles, failedFiles };
+  }
   private _filterFilesBasedOnSizeAndCount(
     file: File,
     existingFileCount: number
   ): { shouldAccept: boolean; reason?: FileInputFailedUploadReason } {
     // check count
-    if (existingFileCount >= this.maxFilesWithMultiple()) {
+    if (existingFileCount >= this.fileLimit()) {
       return { shouldAccept: false, reason: FileInputFailedUploadReason.TooManyFiles };
     }
     // check size
@@ -390,7 +400,7 @@ export abstract class _FileInputComponentBase extends _FormFieldComponentBase im
   }
 
   protected _updateElementValue(): void {
-    const v = this.value;
+    const v = this._valueAsArray();
 
     const inputEl = this.fileInputEl()?.nativeElement;
     if (!inputEl) return;

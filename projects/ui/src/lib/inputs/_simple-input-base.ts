@@ -144,7 +144,6 @@ export abstract class _SimpleInputComponentBase extends _FormFieldComponentBase 
     this._emitInput();
   }
   protected _emitInput(): void {
-    this._onChangeRegistered?.(this.value);
     this.inputEvent.emit(this.value);
     this.valueChange.emit(this.value);
   }
