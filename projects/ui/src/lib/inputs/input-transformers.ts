@@ -29,7 +29,7 @@ export class RegExpTransformer implements IRegExpTransformer {
         text = text.replace(this.regex, this.replace);
         const lengthAfter = text.length;
         //fix caret pos
-        caretPos = caretPos + (lengthAfter - lengthBefore);
+        caretPos += (lengthAfter - lengthBefore);
         //for infinite loop prevention
         safetySwitch++;
       }

@@ -41,6 +41,6 @@ export class BadgePage {
   hidden: boolean = false;
   overlap: boolean = true;
   addTo: 'text' | 'button' = 'button';
-  ariaLabel: string | null = 'Example badge';
-  text: string | null = 'NEW!';
+  ariaLabel: string = 'Example badge';
+  text: string = 'NEW!';
 }

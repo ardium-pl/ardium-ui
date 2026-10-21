@@ -3,7 +3,7 @@ import { ArdiumHexInputModule, provideHexInputDefaults } from '../../../../../..
 
 @Component({
   selector: 'app-hex-input-default-prefix',
-  template: `#`,
+  template: `🎨`,
   standalone: true,
 })
 export class HexInputDefaultPrefixComponent {}

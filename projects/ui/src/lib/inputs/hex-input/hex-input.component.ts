@@ -8,12 +8,11 @@ import {
   forwardRef,
   Inject,
   input,
-  Input,
+  model,
   output,
   viewChild,
   ViewEncapsulation,
 } from '@angular/core';
-import { NG_VALUE_ACCESSOR } from '@angular/forms';
 import { BooleanLike, coerceBooleanProperty, coerceNumberProperty } from '@ardium-pl/devkit';
 import { _FormFieldComponentBase } from '../../_internal/form-field-component';
 import { contextToInputs } from '../../_internal/utils/context-to-inputs';
@@ -39,20 +38,12 @@ import { HexInputModel, HexInputModelHost } from './hex-input.model';
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [
     {
-      provide: NG_VALUE_ACCESSOR,
-      useExisting: forwardRef(() => ArdiumHexInputComponent),
-      multi: true,
-    },
-    {
       provide: ARD_FORM_FIELD_CONTROL,
       useExisting: forwardRef(() => ArdiumHexInputComponent),
     },
   ],
 })
-export class ArdiumHexInputComponent
-  extends _FormFieldComponentBase
-  implements HexInputModelHost, AfterViewInit
-{
+export class ArdiumHexInputComponent extends _FormFieldComponentBase implements HexInputModelHost, AfterViewInit {
   protected override readonly _DEFAULTS!: ArdHexInputDefaults;
   constructor(@Inject(ARD_HEX_INPUT_DEFAULTS) defaults: ArdHexInputDefaults) {
     super(defaults);
@@ -61,15 +52,8 @@ export class ArdiumHexInputComponent
   readonly textInputEl = viewChild<ElementRef<HTMLInputElement>>('textInput');
 
   protected readonly inputModel = new HexInputModel(this);
-  protected _wasViewInit = false;
   ngAfterViewInit(): void {
-    this._wasViewInit = true;
     this._setInputAttributes();
-    //set the value
-    if (this._valueBeforeInit) {
-      this.writeValue(this._valueBeforeInit);
-      delete this._valueBeforeInit;
-    }
   }
 
   //! prefix & suffix
@@ -118,17 +102,13 @@ export class ArdiumHexInputComponent
 
   readonly clearButtonTitle = input<string>(this._DEFAULTS.clearButtonTitle);
 
-  readonly shouldShowClearButton = computed<boolean>(
-    () => this.clearable() && !this.disabled() && Boolean(this.inputModel?.value())
-  );
+  readonly shouldShowClearButton = computed<boolean>(() => this.clearable() && !this.disabled() && Boolean(this.value()));
 
   onClearButtonClick(event: MouseEvent): void {
     if (this.disabled() || this.readonly()) return;
 
     event.stopPropagation();
     this.inputModel.clear();
-    this._emitChange();
-    this._emitInput();
     this.clearEvent.emit();
     this.focus();
   }
@@ -136,33 +116,10 @@ export class ArdiumHexInputComponent
   //! other inputs
   readonly inputAttrs = input<Record<string, any>>({});
 
-  //! control value accessor's write value implementation
-  writeValue(v: any) {
-    if (!this._wasViewInit) {
-      this._valueBeforeInit = v;
-      return;
-    }
-    this.inputModel.writeValue(v);
-  }
-
   //! value two-way binding
-  protected _valueBeforeInit?: string | null = null;
-  @Input()
-  set value(v: string | null) {
-    if (!this._wasViewInit) {
-      this._valueBeforeInit = v;
-      return;
-    }
-    this.writeValue(v);
-  }
-  get value(): string | null {
-    return this.inputModel?.hashSignValue();
-  }
-  readonly valueChange = output<string>();
+  readonly value = model<string | null>(null);
 
   //! event emitters
-  readonly inputEvent = output<string>({ alias: 'input' });
-  readonly changeEvent = output<string>({ alias: 'change' });
   readonly clearEvent = output<void>({ alias: 'clear' });
 
   //! event handlers
@@ -170,31 +127,7 @@ export class ArdiumHexInputComponent
     if (this.disabled() || this.readonly()) return;
 
     event.stopPropagation();
-    const valueHasChanged = this.inputModel.writeValue(newVal);
-    if (!valueHasChanged) return;
-    this._emitInput();
-  }
-  protected _emitInput(): void {
-    const v = this.inputModel.hashSignValue();
-    this.inputEvent.emit(v);
-    this.valueChange.emit(v);
-  }
-
-  onChange(event: Event): void {
-    this._emitChange();
-    event.stopPropagation();
-  }
-  protected _emitChange(): void {
-    const v = this.inputModel.hashSignValue();
-    this.changeEvent.emit(v);
-  }
-
-  override onBlur(event: FocusEvent): void {
-    super.onBlur(event);
-
-    if (this.disabled() || this.readonly()) return;
-
-    this._emitChange();
+    this.inputModel.updateValue(newVal);
   }
 
   //smart focus
@@ -208,14 +141,14 @@ export class ArdiumHexInputComponent
 
   onCopy(event: ClipboardEvent): void {
     if (
-      this.value &&
+      this.value() &&
       //does the selection cover the entire input
       ((this.textInputEl()?.nativeElement.selectionStart === 0 &&
         this.textInputEl()?.nativeElement.selectionEnd === this.textInputEl()?.nativeElement.value.length) ||
         //or is zero-wide
         this.textInputEl()?.nativeElement.selectionStart === this.textInputEl()?.nativeElement.selectionEnd)
     ) {
-      event.clipboardData?.setData('text/plain', this.value);
+      event.clipboardData?.setData('text/plain', this.value() ?? '');
       event.preventDefault();
     }
   }

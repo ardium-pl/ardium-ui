@@ -25,7 +25,7 @@ export class ButtonPage {
   compact: boolean = false;
   vertical: boolean = false;
   disabled: boolean = false;
-  text: string | null = 'Text';
+  text: string = 'Text';
 
   constructor(private _logger: Logger) {}
   log = this._logger.log;

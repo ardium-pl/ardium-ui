@@ -31,7 +31,6 @@
     [(ngModel)]="value"
     (valueChange)="log('valueChange', $event)"
     (ngModelChange)="log('ngModelChange', $event)"
-    (change)="log('change', $event)"
     (input)="log('input', $event)"
     (clear)="log('clear', $event)"
     (focus)="log('focus', $event)"
@@ -60,6 +59,10 @@
   </ard-hex-input>
 </div>
 <div class="master">
+  <span class="title">Default prefix component</span>
+  <app-hex-input-default-prefix-component />
+</div>
+<div class="master">
   <span class="title">Rainbow table</span>
   @for (variant of variants; track variant) {
   <div class="flex">
@@ -75,8 +78,4 @@
     </div>
   </div>
   }
-</div>
-<div class="master">
-  <span class="title">Default prefix component</span>
-  <app-hex-input-default-prefix-component />
 </div>

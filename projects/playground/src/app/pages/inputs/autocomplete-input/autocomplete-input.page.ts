@@ -20,7 +20,7 @@ export class AutocompleteInputPage {
   charlistCaseInsensitive = true;
   valueForCharlist = 'Abcdef';
 
-  fruitInputValue: string | null = 'Apple';
+  fruitInputValue = 'Apple';
 
   private _fruitAutocompleteSubject = new BehaviorSubject<string>('');
   public fruitAutocomplete$ = this._fruitAutocompleteSubject.asObservable();
@@ -40,7 +40,7 @@ export class AutocompleteInputPage {
     return this._autocompletes.find(v => this.fruitInputValue && v.startsWith(this.fruitInputValue)) ?? '';
   }
 
-  colorInputValue: string | null = 'Red';
+  colorInputValue: string = 'Red';
 
   private _colorSuggestionsSubject = new BehaviorSubject<any[]>([]);
   public colorSuggestions$ = this._colorSuggestionsSubject.asObservable();

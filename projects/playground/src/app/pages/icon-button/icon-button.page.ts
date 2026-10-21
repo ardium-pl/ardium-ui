@@ -20,14 +20,8 @@ export class IconButtonPage {
   color: CC[] = [CC.Primary];
   compact: boolean = false;
   disabled: boolean = false;
-  private _icon: string | null = 'favorite';
-  public get icon(): string | null {
-    return this._icon;
-  }
-  public set icon(value: string | null) {
-    this._icon = value;
-  }
-  text: string | null = null;
+  icon: string = 'favorite';
+  text: string = '';
 
   constructor(private _logger: Logger) {}
   log = this._logger.log;

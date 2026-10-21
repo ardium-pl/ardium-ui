@@ -13,7 +13,7 @@
 >
   <div
     class="ard-hex-input"
-    [class.ard-has-value]="value"
+    [class.ard-has-value]="value()"
     (mouseup)="onMouseup()"
   >
     @if (showHash()) {
@@ -49,7 +49,6 @@
         (input)="onInput(textInput.value, $event)"
         (focus)="onFocus($event)"
         (blur)="onBlur($event)"
-        (change)="onChange($event)"
         (mouseup)="$event.stopPropagation()"
         (copy)="onCopy($event)"
       />

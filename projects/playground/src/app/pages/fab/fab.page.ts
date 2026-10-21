@@ -18,8 +18,8 @@ export class FabPage {
   size: FS[] = [FS.Standard];
   extended: boolean = false;
   disabled: boolean = false;
-  icon: string | null = 'favorite';
-  text: string | null = null;
+  icon: string = 'favorite';
+  text: string = '';
 
   constructor(private _logger: Logger) {}
   log = this._logger.log;
