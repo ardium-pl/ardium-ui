@@ -1,4 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, signal } from '@angular/core';
+import { FormControl } from '@angular/forms';
+import { form } from '@angular/forms/signals';
 
 @Component({
   standalone: false,
@@ -6,4 +8,11 @@ import { Component } from '@angular/core';
   templateUrl: './password-input.page.html',
   styleUrls: ['./password-input.page.scss'],
 })
-export class PasswordInputPage {}
+export class PasswordInputPage {
+  readonly control = new FormControl('foobar');
+
+  readonly formValue = signal({
+    input1: 'abcdef',
+  });
+  readonly form = form(this.formValue);
+}

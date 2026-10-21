@@ -9,12 +9,12 @@ import {
   ViewEncapsulation,
   computed,
   contentChild,
-  forwardRef,
+  effect,
   input,
   model,
   viewChild,
 } from '@angular/core';
-import { NG_VALUE_ACCESSOR } from '@angular/forms';
+import { FormValueControl } from '@angular/forms/signals';
 import { BooleanLike, coerceBooleanProperty, coerceNumberProperty } from '@ardium-pl/devkit';
 import { isAnyString, isDefined } from 'simple-bool';
 import { _FormFieldComponentBase } from '../../_internal/form-field-component';
@@ -41,20 +41,22 @@ import { PasswordInputRevealButtonContext } from './password-input.types';
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [
     {
-      provide: NG_VALUE_ACCESSOR,
-      useExisting: forwardRef(() => ArdiumPasswordInputComponent),
-      multi: true,
-    },
-    {
       provide: ARD_FORM_FIELD_CONTROL,
       useExisting: ArdiumPasswordInputComponent,
     },
   ],
 })
-export class ArdiumPasswordInputComponent extends _FormFieldComponentBase implements OnInit, OnDestroy {
+export class ArdiumPasswordInputComponent
+  extends _FormFieldComponentBase
+  implements OnInit, OnDestroy, Omit<FormValueControl<string | null>, 'readonly' | 'disabled' | 'required'>
+{
   protected override readonly _DEFAULTS!: ArdPasswordInputDefaults;
   constructor(@Inject(ARD_PASSWORD_INPUT_DEFAULTS) defaults: ArdPasswordInputDefaults) {
     super(defaults);
+
+    effect(() => {
+      this._validateWrittenValue();
+    });
   }
 
   //! input view
@@ -157,7 +159,8 @@ export class ArdiumPasswordInputComponent extends _FormFieldComponentBase implem
   readonly inputAttrs = input<Record<string, any>>(this._DEFAULTS.inputAttrs);
 
   //! control value accessor's write value implementation
-  writeValue(v: any) {
+  private _validateWrittenValue(): void {
+    const v = this.value() as any;
     if (!isAnyString(v) && isDefined(v)) {
       //warn when using non-string/non-null value
       console.warn(
@@ -166,33 +169,16 @@ export class ArdiumPasswordInputComponent extends _FormFieldComponentBase implem
         )
       );
       //normalize the value
-      v = v?.toString?.() ?? String(v);
+      this.value.set(v?.toString?.() ?? String(v));
       return;
     }
-    this._writeValue(v ?? null);
-  }
-  protected _writeValue(v: string | null): boolean {
-    const oldVal = this.value();
-    this.value.set(v);
-    return oldVal !== v;
   }
   //! value two-way binding
   readonly value = model<string | null>(null);
 
   //! event handlers
   onInput(newVal: string): void {
-    const valueHasChanged = this._writeValue(newVal);
-    if (!valueHasChanged) return;
-    this._emitChange();
-  }
-  protected _emitChange(): void {
-    const v = this.value();
-    // this._onChangeRegistered?.(v);
-  }
-  //focus, blur, change
-  onChange(event: Event): void {
-    event.stopPropagation();
-    this._emitChange();
+    this.value.set(newVal);
   }
 
   // copy

@@ -13,6 +13,7 @@ import {
   viewChild,
   ViewEncapsulation,
 } from '@angular/core';
+import { FormValueControl } from '@angular/forms/signals';
 import { BooleanLike, coerceBooleanProperty, coerceNumberProperty } from '@ardium-pl/devkit';
 import { _FormFieldComponentBase } from '../../_internal/form-field-component';
 import { contextToInputs } from '../../_internal/utils/context-to-inputs';
@@ -43,7 +44,10 @@ import { HexInputModel, HexInputModelHost } from './hex-input.model';
     },
   ],
 })
-export class ArdiumHexInputComponent extends _FormFieldComponentBase implements HexInputModelHost, AfterViewInit {
+export class ArdiumHexInputComponent
+  extends _FormFieldComponentBase
+  implements HexInputModelHost, AfterViewInit, Omit<FormValueControl<string | null>, 'readonly' | 'disabled' | 'required'>
+{
   protected override readonly _DEFAULTS!: ArdHexInputDefaults;
   constructor(@Inject(ARD_HEX_INPUT_DEFAULTS) defaults: ArdHexInputDefaults) {
     super(defaults);
