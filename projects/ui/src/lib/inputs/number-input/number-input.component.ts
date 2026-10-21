@@ -27,8 +27,7 @@ import { OneAxisAlignment } from '../../types/alignment.types';
 import { ArdPlaceholderContext } from '../../types/templates.types';
 import { FormElementAppearance, FormElementVariant } from '../../types/theming.types';
 import { Nullable } from '../../types/utility.types';
-import { NumberInputModelHost } from '../input-utils';
-import { NumberInputModel2 } from './number-input-model';
+import { NumberInputModel, NumberInputModelHost } from './number-input-model';
 import { ARD_NUMBER_INPUT_DEFAULTS, ArdNumberInputDefaults } from './number-input.defaults';
 import {
   ArdNumberInputPlaceholderTemplateDirective,
@@ -103,7 +102,7 @@ export class ArdiumNumberInputComponent
   //! input view
   readonly inputEl = viewChild<ElementRef<HTMLInputElement>>('textInput');
 
-  protected readonly inputModel = new NumberInputModel2(this);
+  protected readonly inputModel = new NumberInputModel(this);
   ngAfterViewInit(): void {
     this._setInputAttributes();
   }
@@ -335,7 +334,10 @@ export class ArdiumNumberInputComponent
     // if (valueChanged) {
     //   this._emitChange();
     // }
-    this.inputModel.updateValueWithCleanup(this.inputModel.stringValue(), this.minMaxBehavior() === ArdNumberInputMinMaxBehavior.AdjustOnBlur);
+    this.inputModel.updateValueWithCleanup(
+      this.inputModel.stringValue(),
+      this.minMaxBehavior() === ArdNumberInputMinMaxBehavior.AdjustOnBlur
+    );
   }
   //change
   onChange(event: Event): void {

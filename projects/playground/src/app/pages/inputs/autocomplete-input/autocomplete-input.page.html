@@ -16,28 +16,13 @@
   <ard-autocomplete-input
     [disabled]="disabled"
     [appearance]="appearance"
-    [(ngModel)]="value"
+    [(value)]="value"
     alignText="right"
     [maxLength]="maxLength"
-    (ngModelChange)="log('ngModelChange', $event)"
-    (change)="log('change', $event)"
     (focus)="log('focus', $event)"
     (blur)="log('blur', $event)"
   ></ard-autocomplete-input>
   } }
-</div>
-<span class="title">Input with character allowlist, case insensitive</span>
-<div class="grid master">
-  @for (disabled of [false, true]; track disabled) {
-  <ard-autocomplete-input
-    [disabled]="disabled"
-    [charlist]="charlist"
-    [charlistCaseInsensitive]="charlistCaseInsensitive"
-    [(ngModel)]="valueForCharlist"
-    (ngModelChange)="log('ngModelChange', $event)"
-    (change)="log('change', $event)"
-  ></ard-autocomplete-input>
-  }
 </div>
 <span class="title">Input with autocomplete</span>
 <div class="grid master">

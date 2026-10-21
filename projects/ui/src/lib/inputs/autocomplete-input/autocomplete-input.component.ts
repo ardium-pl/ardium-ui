@@ -13,16 +13,13 @@ import {
   ViewEncapsulation,
   computed,
   contentChild,
-  forwardRef,
   inject,
   input,
   output,
   signal,
   viewChild,
 } from '@angular/core';
-import { NG_VALUE_ACCESSOR } from '@angular/forms';
 import { BooleanLike, coerceArrayProperty, coerceBooleanProperty } from '@ardium-pl/devkit';
-import { isString } from 'simple-bool';
 import { SimplestItemStorage, SimplestItemStorageHost } from '../../_internal/item-storages/simplest-item-storage';
 import { contextToInputs } from '../../_internal/utils/context-to-inputs';
 import { DropdownPanelAppearance, DropdownPanelVariant } from '../../dropdown-panel/dropdown-panel.types';
@@ -32,7 +29,7 @@ import { FormElementAppearance, FormElementVariant } from '../../types/theming.t
 import { Nullable } from '../../types/utility.types';
 import { _SimpleInputComponentBase } from '../_simple-input-base';
 import { OptionContext } from './../../types/item-storage.types';
-import { InputModel, InputModelHost, escapeAndCreateRegex } from './../input-utils';
+import { InputModel, InputModelHost } from './../input-utils';
 import { ARD_AUTOCOMPLETE_INPUT_DEFAULTS, ArdAutocompleteInputDefaults } from './autocomplete-input.defaults';
 import {
   ArdAutocompleteInputLoadingTemplateDirective,
@@ -50,11 +47,6 @@ import {
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [
-    {
-      provide: NG_VALUE_ACCESSOR,
-      useExisting: forwardRef(() => ArdiumAutocompleteInputComponent),
-      multi: true,
-    },
     {
       provide: ARD_FORM_FIELD_CONTROL,
       useExisting: ArdiumAutocompleteInputComponent,
@@ -77,37 +69,11 @@ export class ArdiumAutocompleteInputComponent
     this.DEFAULTS = this._DEFAULTS;
   }
 
+  readonly componentId = '003';
+  readonly componentName = 'autocomplete-input';
+
   //! input view
   protected override readonly inputModel = new InputModel(this);
-
-  //! allowlist/denylist of characters
-  //use standard string for denylist, prepend with ^ for allowlist
-  readonly charlistFromInput = input<RegExp | undefined, string>(
-    this._DEFAULTS.charlist
-      ? escapeAndCreateRegex(this._DEFAULTS.charlist, '', this._DEFAULTS.charlist.startsWith('^'))
-      : undefined,
-    {
-      alias: 'charlist',
-      transform: v => {
-        if (!isString(v)) {
-          throw new Error('ARD-FT0033: [charlist] must be a non-empty string, got "".');
-        }
-        const negated = v.startsWith('^');
-        return escapeAndCreateRegex(v, '', !negated);
-      },
-    }
-  );
-  readonly charlistCaseInsensitive = input<boolean, BooleanLike>(this._DEFAULTS.charlistCaseInsensitive, {
-    transform: v => coerceBooleanProperty(v),
-  });
-
-  readonly charlist = computed<RegExp | undefined>(() => {
-    const c = this.charlistFromInput();
-    if (!this.charlistCaseInsensitive() || !c) {
-      return c;
-    }
-    return new RegExp(c.source, 'i');
-  });
 
   //! autocomplete
   readonly autocomplete = input<Nullable<string>>(undefined);
@@ -254,7 +220,7 @@ export class ArdiumAutocompleteInputComponent
   }
   private _selectSuggestion(item: ArdSimplestStorageItem): void {
     const selected = this.suggestionStorage.selectItem(item);
-    this.writeValue(selected ?? '');
+    this.value.set(selected ?? '');
 
     this.acceptSuggestionEvent.emit(selected);
 

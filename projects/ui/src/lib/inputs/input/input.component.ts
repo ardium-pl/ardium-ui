@@ -1,5 +1,4 @@
-import { ChangeDetectionStrategy, Component, contentChild, forwardRef, Inject, ViewEncapsulation } from '@angular/core';
-import { NG_VALUE_ACCESSOR } from '@angular/forms';
+import { ChangeDetectionStrategy, Component, contentChild, Inject, ViewEncapsulation } from '@angular/core';
 import { contextToInputs } from '../../_internal/utils/context-to-inputs';
 import { ARD_FORM_FIELD_CONTROL } from '../../form-field/form-field-child.token';
 import { _SimpleInputComponentBase } from '../_simple-input-base';
@@ -19,11 +18,6 @@ import {
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [
     {
-      provide: NG_VALUE_ACCESSOR,
-      useExisting: forwardRef(() => ArdiumInputComponent),
-      multi: true,
-    },
-    {
       provide: ARD_FORM_FIELD_CONTROL,
       useExisting: ArdiumInputComponent,
     },
@@ -34,6 +28,9 @@ export class ArdiumInputComponent extends _SimpleInputComponentBase {
   constructor(@Inject(ARD_SIMPLE_INPUT_DEFAULTS) defaults: ArdInputDefaults) {
     super(defaults);
   }
+
+  readonly componentId = '002';
+  readonly componentName = 'input';
 
   //! prefix & suffix
   readonly prefixTemplate = contentChild(ArdInputPrefixTemplateDirective);

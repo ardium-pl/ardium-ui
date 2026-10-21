@@ -1,33 +1,38 @@
 <span class="title">Simplest input</span>
 <div class="grid master">
-  <ard-input></ard-input>
+  <ard-input />
 </div>
 <span class="title">Readonly input</span>
 <div class="grid master">
-  <ard-input readonly value="Readonly value"></ard-input>
+  <ard-input
+    readonly
+    value="Readonly value"
+  />
 </div>
 <span class="title">Simple input with placeholder</span>
 <div class="grid master">
-  <ard-input placeholder="Placeholder"></ard-input>
+  <ard-input placeholder="Placeholder" />
 </div>
 <span class="title">Simple input with autoTrim</span>
 <div class="grid master">
-  <ard-input placeholder="Auto trim" autoTrim></ard-input>
+  <ard-input
+    placeholder="Auto trim"
+    autoTrim
+  />
 </div>
-<span class="title">Input appearances, max length, text align, ngModel</span>
+<span class="title">Input appearances, max length ({{maxLength}}), text align, [(value)]</span>
 <div class="grid master">
   @for (appearance of appearances; track appearance) { @for (disabled of [false, true]; track disabled) {
   <ard-input
     [disabled]="disabled"
     [appearance]="appearance"
-    [(ngModel)]="value"
+    [(value)]="value"
     alignText="right"
     [maxLength]="maxLength"
-    (ngModelChange)="log('ngModelChange', $event)"
-    (change)="log('change', $event)"
+    (valueChange)="log('valueChange', $event)"
     (focus)="log('focus', $event)"
     (blur)="log('blur', $event)"
-  ></ard-input>
+  />
   } }
 </div>
 <span class="title">Input prefix</span>
@@ -41,4 +46,16 @@
 <div class="master">
   <span class="title">Default prefix component</span>
   <app-input-default-prefix-component />
+</div>
+<span class="title">Input with autoTrim and maxLength (20) hooked up to reactive forms</span>
+<div class="flex master">
+  <ard-input
+    placeholder="Auto trim"
+    autoTrim
+    maxLength="20"
+    clearable
+    [formControl]="control"
+  />
+  <div>value: {{control.value}}</div>
+  <div>touched: {{control.touched}}</div>
 </div>

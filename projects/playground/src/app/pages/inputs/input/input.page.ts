@@ -1,4 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, signal } from '@angular/core';
+import { FormControl } from '@angular/forms';
+import { form } from '@angular/forms/signals';
 import { FormElementAppearance } from '../../../../../../ui/src/public-api';
 import { Logger } from './../../../services/logger.service';
 
@@ -15,4 +17,11 @@ export class InputPage {
 
   constructor(private _logger: Logger) {}
   log = this._logger.log;
+
+  readonly control = new FormControl('Hello world!');
+
+  readonly formValue = signal({
+    input1: 'Hello world!',
+  });
+  readonly form = form(this.formValue);
 }

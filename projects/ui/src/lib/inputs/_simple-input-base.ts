@@ -1,5 +1,6 @@
-import { AfterViewInit, computed, Directive, ElementRef, input, Input, output, viewChild } from '@angular/core';
-import { BooleanLike, coerceBooleanProperty, coerceNumberProperty } from '@ardium-pl/devkit';
+import { AfterViewInit, computed, Directive, ElementRef, input, model, output, viewChild } from '@angular/core';
+import { FormValueControl } from '@angular/forms/signals';
+import { BooleanLike, coerceBooleanProperty, coerceNumberProperty, NumberLike } from '@ardium-pl/devkit';
 import {
   _FormFieldComponentBase,
   _FormFieldComponentDefaults,
@@ -41,23 +42,24 @@ export const _simpleInputComponentDefaults: _SimpleInputComponentDefaults = {
   type: 'text',
 };
 
+const INT_MAX = 2_147_483_647;
+
 @Directive()
-export abstract class _SimpleInputComponentBase extends _FormFieldComponentBase implements AfterViewInit {
+export abstract class _SimpleInputComponentBase
+  extends _FormFieldComponentBase
+  implements AfterViewInit, Omit<FormValueControl<string>, 'readonly' | 'disabled'>
+{
   protected override readonly _DEFAULTS!: _SimpleInputComponentDefaults;
+
+  abstract readonly componentId: string;
+  abstract readonly componentName: string;
 
   //! input view
   readonly textInputEl = viewChild<ElementRef<HTMLInputElement>>('textInput');
 
   protected readonly inputModel = new InputModel(this);
-  private _wasViewInit = false;
   ngAfterViewInit(): void {
-    this._wasViewInit = true;
     this._setInputAttributes();
-    //set the value
-    if (this._valueBeforeInit) {
-      this.writeValue(this._valueBeforeInit);
-      delete this._valueBeforeInit;
-    }
   }
 
   readonly placeholder = input<string>(this._DEFAULTS.placeholder);
@@ -70,7 +72,7 @@ export abstract class _SimpleInputComponentBase extends _FormFieldComponentBase 
   //! placeholder
   abstract readonly placeholderTemplate: any;
 
-  readonly shouldDisplayPlaceholder = computed<boolean>(() => Boolean(this.placeholder()) && !this.inputModel.value());
+  readonly shouldDisplayPlaceholder = computed<boolean>(() => Boolean(this.placeholder()) && !this.inputModel.stringValue());
 
   readonly placeholderTemplateContext = computed<ArdPlaceholderContext>(() => ({
     $implicit: this.placeholder(),
@@ -100,52 +102,37 @@ export abstract class _SimpleInputComponentBase extends _FormFieldComponentBase 
   readonly inputAttrs = input<Record<string, any>>(this._DEFAULTS.inputAttrs);
 
   //! number attribute setters/getters
-  readonly maxLength = input<Nullable<number>, any>(this._DEFAULTS.maxLength, {
-    transform: v => coerceNumberProperty(v, this._DEFAULTS.maxLength),
+  // @ts-expect-error
+  readonly maxLength = input<number, NumberLike>(this._DEFAULTS.maxLength ?? INT_MAX, {
+    transform: v => coerceNumberProperty(v, this._DEFAULTS.maxLength ?? INT_MAX),
   });
 
-  readonly maxLengthAsInt = computed<number>(() => this.maxLength() ?? 2_147_483_647);
+  readonly maxLengthAsInt = computed<number>(() => this.maxLength() ?? INT_MAX);
 
   //! no-value attribute setters/getters
   readonly clearable = input<boolean, BooleanLike>(this._DEFAULTS.clearable, { transform: v => coerceBooleanProperty(v) });
 
   readonly autoTrim = input<boolean, BooleanLike>(this._DEFAULTS.autoTrim, { transform: v => coerceBooleanProperty(v) });
 
-  //! control value accessor's write value implementation
-  writeValue(v: any) {
-    this.inputModel.writeValue(v);
-  }
   //! value two-way binding
-  protected _valueBeforeInit?: string | null = null;
-  @Input()
-  set value(v: string | null) {
-    if (!this._wasViewInit) {
-      this._valueBeforeInit = v;
-      return;
-    }
-    this.writeValue(v);
-  }
-  get value(): string | null {
-    return this.inputModel.value();
-  }
-  readonly valueChange = output<string | null>();
+  readonly value = model<string>('');
 
   //! event emitters
-  readonly inputEvent = output<string | null>({ alias: 'input' });
-  readonly changeEvent = output<string | null>({ alias: 'change' });
+  readonly inputEvent = output<string>({ alias: 'input' });
   readonly clearEvent = output<MouseEvent>({ alias: 'clear' });
 
   //! event handlers
   onInput(newVal: string): void {
     if (this.disabled() || this.readonly()) return;
 
-    const valueHasChanged = this.inputModel.writeValue(newVal);
-    if (!valueHasChanged) return;
+    const oldVal = this.value();
+    this.value.set(newVal);
+    if (oldVal === newVal) return;
+
     this._emitInput();
   }
   protected _emitInput(): void {
-    this.inputEvent.emit(this.value);
-    this.valueChange.emit(this.value);
+    this.inputEvent.emit(this.value());
   }
   //focus, blur, change
   onFocusMaster(event: FocusEvent): void {
@@ -161,26 +148,20 @@ export abstract class _SimpleInputComponentBase extends _FormFieldComponentBase 
     if (!this.autoTrim()) return;
 
     this.inputModel.trim();
-    this._emitChange();
     this._emitInput();
   }
   onChange(event: Event): void {
     event.stopPropagation();
-    this._emitChange();
-  }
-  protected _emitChange(): void {
-    this.changeEvent.emit(this.inputModel.value());
   }
   // clear button
   readonly shouldShowClearButton = computed<boolean>(
-    () => this.clearable() && !this.disabled() && !this.readonly() && Boolean(this.inputModel.value())
+    () => this.clearable() && !this.disabled() && !this.readonly() && Boolean(this.inputModel.stringValue())
   );
   onClearButtonClick(event: MouseEvent): void {
     if (this.disabled() || this.readonly()) return;
 
     event.stopPropagation();
     this.inputModel.clear();
-    this._emitChange();
     this._emitInput();
     this.clearEvent.emit(event);
     this.focus();
@@ -189,14 +170,14 @@ export abstract class _SimpleInputComponentBase extends _FormFieldComponentBase 
   //! copy event
   onCopy(event: ClipboardEvent): void {
     if (
-      this.value &&
+      this.value() &&
       //does the selection cover the entire input
       ((this.textInputEl()?.nativeElement.selectionStart === 0 &&
         this.textInputEl()?.nativeElement.selectionEnd === this.textInputEl()?.nativeElement.value.length) ||
         //or is zero-wide
         this.textInputEl()?.nativeElement.selectionStart === this.textInputEl()?.nativeElement.selectionEnd)
     ) {
-      event.clipboardData?.setData('text/plain', this.value);
+      event.clipboardData?.setData('text/plain', this.value() ?? '');
       event.preventDefault();
     }
   }

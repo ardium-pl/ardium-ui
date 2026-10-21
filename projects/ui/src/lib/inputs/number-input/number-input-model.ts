@@ -1,9 +1,21 @@
-import { effect, signal, untracked } from '@angular/core';
+import { effect, ElementRef, Signal, signal, untracked } from '@angular/core';
 import { isDefined } from 'simple-bool';
 import { ArdTransformer } from '../input-transformers';
-import { NumberInputModelHost } from '../input-utils';
+import { ArdNumberInputMinMaxBehavior } from './number-input.types';
 
-export class NumberInputModel2 {
+export interface NumberInputModelHost {
+  readonly max: Signal<number | null>;
+  readonly min: Signal<number | null>;
+  readonly minMaxBehavior: Signal<ArdNumberInputMinMaxBehavior>;
+  readonly maxDecimalPlaces: Signal<number>;
+  readonly fixedDecimalPlaces: Signal<boolean>;
+  readonly decimalSeparator: Signal<string>;
+  readonly allowFloat: Signal<boolean>;
+  readonly isFocused: Signal<boolean>;
+  readonly inputEl: Signal<ElementRef<HTMLInputElement> | undefined>;
+}
+
+export class NumberInputModel {
   constructor(protected readonly _ardHostCmp: NumberInputModelHost) {
     effect(() => {
       this._updateInputEl();
