@@ -58,7 +58,7 @@ export class ArdiumRangeSliderComponent extends _AbstractSlider<SliderRange> imp
     }
   }
 
-  //! writeValue
+  //! helpers
   private _isValidObject(v: any): v is SliderRange {
     return isObject(v) && isNumber(v['from']) && isNumber(v['to']);
   }
@@ -129,7 +129,7 @@ export class ArdiumRangeSliderComponent extends _AbstractSlider<SliderRange> imp
   //! event handlers
   onTrackHitboxPointerDown(event: MouseEvent | TouchEvent): void {
     if (this.disabled() || this.readonly()) return;
-    this._writeValueFromEvent(event);
+    this._setValueFromEvent(event);
     this.onPointerDownOnHandle(event);
   }
   @HostListener('document:mousemove', ['$event'])
@@ -141,7 +141,7 @@ export class ArdiumRangeSliderComponent extends _AbstractSlider<SliderRange> imp
       this._bodyHasClass = true;
       this.renderer.addClass(this.document.body, 'ard-prevent-touch-actions');
     }
-    this._writeValueFromEvent(event, this._grabbedHandleId());
+    this._setValueFromEvent(event, this._grabbedHandleId());
   }
 
   //! position calculators

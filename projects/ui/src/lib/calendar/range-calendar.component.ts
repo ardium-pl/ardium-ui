@@ -57,7 +57,7 @@ export class ArdiumRangeCalendarComponent extends _AbstractCalendar<DateRange, P
       } else {
         console.error(
           new Error(
-            `ARD-NF2003: <ard-range-calendar> [writeValue] expected a { from: Date, to: Date } object or null, got "${v}".`
+            `ARD-NF2003: <ard-range-calendar> [value] expected a { from: Date, to: Date } object or null, got "${v}".`
           )
         );
       }

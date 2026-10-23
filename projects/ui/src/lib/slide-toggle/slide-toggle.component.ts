@@ -1,5 +1,4 @@
-import { ChangeDetectionStrategy, Component, Inject, ViewEncapsulation, computed, forwardRef, input } from '@angular/core';
-import { NG_VALUE_ACCESSOR } from '@angular/forms';
+import { ChangeDetectionStrategy, Component, Inject, ViewEncapsulation, computed, input } from '@angular/core';
 import { ComponentColor } from '../types/colors.types';
 import { Nullable } from '../types/utility.types';
 import { _BooleanComponentBase } from './../_internal/boolean-component';
@@ -13,13 +12,6 @@ import { ArdSlideToggleAppearance } from './slide-toggle.types';
   styleUrls: ['./slide-toggle.component.scss'],
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  providers: [
-    {
-      provide: NG_VALUE_ACCESSOR,
-      useExisting: forwardRef(() => ArdiumSlideToggleComponent),
-      multi: true,
-    },
-  ],
 })
 export class ArdiumSlideToggleComponent extends _BooleanComponentBase {
   protected override readonly _DEFAULTS!: ArdSlideToggleDefaults;

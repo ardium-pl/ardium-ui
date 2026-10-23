@@ -299,14 +299,6 @@ export class ArdiumSelectComponent
     this.selectItem(newOptionObj);
   }
 
-  //! control value accessor
-  writeValue(ngModel: any[]): void {
-    // not used anymore
-  }
-  protected _emitChange(): void {
-    // not used anymore
-  }
-
   //! value
   readonly value = model<any[] | any>();
 
@@ -683,15 +675,11 @@ export class ArdiumSelectComponent
         this.close();
       }
     }
-    if (unselected.length > 0 || selected.length > 0) {
-      this._emitChange();
-    }
   }
   unselectItem(...items: ArdOption[]): void {
     const unselected = this.itemStorage.unselectItem(...items);
 
     this.removeEvent.emit(unselected);
-    this._emitChange();
     if (!this.keepSearchAfterSelect()) this._clearSearch();
 
     this.focus();
@@ -707,7 +695,6 @@ export class ArdiumSelectComponent
 
     this.clearEvent.emit();
     this.removeEvent.emit(cleared);
-    this._emitChange();
     this._emitTouched();
   }
   private _clearLastItem(): void {
@@ -716,7 +703,6 @@ export class ArdiumSelectComponent
     this.focus();
 
     this.removeEvent.emit([clearedValue]);
-    this._emitChange();
   }
   //! highligh-related
   onMouseMove() {

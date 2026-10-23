@@ -4,7 +4,8 @@
   ard-digit-input {
     display: block;
   }
-  .ard-digit-input__static-input {
+  .ard-digit-input__static-input,
+  .ard-digit-input__label-focus-receiver {
     position: absolute;
     opacity: 0;
     appearance: none;

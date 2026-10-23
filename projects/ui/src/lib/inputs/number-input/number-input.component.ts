@@ -68,17 +68,7 @@ export class ArdiumNumberInputComponent
       }
     });
 
-    // refresh input display when decimalSeparator changes
     effect(() => {
-      this.decimalSeparator();
-      // calling rewrite ensures element value includes new separator
-      // untracked(() => this.inputModel.rewriteValueAfterHostUpdate());
-    });
-    effect(() => {
-      // if (this._shouldIgnoreNextValueChange) {
-      //   this._shouldIgnoreNextValueChange = false;
-      //   return;
-      // }
       const v = this.value();
       this.allowFloat();
       this.decimalSeparator();
@@ -86,9 +76,6 @@ export class ArdiumNumberInputComponent
       this.fixedDecimalPlaces();
       untracked(() => {
         this.inputModel.updateValueOnChange(v, this.minMaxBehavior() === ArdNumberInputMinMaxBehavior.AdjustOnInput);
-        // this.inputModel.writeValue(v, false, true);
-        // this.inputModel.updateOnBlur(true);
-        // this.value.set(this.inputModel.numberValue());
       });
     });
     effect(() => {
@@ -266,7 +253,6 @@ export class ArdiumNumberInputComponent
     //9 is an arbitrary number that just works well. ¯\_(ツ)_/¯
     const newValuePrecise = roundToPrecision(newValue, 9);
 
-    // this.inputModel.writeValue(newValuePrecise, true, true);
     this.inputModel.updateValueWithCleanup(String(newValuePrecise), true);
     this.quickChangeEvent.emit({ direction, value: newValuePrecise });
     this._emitChange();
@@ -315,9 +301,6 @@ export class ArdiumNumberInputComponent
       }
       return;
     }
-    // this._shouldIgnoreNextValueChange = true;
-    // this.inputModel.writeValue(newVal, true, false);
-    // this._emitChange();
     this.inputModel.updateValueOnInput(newVal, this.minMaxBehavior() === ArdNumberInputMinMaxBehavior.AdjustOnInput);
   }
 
@@ -330,10 +313,6 @@ export class ArdiumNumberInputComponent
     if (this.disabled() || this.readonly()) return;
     this.onBlur(event);
 
-    // const valueChanged = this.inputModel.updateOnBlur();
-    // if (valueChanged) {
-    //   this._emitChange();
-    // }
     this.inputModel.updateValueWithCleanup(
       this.inputModel.stringValue(),
       this.minMaxBehavior() === ArdNumberInputMinMaxBehavior.AdjustOnBlur

@@ -66,15 +66,12 @@ export class ArdiumDateInputComponent extends _AbstractDateInput<Date> implement
 
   readonly dateInputValue = model<string>('');
 
-  writeValue(v: Date | null): void {
-    // not used anymore
-  }
   override ngOnChanges(changes: SimpleChanges): void {
     super.ngOnChanges(changes);
     if (changes['value']) {
       const value = changes['value'].currentValue;
       if (!(value instanceof Date) && value !== null) {
-        console.error(new Error(`ARD-NF0083: <ard-date-input> writeValue expected a Date or null, got "${value}".`));
+        console.error(new Error(`ARD-NF0083: <ard-date-input> [value] expected a Date or null, got "${value}".`));
       }
     }
   }

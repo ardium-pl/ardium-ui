@@ -4,16 +4,18 @@
 </div>
 <div class="master">
   <span class="title">Readonly digit input</span>
-  <ard-digit-input config="4" readonly />
+  <ard-digit-input
+    config="4"
+    readonly
+  />
 </div>
 <div class="master">
   <span class="title">Digit input events</span>
   <ard-digit-input
     config="4"
-    (valueChange)="log('valueChange', $event)"
+    (valueChange)="log('valueChange', '\'' + $event + '\'')"
     (input)="log('input', $event)"
-    (change)="log('change', $event)"
-    (finishedValue)="log('finishedValue', $event)"
+    (finishValue)="log('finishValue', '\'' + $event + '\'')"
     (focus)="log('focus', $event)"
     (blur)="log('blur', $event)"
     (focusIndex)="log('focusIndex', $event)"
@@ -38,7 +40,10 @@
 </div>
 <div class="master">
   <span class="title">Digit input with complex config (4x hex digit) with uppercase-transform and with error styling</span>
-  <ard-digit-input [config]="complexConfig" hasError />
+  <ard-digit-input
+    [config]="complexConfig"
+    hasError
+  />
 </div>
 <div class="master">
   <span class="title">Digit input with custom font size & styling</span>
@@ -49,41 +54,51 @@
 </div>
 <div class="master">
   <span class="title">Digit input with static items</span>
-  <label [attr.for]="'postalCode'">Zip code</label>
+  <label [attr.for]="'zipCode'">Zip code</label>
   <ard-digit-input
     #digit
     [config]="configWithStatics"
     [formControl]="group.controls.zipCode"
     htmlId="zipCode"
-    outputAsString
     [inputAttrs]="{ autocomplete: 'postal-code' }"
-    (valueChange)="log('valueChange', $event)"
+    (valueChange)="log('valueChange', '\'' + $event + '\'')"
+  />
+</div>
+<div class="master">
+  <span class="title">Digit input with static items outputing on finish</span>
+  <label [attr.for]="'zipCodeOnFinish'">Zip code</label>
+  <ard-digit-input
+    #digit
+    [config]="configWithStatics"
+    [formControl]="group.controls.zipCodeOnFinish"
+    htmlId="zipCodeOnFinish"
+    [inputAttrs]="{ autocomplete: 'postal-code' }"
+    outputOnFinish
+    (valueChange)="log('valueChange', '\'' + $event + '\'')"
   />
 </div>
 <div class="master">
   <span class="title">Readonly digit input with static items</span>
-  <label [attr.for]="'postalCode'">Zip code</label>
+  <label [attr.for]="'zipCodeReadonly'">Zip code</label>
   <ard-digit-input
     #digit
     [config]="configWithStatics"
     [formControl]="group.controls.zipCode"
-    htmlId="zipCode"
-    outputAsString
+    htmlId="zipCodeReadonly"
     [inputAttrs]="{ autocomplete: 'postal-code' }"
-    (valueChange)="log('valueChange', $event)"
+    (valueChange)="log('valueChange', '\'' + $event + '\'')"
     readonly
   />
 </div>
 <div class="master">
   <span class="title">Disabled digit input with static items</span>
-  <label [attr.for]="'postalCode'">Zip code</label>
+  <label [attr.for]="'zipCodeDisabled'">Zip code</label>
   <ard-digit-input
     #digit
     [config]="configWithStatics"
     [formControl]="group.controls.zipCodeDisabled"
-    htmlId="zipCode"
-    outputAsString
+    htmlId="zipCodeDisabled"
     [inputAttrs]="{ autocomplete: 'postal-code' }"
-    (valueChange)="log('valueChange', $event)"
+    (valueChange)="log('valueChange', '\'' + $event + '\'')"
   />
 </div>

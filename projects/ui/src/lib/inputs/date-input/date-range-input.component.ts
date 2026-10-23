@@ -71,7 +71,7 @@ export class ArdiumDateRangeInputComponent extends _AbstractDateInput<DateRange,
       ) {
         console.error(
           new Error(
-            `ARD-NF0093: <ard-date-range-input> [writeValue] expected a { from: Date, to: Date } object or null, got "${value}".`
+            `ARD-NF0093: <ard-date-range-input> [value] expected a { from: Date, to: Date } object or null, got "${value}".`
           )
         );
       }

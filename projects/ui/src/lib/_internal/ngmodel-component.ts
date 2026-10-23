@@ -12,8 +12,6 @@ export const _ngModelComponentDefaults: _NgModelComponentDefaults = {
 
 /**
  * Common code for components which implement the ControlValueAccessor.
- *
- * **Warning**: `writeValue` function should be implemented on the child component!
  */
 @Directive()
 export abstract class _NgModelComponentBase
@@ -51,6 +49,11 @@ export abstract class _NgModelComponentBase
   }
 
   readonly touch = output<void>();
+  
+  //! control value accessor functions for peace of mind
+  registerOnChange() {}
+  registerOnTouched() {}
+  writeValue(v: any) {}
 
   //! form field related
   readonly invalid = input<boolean>(false);

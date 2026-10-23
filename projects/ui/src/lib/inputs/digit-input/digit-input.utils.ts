@@ -10,7 +10,6 @@ export interface DigitInputConfigData {
 }
 export interface DigitInputModelHost {
   readonly inputs: Signal<readonly ElementRef<HTMLInputElement>[]>;
-  readonly outputAsString: Signal<boolean>;
   readonly transform: Signal<DigitInputTransform>;
 }
 

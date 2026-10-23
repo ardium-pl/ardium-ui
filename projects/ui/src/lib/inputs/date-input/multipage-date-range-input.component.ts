@@ -144,7 +144,7 @@ export class ArdiumMultipageDateRangeInputComponent extends _AbstractDateInput<D
       ) {
         console.error(
           new Error(
-            `ARD-NF0124: <ard-multipage-date-range-input> [writeValue] expected a { from: Date, to: Date } object or null, got "${newValue}".`
+            `ARD-NF0124: <ard-multipage-date-range-input> [value] expected a { from: Date, to: Date } object or null, got "${newValue}".`
           )
         );
       }

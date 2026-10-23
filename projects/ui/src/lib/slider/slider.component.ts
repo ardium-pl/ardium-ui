@@ -71,7 +71,7 @@ export class ArdiumSliderComponent extends _AbstractSlider<number> implements On
 
   readonly tooltipComponentInputs = contextToInputs(this.tooltipContext, this.tooltipComponent);
 
-  //! writeValue
+  //! cleanup
   protected _cleanupValueAfterMinMaxStepChange(): void {
     const v = this.value();
     const clampedValue = this._clampValue(v);
@@ -94,7 +94,7 @@ export class ArdiumSliderComponent extends _AbstractSlider<number> implements On
   //! event handlers
   onTrackHitboxPointerDown(event: MouseEvent | TouchEvent): void {
     if (this.disabled() || this.readonly()) return;
-    this._writeValueFromEvent(event);
+    this._setValueFromEvent(event);
     this.onPointerDownOnHandle(event);
   }
   @HostListener('document:mousemove', ['$event'])
@@ -102,7 +102,7 @@ export class ArdiumSliderComponent extends _AbstractSlider<number> implements On
   onPointerMove(event: MouseEvent | TouchEvent): void {
     if (this.disabled() || this.readonly()) return;
     if (!this._shouldCheckForMovement) return;
-    this._writeValueFromEvent(event);
+    this._setValueFromEvent(event);
   }
 
   //! position calculators

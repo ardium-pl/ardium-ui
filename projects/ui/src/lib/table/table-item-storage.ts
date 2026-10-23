@@ -353,14 +353,6 @@ export class TableItemStorage {
     }
     return [data, this._dataColumns()];
   }
-  /**
-   * Writes a new value to the item storage. Selects the correct items based on the provided values, warning the user if the value is not found.
-   * @param indexes The value of the ngModel to set.
-   */
-  writeValue(indexes: number[]): void {
-    this._forceUnselectAll();
-    this.selectItem(...indexes);
-  }
 
   //! selecting items
   /**

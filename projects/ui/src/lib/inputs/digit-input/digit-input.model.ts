@@ -1,34 +1,40 @@
 import { computed, effect, signal } from '@angular/core';
 import { coerceArrayProperty } from '@ardium-pl/devkit';
-import { isAnyString, isArray, isFunction, isNull, isNumber, isRegExp } from 'simple-bool';
+import { isAnyString, isFunction, isNull, isNumber, isRegExp } from 'simple-bool';
 import {
-    DigitInputAcceptObject,
-    DigitInputConfig,
-    DigitInputOption,
-    DigitInputPrimitiveOption,
-    TransformType,
+  DigitInputAcceptObject,
+  DigitInputConfig,
+  DigitInputOption,
+  DigitInputPrimitiveOption,
+  TransformType,
 } from './digit-input.types';
 import { DigitInputConfigData, DigitInputConfigDataType, DigitInputModelHost, _sanitizeRegExpString } from './digit-input.utils';
 
 export class DigitInputModel {
   constructor(private _ardHost: DigitInputModelHost) {
     //set the value array to be the same length
-    effect(
-      () => {
-        const configArr = this.configArrayData();
+    effect(() => {
+      const configArr = this.configArrayData();
 
-        this.value.update(arr => {
-          if (!arr) arr = [];
-          const newArr: (string | null)[] = [];
-          for (let i = 0; i < configArr.length; i++) {
-            const curr = arr[i];
-            const config = configArr[i];
-            newArr.push(config.type === DigitInputConfigDataType.Static ? null : curr ?? null);
-          }
-          return newArr;
-        });
-      }
-    );
+      this._internalValue.update(arr => {
+        if (!arr) arr = [];
+        const newArr: (string | null)[] = [];
+        for (let i = 0; i < configArr.length; i++) {
+          const curr = arr[i];
+          const config = configArr[i];
+          newArr.push(config.type === DigitInputConfigDataType.Static ? null : (curr ?? null));
+        }
+        return newArr;
+      });
+    });
+    // validate
+    effect(() => {
+      this._validateWrittenValue();
+    });
+    // update inputs
+    effect(() => {
+      this._updateInputElements();
+    });
   }
 
   private readonly _configArray = signal<DigitInputOption[]>([]);
@@ -52,85 +58,56 @@ export class DigitInputModel {
 
   readonly isConfigDefined = computed((): boolean => this._configArray().length > 0);
 
-  readonly value = signal<(string | null)[] | null>(null);
+  private readonly _internalValue = signal<(string | null)[] | null>(null);
 
-  readonly valueWithStatics = computed<(string | null)[]>(() => {
+  private readonly _valueWithStatics = computed<(string | null)[]>(() => {
     const configArr = this.configArrayData();
-    const arr = this.value() ?? [];
+    const arr = this._internalValue() ?? [];
 
     const newArr: (string | null)[] = [];
     for (let i = 0; i < configArr.length; i++) {
       const curr = arr[i];
       const config = configArr[i];
-      newArr.push(config.type === DigitInputConfigDataType.Static ? config.char! : curr ?? null);
+      newArr.push(config.type === DigitInputConfigDataType.Static ? config.char! : (curr ?? null));
     }
     return newArr;
   });
 
   readonly stringValue = computed(
     (): string =>
-      this.valueWithStatics()
+      this._valueWithStatics()
         ?.map(v => v ?? ' ')
         .join('') ?? ''
   );
 
-  readonly isValueFull = computed((): boolean => this.value()?.filter(v => v).length === this._configArray().length);
+  private _validateWrittenValue() {
+    const v = this.stringValue();
 
-  isDefinedAtIndex(index: number): boolean {
-    return !!this.value()?.[index];
-  }
-
-  writeValue(v: any): boolean {
-    if (this._ardHost.outputAsString()) {
-      if (!isAnyString(v) && !isNull(v)) {
-        throw new Error(
-          `ARD-FT0040b: Trying to set <ard-digit-input>'s value to "${v}" (of type ${typeof v}), but the input uses [outputAsString]="true", and thus expects string or null.`
-        );
-      }
-      const vArray = v?.split('') ?? [];
-
-      if (vArray.length > this._configArray().length) {
-        console.warn(
-          `ARD-WA0041: Value provided to <ard-digit-input> is too long. Got ${
-            vArray.length
-          } characters, but expected a maximum of ${this._configArray().length} characters.`
-        );
-      }
-      return this._writeValue(vArray);
-    }
-    if (!isAnyString(v) && !isNull(v) && !isArray(v)) {
+    if (!isAnyString(v) && !isNull(v)) {
       throw new Error(
-        `ARD-FT0041: Trying to set <ard-digit-input>'s value to "${v}" (of type ${typeof v}), expected string or array of characters.`
+        `ARD-FT0040b: Trying to set <ard-digit-input>'s value to "${v}" (of type ${typeof v}), expected string or null.`
       );
     }
-    const vArray = coerceArrayProperty(v);
+    const vStr = v ?? '';
 
-    if (vArray.length > this._configArray().length) {
+    if (vStr.length > this._configArray().length) {
       console.warn(
         `ARD-WA0041: Value provided to <ard-digit-input> is too long. Got ${
-          vArray.length
+          vStr.length
         } characters, but expected a maximum of ${this._configArray().length} characters.`
       );
     }
-    const problemIndex = vArray.findIndex(el => !isAnyString(el) || el.length > 1);
-    if (problemIndex !== -1) {
-      throw new Error(
-        `ARD-FT0042: Array passed to <ard-digit-input>'s value must only contain strings of length 1 or 0. Element "${vArray[problemIndex]}" at index ${problemIndex} does not match those requirements.`
-      );
-    }
-    return this._writeValue(vArray);
   }
-  private _writeValue(v: string[] | null): boolean {
-    const isOldValueTheSame = this.value()?.length ? this.value()!.every((ch, i) => ch === v?.[i]) : !v?.length;
-    if (isOldValueTheSame) return false;
-    this.value.set(v && v.map(el => el || null));
-    this.validateValueAndUpdate();
-    this._updateInputElements();
-    return true;
+
+  readonly isValueFull = computed((): boolean => this._valueWithStatics()?.filter(v => v).length === this._configArray().length);
+  readonly isValueEmpty = computed((): boolean => this._internalValue()?.filter(v => v).length === 0);
+
+  isDefinedAtIndex(index: number): boolean {
+    return !!this._internalValue()?.[index];
   }
 
   private _updateInputElements() {
-    const v = this.value() ?? [];
+    const v = this._internalValue() ?? [];
     let i = 0;
     for (const inputEl of this._ardHost.inputs()) {
       inputEl.nativeElement.value = v[i] ?? '';
@@ -208,7 +185,7 @@ export class DigitInputModel {
     //update the input element and value array
     inputEl.nativeElement.value = newValue;
 
-    this.value.update(arr => {
+    this._internalValue.update(arr => {
       if (!arr) arr = [];
       const newArr = [...arr];
       newArr[index] = newValue || null;
@@ -217,55 +194,68 @@ export class DigitInputModel {
   }
 
   //! validate against the config
-  validateInputAndSetValue(
-    input: string,
-    index: number
-  ): null | { wasChanged: boolean; wasValidChar: boolean; resultChar: string | null } {
+  validateInputAndSetValue(input: string, index: number) {
     if (index < 0 || index > this._configArray().length) return null;
 
-    let v = this.value();
-    //prepare the value array if does not exist
-    if (!v) {
-      this.value.set([]);
-    }
-    v = [];
+    const result = this._processCharacter(input, index);
+
+    this._internalValue.update(arr => {
+      if (!arr) arr = [];
+      const newArr = [...arr];
+      newArr[index] = result.resultChar || null;
+      return newArr;
+    });
+    return result;
+  }
+  validateInputAndSetValueMultiple(value: string, startIndex: number, reset: boolean = false): void {
+    if (startIndex < 0 || startIndex > this._configArray().length) return;
+
+    const results = value.split('').map((char, i) => this._processCharacter(char, startIndex + i));
+
+    this._internalValue.update(arr => {
+      if (!arr) arr = [];
+      const newArr = reset ? new Array(this._ardHost.inputs().length).fill(null) : [...arr];
+      results.forEach((result, i) => {
+        newArr[startIndex + i] = result.resultChar || null;
+      });
+      return newArr;
+    });
+  }
+  private _processCharacter(char: string, index: number) {
     //prepare the characters before the current one (to be used in validation)
     const before = this.stringValue().charAt(index);
 
     //remove the old character from the input element
-    if (before && input.length > 1 && input.match(before)) {
-      input = input.replace(before, '');
+    if (before && char.length > 1 && char.match(before)) {
+      char = char.replace(before, '');
     }
     //use only the first or last character (error safety)
-    const firstChar = input.charAt(0);
-    const lastChar = input.charAt(input.length - 1);
-    input = firstChar === before ? lastChar : firstChar;
+    const firstChar = char.charAt(0);
+    const lastChar = char.charAt(char.length - 1);
+    char = firstChar === before ? lastChar : firstChar;
 
     //validate and transform, if necessary
-    const inputChar = this._validateSingleChar(input, before, this._configArray()[index] as DigitInputAcceptObject);
+    const inputChar = this._validateSingleChar(char, before, this._configArray()[index] as DigitInputAcceptObject);
+
+    const newVal = inputChar ?? before;
 
     //get the corresponding HTML input element
     const inputEl = this._ardHost.inputs()[index];
     if (!inputEl) {
-      throw new Error(
-        "ARD-IS0048: <ard-digit-input>'s value changed, but its corresponding input element could not be found. If you are reading this, you probably experienced a problem with Ardium UI. Please report this issue to the creators."
-      );
+      // do not throw error before inputs have been initialized
+      if (this._ardHost.inputs().length > 0) {
+        throw new Error(
+          "ARD-IS0048: <ard-digit-input>'s value changed, but its corresponding input element could not be found. If you are reading this, you probably experienced a problem with Ardium UI. Please report this issue to the creators."
+        );
+      }
+    } else {
+      //update the input element and value array
+      inputEl.nativeElement.value = newVal ?? '';
     }
-    //update the input element and value array
-    const newVal = inputChar ?? before;
-    inputEl.nativeElement.value = newVal ?? '';
-
-    this.value.update(arr => {
-      if (!arr) arr = [];
-      const newArr = [...arr];
-      newArr[index] = newVal || null;
-      return newArr;
-    });
-    //return changes marker and validated value
     return { wasChanged: newVal !== before, wasValidChar: !isNull(inputChar), resultChar: inputChar };
   }
   validateValueAndUpdate(): void {
-    const v = this.value();
+    const v = this._internalValue();
     if (!v) return;
 
     let before = '';
@@ -281,7 +271,7 @@ export class DigitInputModel {
       const newChar = this._validateSingleChar(char, before, this._configArray()[i] as DigitInputAcceptObject);
       newValue.push(newChar);
     }
-    this.value.set(newValue);
+    this._internalValue.set(newValue);
   }
   private _validateSingleChar(char: string | null, before: string, config: DigitInputOption): string | null {
     // return the character if it is static
@@ -289,7 +279,7 @@ export class DigitInputModel {
     // for peace of mind protect against modifying read-only fields
     if (config.readonly) {
       throw new Error(
-        `ARD-IS0049R: trying to set value of a <ard-digit-input>'s readonly field. This is error is fatal to the functioning of Ardium UI. Please report this issue to the creators.`
+        `ARD-IS0049R: trying to set value of a <ard-digit-input>'s readonly field. This is error is fatal to the functioning of Ardium UI and should normally never occur. Please report this issue to the creators.`
       );
     }
     // process regex or convert string into regex

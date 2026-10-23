@@ -27,12 +27,15 @@
   - `ard-segment` (`[align]`)
   - `ard-tabber` (`[tabAlignment]`)
 - `(change)` event has been removed from all components that supported it. Use `(valueChange)` or similar instead.
+- `[outputAsString]` input has been removed from `<ard-digit-input>`. The value is now always emitted as string or null.
 - Due to contraints given by `FormValueControl` interface for Signal Forms compatibility, several inputs and outputs have been renamed.
   - `[(selected)]  ->  [(value)]` in `ard-checkbox`, `ard-selectable-chip`, `ard-slide-toggle`, `ard-star-button`
   - `[maxSelectedItems]  ->  [maxLength]` in `ard-checkbox-list`, `ard-segment`, `ard-select`
   - `[maxFiles]  ->  [maxLength]` in `ard-file-drop-area`, `ard-file-input`
 - Due to other reasons, some inputs and outputs have been renamed.
   - `[items]  ->  [options]` in `ard-checkbox-list`, `ard-segment`, `ard-select`
+  - `(finishedValue)  ->  (finishValue)` in `ard-digit-input`
+  - `[outputControlValueAccessorOnFinish]  ->  [outputOnFinish]` in `ard-digit-input`
 
 ### Additions & Changes
 

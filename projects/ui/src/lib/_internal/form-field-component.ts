@@ -15,8 +15,6 @@ export const _formFieldComponentDefaults: _FormFieldComponentDefaults = {
 
 /**
  * Common code for components which implement the ControlValueAccessor.
- *
- * **Warning**: `writeValue` function should be implemented on the child component!
  */
 @Directive()
 export abstract class _FormFieldComponentBase

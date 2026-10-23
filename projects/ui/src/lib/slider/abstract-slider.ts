@@ -237,14 +237,6 @@ export abstract class _AbstractSlider<T>
 
   protected abstract _setValue(v: T): void; //* abstact
 
-  //! writeValue
-  writeValue(v: any): void {
-    // not used anymore
-  }
-  protected _emitChange(): void {
-    // not used anymore
-  }
-
   protected abstract _cleanupValueAfterMinMaxStepChange(): void; //* abstact
 
   //! methods for programmatic manipulation
@@ -356,7 +348,7 @@ export abstract class _AbstractSlider<T>
     const newValue = this._percentValueToValue(percent, handleId);
     this._setValue(newValue);
   }
-  protected _writeValueFromEvent(event: MouseEvent | TouchEvent, handleId?: number | null): void {
+  protected _setValueFromEvent(event: MouseEvent | TouchEvent, handleId?: number | null): void {
     if (this.disabled() || this.readonly()) return;
     const percent = this._getPercentValueFromEvent(event);
     this._setValueFromPercent(percent, handleId);

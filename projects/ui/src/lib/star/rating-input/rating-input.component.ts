@@ -72,18 +72,9 @@ export class ArdiumRatingInputComponent extends _FormFieldComponentBase implemen
 
   readonly starArray = computed<number[]>(() => new Array(this.max()).fill(0).map((_, i) => i));
 
-  //! ControlValueAccessor's writeValue
-  writeValue(v: number): void {
-    // not used anymore
-  }
-  protected _emitChange(): void {
-    // not used anymore
-  }
-
   onStarClick(index: number): void {
     if (this.disabled() || this.readonly()) return;
     this.value.set(index + 1);
-    this._emitChange();
     this._emitTouched();
   }
   onStarHighlight(index: number): void {

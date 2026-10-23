@@ -36,7 +36,7 @@ export class ArdiumCalendarComponent extends _AbstractCalendar<Date> {
     effect(() => {
       const v = this.value();
       if (isDefined(v) && !(v instanceof Date)) {
-        console.error(new Error(`ARD-NF2003: <ard-calendar> [writeValue] expected a Date or null, got "${v}".`));
+        console.error(new Error(`ARD-NF2003: <ard-calendar> [value] expected a Date or null, got "${v}".`));
       }
     });
   }

@@ -1,14 +1,12 @@
 import {
-    ChangeDetectionStrategy,
-    Component,
-    computed,
-    forwardRef,
-    Inject,
-    input,
-    output,
-    ViewEncapsulation,
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  Inject,
+  input,
+  output,
+  ViewEncapsulation
 } from '@angular/core';
-import { NG_VALUE_ACCESSOR } from '@angular/forms';
 import { BooleanLike, coerceBooleanProperty } from '@ardium-pl/devkit';
 import { _FocusableComponentBase } from '../../_internal/focusable-component';
 import { SimpleOneAxisAlignment } from '../../types/alignment.types';
@@ -23,13 +21,6 @@ import { ARD_DELETABLE_CHIP_DEFAULTS, ArdDeletableChipDefaults } from './deletab
   styleUrls: ['../chip.component.scss'],
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  providers: [
-    {
-      provide: NG_VALUE_ACCESSOR,
-      useExisting: forwardRef(() => ArdiumDeletableChipComponent),
-      multi: true,
-    },
-  ],
 })
 export class ArdiumDeletableChipComponent extends _FocusableComponentBase {
   protected override readonly _DEFAULTS!: ArdDeletableChipDefaults;
