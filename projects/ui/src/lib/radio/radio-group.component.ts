@@ -75,9 +75,6 @@ export class ArdiumRadioGroupComponent
       this.value();
       this._updateRadioButtonsSelected();
     });
-
-    console.log('ArdiumRadioGroupComponent initialized');
-    console.log('ArdiumRadioGroupComponent initialized');
   }
 
   //! value
