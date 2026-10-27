@@ -75,11 +75,10 @@ export class ArdiumRadioGroupComponent
       this.value();
       this._updateRadioButtonsSelected();
     });
-  }
 
-  fnjdf = effect(() => {
-    console.log(this.disabled());
-  });
+    console.log('ArdiumRadioGroupComponent initialized');
+    console.log('ArdiumRadioGroupComponent initialized');
+  }
 
   //! value
   readonly value = model<any>(null);

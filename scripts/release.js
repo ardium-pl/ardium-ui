@@ -30,18 +30,37 @@ const VERSION_ALIAS_MAP = {
 
     // search all .ts files for console.log
     const files = fs.readdirSync(srcPath, { recursive: true }).filter(file => file.endsWith('.ts'));
+    const foundConsoleLogFiles = {};
     for (const file of files) {
       const filePath = path.join(srcPath, file);
       const content = fs.readFileSync(filePath, 'utf8');
       const lines = content.split('\n');
-      const lineIndex = lines.findIndex(line => line.includes('console.log'));
-      if (lineIndex !== -1) {
-        console.error(
-          `${ansis.redBright.bold('✕')} Error: Found console.log statements in ${ansis.underline(filePath)} (line ${lineIndex + 1}). Please remove them before releasing.`
-        );
-        return;
+      const lineIndexes = lines.map((line, index) => ({ line, index })).filter(({ line }) => /console\.(log|table)/.test(line)).map(({ index }) => index);
+      if (lineIndexes.length > 0) {
+        foundConsoleLogFiles[filePath] = lineIndexes;
       }
     }
+    const foundConsoleLogFilesArray = Array.from(Object.entries(foundConsoleLogFiles));
+    if (foundConsoleLogFilesArray.length > 0) {
+      if (foundConsoleLogFilesArray.length === 1) {
+        const [file, lineIndexes] = foundConsoleLogFilesArray[0];
+        if (lineIndexes.length === 1) {
+          console.error(`${ansis.redBright.bold('✕')} Error: Found a console.log statement in ${file}:${lineIndexes[0] + 1}. Please remove it before releasing.`);
+          return;
+        }
+      }
+      const totalCount = foundConsoleLogFilesArray.reduce((acc, [_, lineIndexes]) => acc + lineIndexes.length, 0);
+      console.error(`${ansis.redBright.bold('✕')} Error: Found ${ansis.redBright.bold(totalCount)} console.log statements in the following files:`);
+
+      const filesWithLineNumbers = foundConsoleLogFilesArray.flatMap(([file, lineIndexes]) => {
+        return lineIndexes.map(index => `${file}:${index + 1}`);
+      });
+      for (const fileWithLineNumber of filesWithLineNumbers) {
+        console.error(`  - ${fileWithLineNumber}`);
+      }
+      return;
+    }
+
     console.log(
       `${ansis.greenBright.bold('✓')} No console.log statements found. Proceeding... (${new Date().valueOf() - startTime.valueOf()} ms)`
     );

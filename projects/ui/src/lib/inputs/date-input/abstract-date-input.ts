@@ -16,7 +16,7 @@ import {
   SimpleChanges,
   TemplateRef,
   viewChild,
-  ViewContainerRef
+  ViewContainerRef,
 } from '@angular/core';
 import { BooleanLike, coerceBooleanProperty, coerceDateOnlyProperty, coerceNumberProperty, NumberLike } from '@ardium-pl/devkit';
 import { _FormFieldComponentBase } from '../../_internal/form-field-component';
@@ -194,7 +194,6 @@ export abstract class _AbstractDateInput<T, PT = T> extends _FormFieldComponentB
     }
     if (changes['value']) {
       const value = changes['value'].currentValue;
-      console.log('value change', value);
       this.partialValue.set(value as PT | null);
     }
   }
