@@ -1,4 +1,5 @@
 import { AutofillMonitor } from '@angular/cdk/text-field';
+import { isPlatformBrowser } from '@angular/common';
 import {
   AfterViewInit,
   ChangeDetectionStrategy,
@@ -12,6 +13,7 @@ import {
   model,
   OnDestroy,
   output,
+  PLATFORM_ID,
   signal,
   untracked,
   viewChildren,
@@ -50,6 +52,8 @@ export class ArdiumDigitInputComponent
     OnDestroy,
     Omit<FormValueControl<string | null>, 'readonly' | 'disabled' | 'required'>
 {
+  private readonly _platformId = inject(PLATFORM_ID);
+
   protected override readonly _DEFAULTS!: ArdDigitInputDefaults;
   constructor(@Inject(ARD_DIGIT_INPUT_DEFAULTS) defaults: ArdDigitInputDefaults) {
     super(defaults);
@@ -239,6 +243,7 @@ export class ArdiumDigitInputComponent
   focusByIndex(index: number): boolean;
   focusByIndex(index: number, tryFocusingNext: boolean, direction: 1 | -1): boolean;
   focusByIndex(index: number, tryFocusingNext?: boolean, direction?: 1 | -1): boolean {
+    if (!isPlatformBrowser(this._platformId)) return false;
     if (index < 0 || index >= this.inputs().length) return false;
     const nextEl = this.inputs()[index]?.nativeElement;
     if (!nextEl) return false;
@@ -281,7 +286,7 @@ export class ArdiumDigitInputComponent
         this.focusByIndex(0, true, 1);
         return;
       case 'End':
-        this.focusByIndex(this.inputs.length - 1, true, -1);
+        this.focusByIndex(this.inputs().length - 1, true, -1);
         return;
       case 'Backspace':
       case 'Delete':

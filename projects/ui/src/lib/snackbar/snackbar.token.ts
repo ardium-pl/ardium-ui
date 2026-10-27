@@ -11,7 +11,7 @@ import {
 const _snackbarDefaults: Required<ArdSnackbarOptions> = {
   placement: {
     align: ArdSnackbarAlignment.BottomCenter,
-    origin: document.body,
+    origin: undefined,
     originRelation: ArdSnackbarOriginRelation.Inside,
   },
   duration: 5000,

@@ -1,15 +1,17 @@
+import { isPlatformBrowser } from '@angular/common';
 import {
-    AfterViewChecked,
-    ChangeDetectionStrategy,
-    Component,
-    ElementRef,
-    TemplateRef,
-    ViewEncapsulation,
-    computed,
-    inject,
-    input,
-    output,
-    viewChild,
+  AfterViewChecked,
+  ChangeDetectionStrategy,
+  Component,
+  ElementRef,
+  PLATFORM_ID,
+  TemplateRef,
+  ViewEncapsulation,
+  computed,
+  inject,
+  input,
+  output,
+  viewChild,
 } from '@angular/core';
 import { BooleanLike, coerceBooleanProperty } from '@ardium-pl/devkit';
 import { Nullable } from '../types/utility.types';
@@ -29,6 +31,7 @@ import { DropdownPanelAppearance, DropdownPanelVariant, ScrollAlignment } from '
 })
 export class ArdiumDropdownPanelComponent implements AfterViewChecked {
   private readonly _DEFAULTS = inject(ARD_DROPDOWN_PANEL_DEFAULTS);
+  private readonly _platformId = inject(PLATFORM_ID);
 
   private readonly _scrollElementRef = viewChild<ElementRef<HTMLElement>>('scroll');
   private readonly _scrollEl = computed(() => this._scrollElementRef()?.nativeElement);
@@ -133,7 +136,7 @@ export class ArdiumDropdownPanelComponent implements AfterViewChecked {
   }
   private _getContentRect(el: HTMLElement): DOMRect {
     const elRect = el.getBoundingClientRect();
-    const elPadding = window.getComputedStyle(el).getPropertyValue('padding');
+    const elPadding = isPlatformBrowser(this._platformId) ? window.getComputedStyle(el).getPropertyValue('padding') : '0';
     const paddings = elPadding.split(' ').map(v => (v ? parseFloat(v) : null));
     const topPadd = paddings[0] ?? 0;
     const rightPadd = paddings[1] ?? topPadd;

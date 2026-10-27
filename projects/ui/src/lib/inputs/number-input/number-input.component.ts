@@ -1,3 +1,4 @@
+import { isPlatformBrowser } from '@angular/common';
 import {
   AfterViewInit,
   ChangeDetectionStrategy,
@@ -6,10 +7,12 @@ import {
   contentChild,
   effect,
   ElementRef,
+  inject,
   Inject,
   input,
   model,
   output,
+  PLATFORM_ID,
   untracked,
   viewChild,
   ViewEncapsulation,
@@ -54,6 +57,8 @@ export class ArdiumNumberInputComponent
   extends _FormFieldComponentBase
   implements NumberInputModelHost, AfterViewInit, Omit<FormValueControl<number | null>, 'readonly' | 'disabled' | 'required'>
 {
+  private readonly _platformId = inject(PLATFORM_ID);
+
   protected override readonly _DEFAULTS!: ArdNumberInputDefaults;
   constructor(@Inject(ARD_NUMBER_INPUT_DEFAULTS) defaults: ArdNumberInputDefaults) {
     super(defaults);
@@ -331,6 +336,8 @@ export class ArdiumNumberInputComponent
   //smart focus
   onMouseup(): void {
     if (this.disabled() || this.readonly()) return;
+    if (!isPlatformBrowser(this._platformId)) return;
+    
     const selection = window.getSelection();
     if (selection && selection.type === 'Range') return;
 

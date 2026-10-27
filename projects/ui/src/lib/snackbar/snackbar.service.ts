@@ -1,6 +1,7 @@
 import { ComponentType, Overlay, OverlayConfig, OverlayRef } from '@angular/cdk/overlay';
 import { ComponentPortal } from '@angular/cdk/portal';
-import { Injectable, Injector, OnDestroy, inject } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
+import { Injectable, Injector, OnDestroy, PLATFORM_ID, inject } from '@angular/core';
 import { isArray, isDefined } from 'simple-bool';
 import { Queue } from '../_internal/models/queue';
 import { ComponentColor } from '../types/colors.types';
@@ -31,6 +32,7 @@ export class ArdiumSnackbarService implements OnDestroy {
   private readonly _animationLength = inject(ARD_SNACKBAR_ANIMATION_LENGTH);
   private readonly _overlay = inject(Overlay);
   private readonly _injector = inject(Injector);
+  private readonly _platformId = inject(PLATFORM_ID);
 
   //! public methods for creating new snackbars
   /**
@@ -173,9 +175,11 @@ export class ArdiumSnackbarService implements OnDestroy {
 
     let origin = options.placement!.origin;
     if (!origin) {
-      console.error(
-        new Error(`ARD-NF7021: trying to open a snackbar, but the origin is undefined. Using "document.body" instead.`)
-      );
+      if (!isPlatformBrowser(this._platformId)) {
+        throw new Error(
+          `ARD-FT7021: trying to open a snackbar, but the origin is undefined and the platform is not a browser. Aborting.`
+        );
+      }
       origin = document.body;
     }
 

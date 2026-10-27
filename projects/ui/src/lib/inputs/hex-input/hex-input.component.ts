@@ -1,3 +1,4 @@
+import { isPlatformBrowser } from '@angular/common';
 import {
   AfterViewInit,
   ChangeDetectionStrategy,
@@ -6,10 +7,12 @@ import {
   contentChild,
   ElementRef,
   forwardRef,
+  inject,
   Inject,
   input,
   model,
   output,
+  PLATFORM_ID,
   viewChild,
   ViewEncapsulation,
 } from '@angular/core';
@@ -48,6 +51,8 @@ export class ArdiumHexInputComponent
   extends _FormFieldComponentBase
   implements HexInputModelHost, AfterViewInit, Omit<FormValueControl<string | null>, 'readonly' | 'disabled' | 'required'>
 {
+  private readonly _platformId = inject(PLATFORM_ID);
+
   protected override readonly _DEFAULTS!: ArdHexInputDefaults;
   constructor(@Inject(ARD_HEX_INPUT_DEFAULTS) defaults: ArdHexInputDefaults) {
     super(defaults);
@@ -137,6 +142,8 @@ export class ArdiumHexInputComponent
   //smart focus
   onMouseup(): void {
     if (this.disabled() || this.readonly()) return;
+    if (!isPlatformBrowser(this._platformId)) return;
+
     const selection = window.getSelection();
     if (selection && selection.type === 'Range') return;
 

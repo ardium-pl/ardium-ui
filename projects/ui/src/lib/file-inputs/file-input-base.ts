@@ -1,3 +1,4 @@
+import { isPlatformBrowser } from '@angular/common';
 import {
   computed,
   Directive,
@@ -9,6 +10,7 @@ import {
   model,
   OnInit,
   output,
+  PLATFORM_ID,
   signal,
   viewChild,
 } from '@angular/core';
@@ -33,6 +35,8 @@ export abstract class _FileInputComponentBase
   extends _FormFieldComponentBase
   implements OnInit, Omit<FormValueControl<File | File[] | null>, 'readonly' | 'disabled'>
 {
+  private readonly _platformId = inject(PLATFORM_ID);
+
   protected override readonly _DEFAULTS!: _FileInputBaseDefaults;
 
   constructor(defaults: _FileInputBaseDefaults) {
@@ -54,6 +58,8 @@ export abstract class _FileInputComponentBase
 
   override ngOnInit(): void {
     super.ngOnInit();
+    if (!isPlatformBrowser(this._platformId)) return;
+    
     if (!(window.File && window.FileReader && window.Blob)) {
       console.error(
         new Error(
@@ -79,7 +85,9 @@ export abstract class _FileInputComponentBase
 
   readonly blockAfterUpload = input<boolean, BooleanLike>(false, { transform: v => coerceBooleanProperty(v) });
 
-  readonly shouldBeBlocked = computed<boolean>(() => this.disabled() || this.readonly() || (this.blockAfterUpload() && isDefined(this.value())));
+  readonly shouldBeBlocked = computed<boolean>(
+    () => this.disabled() || this.readonly() || (this.blockAfterUpload() && isDefined(this.value()))
+  );
 
   readonly maxFileSizeBytes = input<Nullable<number>, any>(null, { transform: v => coerceNumberProperty(v, null) });
 
